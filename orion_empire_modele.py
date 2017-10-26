@@ -103,7 +103,10 @@ class Modele():
 			ia = IA(self, nomia, planes.pop(0), couleurs.pop(0))
 			self.joueurs[nomia] = ia  # IA
 			self.ias.append(ia)  # IA
-
+			
+	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
+		self.parent.actions.append([self.parent.monnom, "creervaisseauSolaire", systeme, planete, typeVaisseau])
+	
 	def creervaisseauGalactique(self, systeme):  # ! Changer nom
 		self.parent.actions.append([self.parent.monnom, "creervaisseauGalactique", systeme])
 
@@ -150,3 +153,4 @@ class Modele():
 
 	def chargedansvaisseaugalactique(self, vg, vs):
 		self.parent.actions.append([self.parent.monnom, "chargedansvaisseaugalactique", (vg, vs)])
+		

@@ -916,10 +916,10 @@ class VueSysteme(Perspective):
 
 		for p in self.systeme.planetes:
 			x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * UAmini, 100, 100)
-			self.minimap.create_oval(x - mini, y - mini, x + mini, y + mini, fill="red", tags=("planete"))
+			self.minimap.create_oval(x - mini, y - mini, x + mini, y + mini, fill=p.couleurPlanete, tags=("planete"))
 			x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * self.UA2pixel, xl, yl)
 			n = p.taille * self.UA2pixel
-			self.canevas.create_oval(x - n, y - n, x + n, y + n, fill="red", tags=(
+			self.canevas.create_oval(x - n, y - n, x + n, y + n, fill=p.couleurPlanete, tags=(
 			self.systeme.proprietaire, "planete", p.id, "inconnu", self.systeme.id, int(x), int(y)))
 
 			if self.maselection != None:

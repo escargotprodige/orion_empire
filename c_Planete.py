@@ -31,6 +31,8 @@ class Planete():
 
 		self.elevationMax = 255
 		self.roughness = 4
+		
+		self.couleurPlanete = 0
 
 		self.terrain = [[0 for x in range(self.terrainTailleCarre)] for y in range(self.terrainTailleCarre)]
 		self.terrainColor = [['#000000' for x in range(self.terrainTailleCarre)] for y in
@@ -47,7 +49,8 @@ class Planete():
 		self.parent.parent.parent.vue.attenteloading()
 
 		self.delais = 5
-
+		
+		
 	def genTerrain(self):
 		size = self.terrainTailleCarre
 		for n in range(self.terrainTailleCarre * self.terrainTailleCarre):
@@ -113,6 +116,10 @@ class Planete():
 		g = r * b
 		r -= g / 2
 		b -= g / 2
+		
+		self.couleurPlanete = self.rgbToHex(255*r, 255*g*2, 255*b);
+		
+		
 
 		waterlevel = 0
 		if (r > b):

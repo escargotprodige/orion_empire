@@ -64,7 +64,7 @@ class Controleur():
 			rep = self.serveur.inscrireclient(self.monnom)  # on averti le serveur de nous inscrire
 			# tester retour pour erreur de nom
 			# random.seed(rep[2])
-			random.seed(2439)
+			random.seed(64544)
 
 	def boucleattente(self):
 		rep = self.serveur.faireaction([self.monnom, 0, 0])

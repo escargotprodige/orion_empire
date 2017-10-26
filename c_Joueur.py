@@ -13,6 +13,7 @@ class Joueur():
 		self.systemesvisites = [systemeorigine]
 		self.vaisseauxinterstellaires = []
 		self.vaisseauxinterplanetaires = []
+		self.stationGalactiques = []  ################################################# MODIF TRISTAN
 		self.actions = {"creervaisseauGalactique": self.creervaisseauGalactique,
 		                "ciblerdestination": self.ciblerdestination,
 		                "atterrirplanete": self.atterrirplanete,
@@ -21,8 +22,14 @@ class Joueur():
 		                "creerville": self.creerville,
 		                "creergeneratrice": self.creergeneratrice,
 		                "creerferme": self.creerferme,
-		                "dechargervausseaugalactique": self.dechargervaisseaugalactique,  # ! MODIF ICI
+		                "dechargervausseaugalactique": self.dechargervaisseaugalactique,
+		                "creerstationGalactique": self.creerstationGalactique,
+		                "upgradevitessevaisseau": self.upgradeVitesseVaisseau,
+		                "creerbarrack": self.creerbarrack,
+		                "creerlazerboi": self.creerLazerBoi,
 		                }
+
+		self.stationGalactiques = []
 
 		self.planeteOrigine = random.choice(self.systemeorigine.planetes)
 		self.planeteOrigine.proprietaire = self.nom
@@ -45,6 +52,25 @@ class Joueur():
 		self.parent.parent.afficherBatiment(ville)  ### TEST ICI  ###
 
 		# return coords
+
+	def creer_vaisseau_solaire(self, systemeid, planeteid, type_vaisseau):
+		for i in self.systemesvisites:
+			if i.id == systemeid:
+				for j in i.planetes:
+					if j.id == planeteid:
+						v = type_vaisseau(i, self.nom, j)
+						i.vaisseaux.append(v)
+						return 1
+
+	# ajout
+	def creer_infrastructure(self, nom, systemeid, planeteid, x, y, type_infrastructure):
+		for i in self.systemesvisites:
+			if i.id == systemeid:
+				for j in i.planetes:
+					if j.id == planeteid:
+						infrastructure = type_infrastructure(self, nom, systemeid, planeteid, x, y)
+						j.infrastructures.append(infrastructure)
+						self.parent.parent.afficherBatiment(infrastructure)
 
 	def creermine(self, listeparams):
 		nom, systemeid, planeteid, x, y = listeparams
@@ -90,47 +116,19 @@ class Joueur():
 						# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
 						self.parent.parent.afficherBatiment(generatrice)
 
-	""" Version avant
-	def creermine(self,listeparams):
-		nom,systemeid,planeteid,x,y=listeparams
-		for i in self.systemesvisites:
-			if i.id==systemeid:
-				for j in i.planetes:
-					if j.id==planeteid:
-						mine=Mine(self,nom,systemeid,planeteid,x,y)
-						j.infrastructures.append(mine)
-						self.parent.parent.affichermine(nom,systemeid,planeteid,x,y)
+						# ! MODIF
 
-	def creerville(self,listeparams):
-		nom,systemeid,planeteid,x,y=listeparams
+	def creerbarrack(self, listeparams):
+		nom, systemeid, planeteid, x, y = listeparams
 		for i in self.systemesvisites:
-			if i.id==systemeid:
+			if i.id == systemeid:
 				for j in i.planetes:
-					if j.id==planeteid:
-						ville=Ville(self,nom,systemeid,planeteid)
-						j.infrastructures.append(ville)
-						self.parent.parent.afficherville(nom,systemeid,planeteid,x,y)
-
-
-	def creergeneratrice(self,listeparams):
-		nom,systemeid,planeteid,x,y=listeparams
-		for i in self.systemesvisites:
-			if i.id==systemeid:
-				for j in i.planetes:
-					if j.id==planeteid:
-						ferme=Ferme(self,nom,systemeid,planeteid,x,y)
-						j.infrastructures.append(ferme)
-						self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
-
-	def creerferme(self,listeparams):
-		nom,systemeid,planeteid,x,y=listeparams
-		for i in self.systemesvisites:
-			if i.id==systemeid:
-				for j in i.planetes:
-					if j.id==planeteid:
-						generatrice=Generatrice(self,nom,systemeid,planeteid,x,y)
-						j.infrastructures.append(generatrice)
-						self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y) """
+					if j.id == planeteid:
+						barrack = Barrack(self, nom, systemeid, planeteid, x, y)
+						barrack.setBarrackMere(self.barrackMere)
+						j.infrastructures.append(barrack)
+						# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
+						self.parent.parent.afficherBatiment(barrack)
 
 	def atterrirplanete(self, d):
 		nom, systeid, planeid = d
@@ -154,6 +152,31 @@ class Joueur():
 				v = VaisseauGalactique(self, self.nom, i)
 				self.vaisseauxinterstellaires.append(v)
 				return 1
+
+	def creerstationGalactique(self,
+	                           id):  ##################################################################  MODIF TRISTAN
+		for i in self.systemesvisites:
+			if i.id == id:
+				sg = StationGalactique(self, self.nom, i, i.x, i.y)
+				self.stationGalactiques.append(sg)
+				return 1
+
+	# debut modif
+	def creerLazerBoi(self, listeparams):
+		nom, systemeid, planeteid, x, y, barrackid = listeparams
+		for i in self.systemesvisites:
+			if i.id == systemeid:
+				for j in i.planetes:
+					if j.id == planeteid:
+						for infrastructure in j.infrastructures:
+							if infrastructure.id == barrackid:
+								lazerboi = infrastructure.creerLazerBoi()
+								lazerboi.x = infrastructure.x
+								lazerboi.y = infrastructure.y
+								self.attaquantTerre.append(lazerboi)
+								self.parent.parent.afficherLazerBoi(lazerboi)
+
+	# fin modif
 
 	def ciblerdestination(self, ids):
 		idori, iddesti = ids
@@ -180,12 +203,10 @@ class Joueur():
 				rep = i.avancer()
 				if rep:
 					if rep in self.parent.systemes:  # ------------------------ verifie si la cible est un systeme
-						# ! ------------------------------------------------ D�BUT MODIF
 						if rep not in self.systemesvisites:
 							self.systemesvisites.append(rep)
 							if self.nom == self.parent.parent.monnom:
 								self.parent.changeetatsystem(self.nom, rep)
-								# ! ------------------------------------------------- FIN MODIF
 					elif rep in self.parent.pulsars:  # ---------------------------- verifie si la cible est une pulsar
 						# ----------------------------------------Teleporte vaisseau vers autre pulsar au hazard
 						teleport = random.choice(self.parent.pulsars)
@@ -194,17 +215,11 @@ class Joueur():
 						i.x = teleport.x
 						i.y = teleport.y
 						print(i.id, " >> TELEPORTE VERS PULSAR ", teleport)
-						"""if rep.proprietaire=="inconnu":
-						if rep not in self.systemesvisites:
-							self.systemesvisites.append(rep)
-							self.parent.changerproprietaire(self.nom,self.couleur,rep)"""
-						# ! ------------------------------------------------------------------ DEBUT MODIF
+
 						if self.nom == self.parent.parent.monnom:
 							if self.parent.parent.vue.modecourant == self.parent.parent.vue.modes["galaxie"]:
 								self.parent.parent.vue.deplacerCanevas(i.x, i.y)
-								# ! ------------------------------------------------------------------- FIN MODIF
 
-	# ! ------------------------------------------------------------ DEBUT MODIF
 	def dechargervaisseaugalactique(self, rep):
 		v = None
 		s = None
@@ -219,7 +234,6 @@ class Joueur():
 
 		if s and v:
 			v.dechargervaisseaugalactique(s)
-			# ! ------------------------------------------------------------- FIN MODIF
 
 	def dechargervaisseaugalactique(self, rep):
 		v = None
@@ -252,7 +266,6 @@ class Joueur():
 			#  print("UPGRADE VITESSE VAISSEAU",id)
 			v.upgradeVitesse(ajout)
 
-	# ! DEBUT MODIF
 	def chargementdansvaisseaugalactique(self, rep):
 		vg = rep[0]
 		vs = rep[1]
@@ -272,4 +285,6 @@ class Joueur():
 		vg.chargementvaisseau(vs)
 
 		self.vaisseauxinterstellaires.pop(vs)
-		# ! FIN MODIF
+
+	def creerstationGalactique(self, rep):
+		pass

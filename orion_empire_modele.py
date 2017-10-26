@@ -141,7 +141,8 @@ class Modele():
 	def dechargerVaisseauGalactique(self, id,
 	                                systeme):  # ! ------------------------------------------------------ METHODE A AJOUTER
 		self.parent.actions.append([self.parent.monnom, "dechargervausseaugalactique", (id, systeme)])
-		# print("ENVOIE DEMANDE DECHARGEMENT")
+
+	# print("ENVOIE DEMANDE DECHARGEMENT")
 
 	def upgradeVitesseVaisseau(self, id, boost):  # ! MODIF ICI
 		# print("DEMANDE UPGRADE VITESSE VAISSEAU",id)

@@ -7,11 +7,11 @@ class Vaisseau():
 		self.id = Id.prochainid()
 		self.proprietaire = nom
 		self.taille = 16
-		self.base = systeme
+		# self.base = systeme
 		self.angletrajet = 0
 		self.degre = 0
-		self.x = self.base.x
-		self.y = self.base.y
+		self.x = systeme.x
+		self.y = systeme.y
 		self.taille = 16
 		self.cargo = 0
 		self.energie = 100
@@ -33,7 +33,7 @@ class Vaisseau():
 			self.x, self.y = hlp.getAngledPoint(self.angletrajet, self.vitesse, self.x, self.y)
 			if hlp.calcDistance(self.x, self.y, x, y) <= self.vitesse:
 				rep = self.cible
-				self.base = self.cible
+				self.systeme_courant = self.cible
 				self.cible = None
 			return rep
 			# else: # ----------------------------------------- s'il n'y a plus d'essence, le vaisseau tombe en panne
@@ -70,7 +70,7 @@ class Vaisseau():
 	def sortir_systeme(self):
 		pass
 
-	def upgradeVitesse(self, boost):  # ! MODIF ICI
+	def upgradeVitesse(self, boost):
 		# print("upgrade vitesse")
 		self.vitesse += boost
 		pass
@@ -111,7 +111,7 @@ class VaisseauGalactique(Vaisseau):
 		Vaisseau.__init__(self, parent, nom, systeme)
 		self.vaisseauxtransportee = []
 
-	def dechargervaisseaugalactique(self, systeme):  # ! ---------------------------------------- METHODE A AJOUTER
+	def dechargervaisseaugalactique(self, systeme):
 		# EN CONSTRUCTION #
 		if len(self.vaisseauxtransportee) > 0:
 			print("DECHARGEMENT VAISSEAU")
@@ -130,12 +130,12 @@ class VaisseauGalactique(Vaisseau):
 			print("AUCUN VAISSEAU TRANSPORTEE")
 		pass
 
-	def chargementvaisseau(self, vaisseau):  # ! METHODE A AJOUTER
+	def chargementvaisseau(self, vaisseau):
 		self.vaisseauxtransportee.append(vaisseau)
 
 	def avancer(self):
 		rep = None
-		if self.cible:  # MODIF ICI
+		if self.cible:
 			# if self.essence > 0: # -------------------------- s'il reste de l'essence, le vaisseau avance
 			# self.essence -= 1 # -------------------------------- -1 unitee d'essence a chaque fois que le vaisseau avance
 			x = self.cible.x
@@ -149,5 +149,10 @@ class VaisseauGalactique(Vaisseau):
 			if dist <= self.vitesse:
 				rep = self.cible
 				self.base = self.cible
+				self.systeme_courant = self.cible  # ! MODIF ICI
 				self.cible = None
+			# ! ----------------------------- DEBUT MODIF
+			elif self.systeme_courant:
+				self.systeme_courant = None
+			# ! -------------------------------- FIN MODIF
 			return rep

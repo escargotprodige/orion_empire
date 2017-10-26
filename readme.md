@@ -1,5 +1,7 @@
 # Orion Empire
 
+http://docs.godotengine.org/en/latest/community/contributing/pr_workflow.html
+
 ## setup (juste une fois)
 
 1. créer un compte / loggez vous sur github

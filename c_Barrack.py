@@ -18,6 +18,7 @@ class ATP(Enum):  # ATTAQUANT_TERRE PARAMETRE
 	PLANETEID = 10
 	PROPRIETAIRE = 11
 	TYPE = 12
+	PRIX = 13
 
 
 class AT_TYPE(Enum):
@@ -42,7 +43,8 @@ class Barrack(Batiment):
 		                                       ATP.SYSTEMID: self.systemeid,
 		                                       ATP.PLANETEID: self.planeteid,
 		                                       ATP.PROPRIETAIRE: self.proprietaire,
-		                                       ATP.TYPE: AT_TYPE.LAZERBOI
+		                                       ATP.TYPE: AT_TYPE.LAZERBOI,
+		                                       ATP.PRIX: 100
 		                                       },
 		                    AT_TYPE.FISTBOI: {ATP.NOM: 'fistBoi',
 		                                      ATP.X: self.x,
@@ -56,18 +58,46 @@ class Barrack(Batiment):
 		                                      ATP.SYSTEMID: self.systemeid,
 		                                      ATP.PLANETEID: self.planeteid,
 		                                      ATP.PROPRIETAIRE: self.proprietaire,
-		                                      ATP.TYPE: AT_TYPE.FISTBOI
+		                                      ATP.TYPE: AT_TYPE.FISTBOI,
+		                                      ATP.PRIX: 100
 		                                      }
 		                    }
+
+	def setBarrackMere(self, barrackMere):
+		dictUnitTemplate = barrackMere.dictUnitTemplate
 
 	def creerLazerBoi(self):
 		t = self.dictUnitTemplat[AT_TYPE.LAZERBOI]
 		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], T[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
 		                        t[ATP.HP], t[ATP.SPEED], t[ATP.DEFENSE], t[ATP.SYSTEMID], t[ATP.PLANETEID],
 		                        t[ATP.PROPRIETAIRE], t[ATP.TYPE])
+		return soldat
 
 	def creerFistBoi(self):
 		t = self.dictUnitTemplat[AT_TYPE.FISTBOI]
 		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], T[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
 		                        t[ATP.HP], t[ATP.SPEED], t[ATP.DEFENSE], t[ATP.SYSTEMID], t[ATP.PLANETEID],
 		                        t[ATP.PROPRIETAIRE], t[ATP.TYPE])
+		return soldat
+
+	def upgradeLazerBoi(self, scale):
+		t = self.dictUnitTemplat[AT_TYPE.LAZERBOI]
+		t[ATP.FAR_RANGE] *= scale
+		t[ATP.NEAR_RANGE] *= scale
+		t[ATP.ATK] *= scale
+		t[ATP.HP] *= scale * 2
+		t[ATP.SPEED] *= scale / 2
+		t[ATP.DEFENSE] *= scale
+		t[ATP.NOM] += 'i'
+		t[ATP.PRIX] *= scale
+
+	def upgradeFistBoi(self, scale):
+		t = self.dictUnitTemplat[AT_TYPE.FISTBOI]
+		t[ATP.FAR_RANGE] *= scale
+		t[ATP.NEAR_RANGE] *= scale
+		t[ATP.ATK] *= scale
+		t[ATP.HP] *= scale / 2
+		t[ATP.SPEED] *= scale * 2
+		t[ATP.DEFENSE] *= scale
+		t[ATP.NOM] += 'i'
+		t[ATP.PRIX] *= scale

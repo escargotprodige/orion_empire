@@ -44,7 +44,7 @@ class Planete():
 
 		self.genTerrainRessource()
 
-		self.parent.parent.parent.vue.attenteloading()  # ! Ligne a ajouter
+		self.parent.parent.parent.vue.attenteloading()
 
 		self.delais = 5
 

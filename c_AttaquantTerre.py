@@ -1,5 +1,6 @@
 from IdMaker import *
 from mathPlus import *
+from test.test_threading_local import target
 
 
 class AttaquantTerre:
@@ -10,7 +11,7 @@ class AttaquantTerre:
 		self.atk = atk
 		self.defense = defense
 		self.hp = hp
-		sel.speed = speed
+		self.speed = speed
 		self.x = x
 		self.y = y
 		self.id = ID.Id.prochainid()
@@ -20,19 +21,36 @@ class AttaquantTerre:
 		self.nom = nom
 		self.type = type
 		self.target = None
+		self.isTargetInRange = False
 
-	def setTarget(self):
-		pass
+		self.targetPositionX = None
+		self.targetPositionY = None
 
 	def attaquer(self):
-		pass
+		# v�rifie s'il existe un target
+		if self.target == None:
+			pass
 
-	def avancer(self):
-		# utilise isinstance
-		pass
+		# fait avancer l'Attaquant vers son target
+		dist = distance(self.x, self.y, self.target.x, self.target.y)
+		if (dist <= self.farRange and dist >= self.nearRange):
+			self.avancer(self.target.x, self.target.y)
+			self.isTargetInRange = False;
+		else:
+			self.isTargetInRange = True;
 
-	def upgrade(self):
-		pass
+		# fait attaquer l'attaquant quand celui-ci est rendu a destination
+		if (self.isTargetInRange):
+			damage = self.atk - target.defense
+			if (damage > 1):
+				target.hp -= damage
+			else:
+				target.hp -= 1
+
+	def avancer(self, x, y):
+		dirVers = directionVers(self.x, self.y, x, y)
+		self.x += dirVers[0]
+		self.y += dirVers[1]
 
 	def arboderBoat(self, target):
 		pass

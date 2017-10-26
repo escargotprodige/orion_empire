@@ -16,7 +16,7 @@ class Pulsar():
 		self.maxtaille = self.mintaille + +random.randrange(1, 3)
 		self.pas = self.maxtaille / self.periode
 		self.taille = self.mintaille
-		self.destination = None  # ! ------------------------------------ Ajout variable
+		self.destination = None
 
 	def evoluer(self):
 		self.moment = self.moment + self.phase

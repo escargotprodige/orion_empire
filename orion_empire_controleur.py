@@ -79,7 +79,7 @@ class Controleur():
 	                  rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
 		if rep[1][0][0] == "lancerpartie":
 			# print("REP",rep)
-			self.vue.changecadre(self.vue.cadreloading)  # ! MODIF ICI
+			self.vue.changecadre(self.vue.cadreloading)
 			self.modele = Modele(self, rep[1][0][1], rep[1][0][2])  # on cree le modele
 			self.vue.afficherinitpartie(self.modele)
 			# print(self.monnom,"LANCE PROCHAINTOUR")
@@ -159,7 +159,14 @@ class Controleur():
 		self.modele.creervaisseau(systeme)
 		# self.actions.append([self.monnom,"creervaisseau",""])
 
-	def creerstationGalactique(self, systeme):  ##############################################  MODIF TRISTAN
+		# ! debut modif
+
+	def creerLazerBoi(self, systeme):
+		self.modele.creerlazerboi(systeme)
+
+	# !fin modif
+
+	def creerstationGalactique(self, systeme):
 		self.modele.creerstationGalactique(systeme)
 
 	def creervaisseauGalactique(self, systeme):
@@ -174,7 +181,7 @@ class Controleur():
 	def atterrirdestination(self, joueur, systeme, planete):
 		self.actions.append([self.monnom, "atterrirplanete", [self.monnom, systeme, planete]])
 
-	def creergeneratrice(self, joueur, systeme, planete, x, y):  # ! DEBUT
+	def creergeneratrice(self, joueur, systeme, planete, x, y):
 		self.actions.append([self.monnom, "creergeneratrice", [self.monnom, systeme, planete, x, y]])
 
 	def creerferme(self, joueur, systeme, planete, x, y):  # !
@@ -186,20 +193,22 @@ class Controleur():
 	def creerville(self, joueur, systeme, planete, x, y):
 		self.actions.append([self.monnom, "creerville", [self.monnom, systeme, planete, x, y]])
 
-		# ! modif
-
 	def creerbarrack(self, joueur, systeme, planete, x, y):
 		self.actions.append([self.monnom, "creerbarrack", [self.monnom, systeme, planete, x, y]])
-
-	# fin modif
 
 	def afficherBatiment(self, Batiment):
 		self.vue.afficherBatiment(Batiment)
 
+	# ! debut modif
+	def afficherLazerBoi(self, lazerBoi):
+		self.vue.afficherLazerBoi(lazerBoi)
+
+	# !fin modif
+
 	def effacerBatiment(self, Batiment):
 		self.vue.effacerBatiment(Batiment)
 
-	def changeetatsystem(self, nom, systeme):  # ! ------------------------------ AJOUTER M�THODE
+	def changeetatsystem(self, nom, systeme):
 		self.vue.modes["galaxie"].changeetatsystem(nom, systeme)
 
 	def voirplanete(self, idsysteme, idplanete):
@@ -208,15 +217,15 @@ class Controleur():
 	def changerproprietaire(self, nom, couleur, systeme):
 		self.vue.modes["galaxie"].changerproprietaire(nom, couleur, systeme)
 
-	def dechargerVaisseauGalactique(self, id, systeme):  # ! MODIF ICI
+	def dechargerVaisseauGalactique(self, id, systeme):
 		print("DEMANDE DECHARGEMENT")
 		self.modele.dechargerVaisseauGalactique(id, systeme)
 
-	def upgradeVitesseVaisseau(self, id, boost):  # ! MODIF ICI
+	def upgradeVitesseVaisseau(self, id, boost):
 		self.modele.upgradeVitesseVaisseau(id, boost)
 
 	def chargedansvaisseaugalactique(self, vg, vs):
-		self.modele.chargedansvaisseaugalactique(vg, vs)  # ! MODIF ICI
+		self.modele.chargedansvaisseaugalactique(vg, vs)
 
 
 if __name__ == "__main__":

@@ -19,6 +19,7 @@ $ git fetch upstream
 ## travailler sur une fonctionnalité
 
 créer une nouvelle branche pour le nouveau code
+<nouveau-feature> = nom de la nouvelle fonctionnalité
 ```sh
 $ git checkout -b <nouveau-feature>
 ```
@@ -28,8 +29,9 @@ mettre à jour la branche
 $ git pull --rebase upstream master
 ```
 
-faites vos commits
-push vers votre fork
+1. codez
+2. faites vos commits  
+3. push vers votre fork
 
 ```sh
 $ git push origin <nouveau-feature>

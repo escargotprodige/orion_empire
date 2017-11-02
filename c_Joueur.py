@@ -30,8 +30,6 @@ class Joueur():
 		                "creervaisseauSolaire": self.creervaisseauSolaire
 		                }
 
-		self.stationGalactiques = []
-
 		self.planeteOrigine = random.choice(self.systemeorigine.planetes)
 		self.planeteOrigine.proprietaire = self.nom
 		# self.creerVilleOrigine()
@@ -153,14 +151,15 @@ class Joueur():
 				v = VaisseauGalactique(self, self.nom, i)
 				self.vaisseauxinterstellaires.append(v)
 				return 1
-
-	def creerstationGalactique(self,
-	                           id):  ##################################################################  MODIF TRISTAN
+			
+	def creerstationGalactique(self, id):  ##################################################################  MODIF TRISTAN
+		print('creerstationGalactique')
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
+
 
 	# debut modif
 	def creerLazerBoi(self, listeparams):
@@ -286,6 +285,3 @@ class Joueur():
 		vg.chargementvaisseau(vs)
 
 		self.vaisseauxinterstellaires.pop(vs)
-
-	def creerstationGalactique(self, rep):
-		pass

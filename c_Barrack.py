@@ -21,9 +21,6 @@ class ATP(Enum):  # ATTAQUANT_TERRE PARAMETRE
 	PRIX = 13
 
 
-class AT_TYPE(Enum):
-	LAZERBOI = 0
-	FISTBOI = 1
 
 
 class Barrack(Batiment):
@@ -64,17 +61,37 @@ class Barrack(Batiment):
 		                    }
 
 	def setBarrackMere(self, barrackMere):
-		dictUnitTemplate = barrackMere.dictUnitTemplate
+		b = self.dictUnitTemplat[AT_TYPE.LAZERBOI]
+		bm = barrackMere.dictUnitTemplat[AT_TYPE.LAZERBOI]
+		
+		b[ATP.NEAR_RANGE] = bm[ATP.NEAR_RANGE]
+		b[ATP.FAR_RANGE] = bm[ATP.FAR_RANGE]
+		b[ATP.ATK] = bm[ATP.ATK]
+		b[ATP.HP] = bm[ATP.HP]
+		b[ATP.SPEED] = bm[ATP.SPEED]
+		b[ATP.DEFENSE] = bm[ATP.DEFENSE]
+		b[ATP.PRIX] = bm[ATP.PRIX]
+		
+		b = self.dictUnitTemplat[AT_TYPE.FISTBOI]
+		bm = barrackMere.dictUnitTemplat[AT_TYPE.FISTBOI]
+		
+		b[ATP.NEAR_RANGE] = bm[ATP.NEAR_RANGE]
+		b[ATP.FAR_RANGE] = bm[ATP.FAR_RANGE]
+		b[ATP.ATK] = bm[ATP.ATK]
+		b[ATP.HP] = bm[ATP.HP]
+		b[ATP.SPEED] = bm[ATP.SPEED]
+		b[ATP.DEFENSE] = bm[ATP.DEFENSE]
+		b[ATP.PRIX] = bm[ATP.PRIX]
 
 	def creerLazerBoi(self):
-		t = self.dictUnitTemplat[AT_TYPE.LAZERBOI]
+		t = self.dictUnitTemplate[AT_TYPE.LAZERBOI]
 		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], T[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
 		                        t[ATP.HP], t[ATP.SPEED], t[ATP.DEFENSE], t[ATP.SYSTEMID], t[ATP.PLANETEID],
 		                        t[ATP.PROPRIETAIRE], t[ATP.TYPE])
 		return soldat
 
 	def creerFistBoi(self):
-		t = self.dictUnitTemplat[AT_TYPE.FISTBOI]
+		t = self.dictUnitTemplate[AT_TYPE.FISTBOI]
 		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], T[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
 		                        t[ATP.HP], t[ATP.SPEED], t[ATP.DEFENSE], t[ATP.SYSTEMID], t[ATP.PLANETEID],
 		                        t[ATP.PROPRIETAIRE], t[ATP.TYPE])

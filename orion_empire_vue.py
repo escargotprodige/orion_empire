@@ -1102,23 +1102,97 @@ class VuePlanete(Perspective):
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
 		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
+		self.chargeimages()
 
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
 			self.boutonShop.config(text="Shop ˃")
 			self.cadreShop = None
 		else:
-			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
+			self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
 			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-			shopVille = Button(self.cadreShop, text="Ville", command=self.creerville)
+			
+			shopVille = Button(self.cadreShop, text="Ville", image=self.images["miniVille"], compound="top", command=self.infoVilleShop)
 			shopVille.grid(row=0, column=0)
-			shopMine = Button(self.cadreShop, text="Mine", command=self.creermine)
+			shopMine = Button(self.cadreShop, text="Mine", image=self.images["miniMine"], compound="top",  command=self.creermine)
 			shopMine.grid(row=0, column=1)
-			shopGeneratrice = Button(self.cadreShop, text="Generatrice", command=self.creergeneratrice)
+			shopGeneratrice = Button(self.cadreShop, text="Generatrice", image=self.images["miniGen"], compound="top",  command=self.creergeneratrice)
 			shopGeneratrice.grid(row=0, column=2)
-			shopFerme = Button(self.cadreShop, text="Ferme", command=self.creeferme)
-			shopFerme.grid(row=0, column=3)
+			shopFerme = Button(self.cadreShop, text="Ferme", image=self.images["miniFerm"], compound="top",  command=self.creeferme)
+			shopFerme.grid(row=1, column=0)
+			shopBarrack = Button(self.cadreShop, text="Barrack", image=self.images["miniBarra"], compound="top",  command=self.creeBarrack)
+			shopBarrack.grid(row=1, column=1)
 
+	def infoShop(self, typeBatiment):
+		self.cadreInfoShop =  Frame(self.cadreShop, width=200, height=100, bg="white")
+		self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+		#Infos batiment
+		labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
+		labelNom = Label(self.cadreInfoShop, text="Ville")
+		labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
+		#Infos ressources Batiment
+		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Metal")
+		labelInfo2 = Label(self.cadreInfoShop, text="+1/sec Food")
+		labelInfo3 = Label(self.cadreInfoShop, text="+1/sec Energie")
+		#Cout batiment
+		labelCout1 = Label(self.cadreInfoShop, text="-20 Metal")
+		labelCout2 = Label(self.cadreInfoShop, text="-20 Food")
+		labelCout3 = Label(self.cadreInfoShop, text="-20 Energie")
+		#Boutons
+		boutonAcheter = Button(self.cadreInfoShop, text="Acheter", command=self.creerville)
+		
+		if typeBatiment is "ville":
+			labelImage.config(image=self.images["miniVille"])
+			labelNom.config(text="Ville")
+			labelInfo1.config(text="")
+	
+		#grid tout
+			#batiment
+		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
+		labelNom.grid(row=2,column=0, columnspan=2, rowspan=2)
+		labelLvl.grid(row=3,column=0, columnspan=2, rowspan=2)
+			#ressources +
+		labelInfo1.grid(row=0, column=3)
+		labelInfo2.grid(row=1, column=3)
+		labelInfo3.grid(row=2, column=3)
+			#ressources -
+		labelCout1.grid(row=0, column=4)
+		labelCout2.grid(row=1, column=4)
+		labelCout3.grid(row=2, column=4)
+			#bouton
+		boutonAcheter.grid(row=3, column=4)
+		
+	def infoVilleShop(self):
+		self.cadreInfoShop =  Frame(self.cadreShop, width=200, height=100, bg="lightgray")
+		self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+		
+		labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
+		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
+		labelNom = Label(self.cadreInfoShop, text="Ville")
+		labelNom.grid(row=2,column=0)
+		labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
+		labelLvl.grid(row=3,column=0)
+		
+		#Infos Batiment
+		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Metal")
+		labelInfo1.grid(row=0, column=3)
+		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Food")
+		labelInfo1.grid(row=1, column=3)
+		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Energie")
+		labelInfo1.grid(row=2, column=3)
+		
+		#Cout batiment
+		labelCout1 = Label(self.cadreInfoShop, text="-20 Metal")
+		labelCout1.grid(row=0, column=4)
+		labelCout1 = Label(self.cadreInfoShop, text="-20 Food")
+		labelCout1.grid(row=1, column=4)
+		labelCout1 = Label(self.cadreInfoShop, text="-20 Energie")
+		labelCout1.grid(row=2, column=4)
+		
+		#Boutons
+		boutonAcheter = Button(self.cadreInfoShop, text="Acheter", command=self.creerville)
+		boutonAcheter.grid(row=3, column=4)
+	
 	def creermine(self):
 		self.macommande = "mine"
 
@@ -1188,6 +1262,17 @@ class VuePlanete(Perspective):
 		im = Image.open("./images/mine_100.png")
 		self.images["barrack"] = ImageTk.PhotoImage(im)
 
+		im = Image.open("./images/ville_50.png")
+		self.images["miniVille"] = ImageTk.PhotoImage(im)
+		im = Image.open("./images/mine_50.png")
+		self.images["miniMine"] = ImageTk.PhotoImage(im)
+		im = Image.open("./images/generatrice_50.png")
+		self.images["miniGen"] = ImageTk.PhotoImage(im)
+		im = Image.open("./images/ferme_50.png")
+		self.images["miniFerm"] = ImageTk.PhotoImage(im)
+		im = Image.open("./images/mine_50.png")
+		self.images["miniBarra"] = ImageTk.PhotoImage(im)
+		
 	def afficherdecor(self):
 		pass
 
@@ -1212,11 +1297,13 @@ class VuePlanete(Perspective):
 		pass
 
 	def cliquervue(self, evt):
+		
 		t = self.canevas.gettags("current")
 		if t and t[0] != "current":
 			if t[0] == self.parent.nom:
 				pass
-			elif t[1] == "systeme":
+			elif t[1] == "mine":
+				print("mine mine mine") #!!!
 				pass
 		else:
 			x = self.canevas.canvasx(evt.x)

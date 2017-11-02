@@ -1,6 +1,6 @@
 from orion_empire_modele import *
 
 
-class Station():
+class StationGalactique():
 	def __init__(self):
 		pass

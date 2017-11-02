@@ -1,5 +1,6 @@
 from orion_empire_modele import *
-
+import c_Vaisseau
+from c_StationGalactique import *
 
 class Joueur():
 	def __init__(self, parent, nom, systemeorigine, couleur):
@@ -54,7 +55,8 @@ class Joueur():
 
 		# return coords
 
-	def creervaisseauSolaire(self, systemeid, planeteid, type_vaisseau):
+	def creervaisseauSolaire(self, listeparams): #, systemeid, planeteid, type_vaisseau=c_Vaisseau.VaisseauTransport):
+		systemeid, planeteid, type_vaisseau = listeparams
 		for i in self.systemesvisites:
 			if i.id == systemeid:
 				for j in i.planetes:

@@ -911,6 +911,7 @@ class VueSysteme(Perspective):
 
 	def afficherpartie(self, mod):
 		self.canevas.delete("planete")
+		self.canevas.delete("vaisseau")
 		self.minimap.delete("planete")
 
 		xl = self.largeur / 2
@@ -933,6 +934,9 @@ class VueSysteme(Perspective):
 					self.canevas.create_oval((x) - n - 1, (y) - n - 1, (x) + n, (y) + n - 1, dash=(2, 2),
 					                         outline=self.modele.joueurs[self.parent.nom].couleur,
 					                         tags=("select", "selecteur"))
+
+		for v in self.systeme.vaisseaux:
+			pass
 
 	def changerproprietaire(self):
 		pass
@@ -1049,6 +1053,14 @@ class VueSysteme(Perspective):
 				print("AUCUN VAISSEAU GALACTIQUE PRESENT À CE SYSTEME")
 
 		pass
+
+	def chargeimages(self):
+		im = Image.open("./images/v_attaque.png")
+		self.images["attaque"] = ImageTk.PhotoImage(im)
+		im = Image.open("./images/v_collonie.png")
+		self.images["collonie"] = ImageTk.PhotoImage(im)
+		im = Image.open("./images/v_tranport.png")
+		self.images["transport"] = ImageTk.PhotoImage(im)
 
 
 class VuePlanete(Perspective):

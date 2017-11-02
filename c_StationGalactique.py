@@ -18,7 +18,8 @@ class StationGalactique():
     def orbiter(self):
         self.delais -= 1
         if self.delais <= 0:
-            self.delais = 5
+            #self.delais = 5 
+            self.delais = 0
             self.angle += 1
             if self.angle >= 360:
                 self.angle = 0

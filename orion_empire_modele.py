@@ -132,7 +132,10 @@ class Modele():
         for i in self.systemes:
             for p in i.planetes:
                 p.orbiter()
-
+        
+        for i in self.joueurs: #################################################################################### MODIF TRISTAN
+            for s in self.joueurs[i].stationGalactiques:
+                s.orbiter()
         self.parent.vue.modecourant.updateRessources(self.joueurs[self.parent.monnom])  # !
 
     def changeetatsystem(self, nom, systeme):  # ! ------------------------------ AJOUTER M�THODE

@@ -27,6 +27,7 @@ class Joueur():
 		                "upgradevitessevaisseau": self.upgradeVitesseVaisseau,
 		                "creerbarrack": self.creerbarrack,
 		                "creerlazerboi": self.creerLazerBoi,
+		                "creervaisseauSolaire": self.creervaisseauSolaire
 		                }
 
 		self.stationGalactiques = []
@@ -53,7 +54,7 @@ class Joueur():
 
 		# return coords
 
-	def creer_vaisseau_solaire(self, systemeid, planeteid, type_vaisseau):
+	def creervaisseauSolaire(self, systemeid, planeteid, type_vaisseau):
 		for i in self.systemesvisites:
 			if i.id == systemeid:
 				for j in i.planetes:

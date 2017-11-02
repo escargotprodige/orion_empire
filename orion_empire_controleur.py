@@ -155,11 +155,8 @@ class Controleur():
 		self.vue.root.destroy()
 
 	# FONCTIONS DE COUP DU JOUEUR A ENVOYER AU SERVEUR
-	def creervaisseau(self, systeme):
-		self.modele.creervaisseau(systeme)
-		# self.actions.append([self.monnom,"creervaisseau",""])
-
-		# ! debut modif
+	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
+		self.modele.creervaisseauSolaire(systeme, planete, typeVaisseau)
 
 	def creerLazerBoi(self, systeme):
 		self.modele.creerlazerboi(systeme)

@@ -500,7 +500,7 @@ class VueGalaxie(Perspective):
 			t = i.etoile.taille * 3
 			if t < 3:
 				t = 3
-
+			
 			self.canevas.create_oval((i.x * e) - t, (i.y * e) - t, (i.x * e) + t, (i.y * e) + t, fill=i.etoile.outline,
 			                         tags=("inconnu", "systeme", i.id, str(i.x), str(i.y)))
 
@@ -900,7 +900,11 @@ class VueSysteme(Perspective):
 		self.affichermodelestatique(i)
 
 	def creervaisseau(self):
-		pass
+		if self.maselection:
+			print(self.maselection)
+			self.parent.parent.creervaisseauSolaire(self.maselection[4],self.maselection[2],0)
+			self.maselection = None
+			self.canevas.delete("selecteur")
 
 	def creerstation(self):
 		print("Creer station EN CONSTRUCTION")
@@ -954,6 +958,7 @@ class VueSysteme(Perspective):
 							                         tags=("select", "selecteur"))
 
 							p.selectionne = True
+			'''
 			elif self.maselection[1] == "vaisseauSolaire":
 				for i in joueur.vaisseauxinterstellaires:
 					if i.id == self.maselection[2]:
@@ -963,7 +968,7 @@ class VueSysteme(Perspective):
 						self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
 						                              outline=joueur.couleur,
 						                              tags=("select", "selecteur"))
-
+			'''
 	def cliquervue(self, evt):
 		self.changecadreetat(None)
 

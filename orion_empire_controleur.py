@@ -214,8 +214,8 @@ class Controleur():
 	def voirplanete(self, idsysteme, idplanete):
 		pass
 
-    def chargedansvaisseaugalactique(self, vg, vs):
-        self.modele.chargedansvaisseaugalactique(vg, vs)
+	def chargedansvaisseaugalactique(self, vg, vs):
+		self.modele.chargedansvaisseaugalactique(vg, vs)
 
 
 if __name__ == "__main__":

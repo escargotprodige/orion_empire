@@ -1115,262 +1115,351 @@ class VueSysteme(Perspective):
 
 
 class VuePlanete(Perspective):
-	def __init__(self, parent, syste, plane):
-		Perspective.__init__(self, parent)
-		self.modele = self.parent.modele
+    def __init__(self, parent, syste, plane):
+        Perspective.__init__(self, parent)
+        self.modele = self.parent.modele
 
-		self.planeteid = plane
-		self.planete = None
-		self.systeme = syste
-		#self.infrastructures = {}
-		self.maselection = None
-		self.macommande = None
+        self.planeteid = plane
+        self.planete = None
+        self.systeme = syste
+        self.infrastructures = {}
+        self.maselection = None
+        self.macommande = None
 
-		self.KM2pixel = 100  # ainsi la terre serait a 100 pixels du soleil et Uranus a 19 Unites Astronomique
-		self.largeur = int(self.modele.diametre * self.KM2pixel)
-		self.hauteur = self.largeur
+        self.KM2pixel = 100  # ainsi la terre serait a 100 pixels du soleil et Uranus a 19 Unites Astronomique
+        self.largeur = int(self.modele.diametre * self.KM2pixel)
+        self.hauteur = self.largeur
 
-		# recherche l'object planet actuel via planetid
-		for s in self.modele.systemes:
-			if s.id == self.systeme:
-				for p in s.planetes:
-					if p.id == self.planeteid:
-						self.planete = p
-						break						
-		
-		self.canevas.config(scrollregion=(0, 0, self.largeur * 5, self.hauteur * 5))
-		self.canevas.config(bg="black")
+        # recherche l'object planet actuel via planetid
+        for s in self.modele.systemes:
+            if s.id == self.systeme:
+                for p in s.planetes:
+                    if p.id == self.planeteid:
+                        self.planete = p
 
-		self.tailleTile = self.largeur * 5 / self.planete.terrainTailleCarre
+        self.canevas.config(scrollregion=(0, 0, self.largeur * 5, self.hauteur * 5))
+        self.canevas.config(bg="black")
 
-		self.tailleterrainpixel = self.tailleTile * self.planete.terrainTailleCarre  # ! AJOUTER VARIABLE
+        tailleTile = self.largeur * 5 / self.planete.terrainTailleCarre
 
-		# ajouter appliquer les couleurs de la carte
-		for i in range(self.planete.terrainTailleCarre):
-			for j in range(self.planete.terrainTailleCarre):
-				self.canevas.create_rectangle(i * self.tailleTile, j * self.tailleTile, i * self.tailleTile + self.tailleTile,
-				                              j * self.tailleTile + self.tailleTile, fill=self.planete.terrainColor[i][j],
-				                              outline="")
+        self.tailleterrainpixel = tailleTile * self.planete.terrainTailleCarre  # ! AJOUTER VARIABLE
 
-		self.afficherUI()
+        # ajouter appliquer les couleurs de la carte
+        for i in range(self.planete.terrainTailleCarre):
+            for j in range(self.planete.terrainTailleCarre):
+                self.canevas.create_rectangle(i * tailleTile, j * tailleTile, i * tailleTile + tailleTile,
+                                              j * tailleTile + tailleTile, fill=self.planete.terrainColor[i][j],
+                                              outline="")
 
-	def afficherUI(self):
-		Perspective.afficherUI(self)
-		self.cadreShop = None
-		self.cadreJoueur = None
-		self.cadreSelection = None
-		self.chargeimages()
+        self.afficherUI()
 
-		boutonBack = Button(self.cadreetat, text="←", command=self.voirsysteme)
-		boutonBack.grid(row=0, column=0)
-		# boutonNext=Button(self.cadreetat,text="→",command=self.voirsysteme)
-		# boutonNext.grid(row=0,column=5)
+    def afficherUI(self):
+        Perspective.afficherUI(self)
+        self.cadreShop = None
+        self.cadreInfoShop = None
+        self.cadreJoueur = None
+        self.cadreSelection = None
+        self.cadreJoueur = None
+        self.chargeimages()
 
-		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
-		self.boutonShop.grid(row=2, column=0)
+        boutonBack = Button(self.cadreetat, text="←", command=self.voirsysteme)
+        boutonBack.grid(row=0, column=0, sticky= N + W)
+        # boutonNext=Button(self.cadreetat,text="→",command=self.voirsysteme)
+        # boutonNext.grid(row=0,column=5)
 
-	def afficherShop(self):
-		self.boutonShop.config(text="Shop ˅")
-		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
-		
+        self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
+        self.boutonShop.grid(row=1, column=0, sticky= W)
+        self.boutonSelect = Button(self.cadreetat, text="Selection >", )
+        self.boutonSelect.grid(row=10,column=0,sticky = W)
 
-		if self.cadreShop:
-			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
-			self.cadreShop = None
-		else:
-			self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
-			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-			
-			shopVille = Button(self.cadreShop, text="Ville", image=self.images["miniVille"], compound="top", command=self.infoVilleShop)
-			shopVille.grid(row=0, column=0)
-			shopMine = Button(self.cadreShop, text="Mine", image=self.images["miniMine"], compound="top",  command=self.creermine)
-			shopMine.grid(row=0, column=1)
-			shopGeneratrice = Button(self.cadreShop, text="Generatrice", image=self.images["miniGen"], compound="top",  command=self.creergeneratrice)
-			shopGeneratrice.grid(row=0, column=2)
-			shopFerme = Button(self.cadreShop, text="Ferme", image=self.images["miniFerm"], compound="top",  command=self.creeferme)
-			shopFerme.grid(row=1, column=0)
-			shopBarrack = Button(self.cadreShop, text="Barrack", image=self.images["miniBarra"], compound="top",  command=self.creeBarrack)
-			shopBarrack.grid(row=1, column=1)
+    def afficherSelection(self):
+        self.boutonSelect.config(text="Selection ˅")
+        if self.cadreShop:
+            self.cadreShop.grid_forget()
+            self.boutonShop.config(text="Shop ˃")
+            self.cadreShop = None
+        else: 
+            pass
+        
+        if self.cadreSelection:
+            self.cadreSelection.grid_forget()
+            self.boutonSelect.config(text="Selection ˃")
+            self.cadreSelection = None
+        else:
+            self.cadreSelection = Frame(self.cadreetat, width=200, height=400, bg="blue")
+            self.cadreSelection.grid(row=11, column=0, columnspan=5, rowspan=5)
+        
+        if self.maselection is None:
+            label = Label(self.cadreSelection, text="Veillez selectionner un objet")
+            label.grid()
+        else:
+            pass
+        
+        
+    def afficherShop(self):
+        self.boutonShop.config(text="Shop ˅")
+        #enlever les autres cadres
+        if self.cadreSelection:
+            self.cadreSelection.grid_forget()
+            self.boutonSelect.config(text="Selection >")
+            self.cadreSelection = None
+        else:
+            pass    
+        
+        if self.cadreShop:
+            self.cadreShop.grid_forget()
+            self.boutonShop.config(text="Shop ˃")
+            self.cadreShop = None
+        else:
+            self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
+            self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+            
+            shopVille = Button(self.cadreShop, text="Ville", image=self.images["miniVille"], compound="top", command=self.infoVille)
+            shopVille.grid(row=0, column=0)
+            shopMine = Button(self.cadreShop, text="Mine", image=self.images["miniMine"], compound="top",  command=self.infoMine)
+            shopMine.grid(row=0, column=1)
+            shopGeneratrice = Button(self.cadreShop, text="Generatrice", image=self.images["miniGen"], compound="top",  command=self.infoGeneratrice)
+            shopGeneratrice.grid(row=0, column=2)
+            shopFerme = Button(self.cadreShop, text="Ferme", image=self.images["miniFerm"], compound="top",  command=self.infoFerme)
+            shopFerme.grid(row=1, column=0)
+            shopBarrack = Button(self.cadreShop, text="Barrack", image=self.images["miniBarra"], compound="top",  command=self.infoBarrack)
+            shopBarrack.grid(row=1, column=1)
 
-	def infoShop(self, typeBatiment):
-		self.cadreInfoShop =  Frame(self.cadreShop, width=200, height=100, bg="white")
-		self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-		#Infos batiment
-		labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
-		labelNom = Label(self.cadreInfoShop, text="Ville")
-		labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
-		#Infos ressources Batiment
-		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Metal")
-		labelInfo2 = Label(self.cadreInfoShop, text="+1/sec Food")
-		labelInfo3 = Label(self.cadreInfoShop, text="+1/sec Energie")
-		#Cout batiment
-		labelCout1 = Label(self.cadreInfoShop, text="-20 Metal")
-		labelCout2 = Label(self.cadreInfoShop, text="-20 Food")
-		labelCout3 = Label(self.cadreInfoShop, text="-20 Energie")
-		#Boutons
-		boutonAcheter = Button(self.cadreInfoShop, text="Acheter", command=self.creerville)
-		
-		if typeBatiment is "ville":
-			labelImage.config(image=self.images["miniVille"])
-			labelNom.config(text="Ville")
-			labelInfo1.config(text="")
-	
-		#grid tout
-			#batiment
-		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
-		labelNom.grid(row=2,column=0, columnspan=2, rowspan=2)
-		labelLvl.grid(row=3,column=0, columnspan=2, rowspan=2)
-			#ressources +
-		labelInfo1.grid(row=0, column=3)
-		labelInfo2.grid(row=1, column=3)
-		labelInfo3.grid(row=2, column=3)
-			#ressources -
-		labelCout1.grid(row=0, column=4)
-		labelCout2.grid(row=1, column=4)
-		labelCout3.grid(row=2, column=4)
-			#bouton
-		boutonAcheter.grid(row=3, column=4)
-		
-	def infoVilleShop(self):
-		self.cadreInfoShop =  Frame(self.cadreShop, width=200, height=100, bg="lightgray")
-		self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-		
-		labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
-		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
-		labelNom = Label(self.cadreInfoShop, text="Ville")
-		labelNom.grid(row=2,column=0)
-		labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
-		labelLvl.grid(row=3,column=0)
-		
-		#Infos Batiment
-		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Metal")
-		labelInfo1.grid(row=0, column=3)
-		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Food")
-		labelInfo1.grid(row=1, column=3)
-		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Energie")
-		labelInfo1.grid(row=2, column=3)
-		
-		#Cout batiment
-		labelCout1 = Label(self.cadreInfoShop, text="-20 Metal")
-		labelCout1.grid(row=0, column=4)
-		labelCout1 = Label(self.cadreInfoShop, text="-20 Food")
-		labelCout1.grid(row=1, column=4)
-		labelCout1 = Label(self.cadreInfoShop, text="-20 Energie")
-		labelCout1.grid(row=2, column=4)
-		
-		#Boutons
-		boutonAcheter = Button(self.cadreInfoShop, text="Acheter", command=self.creerville)
-		boutonAcheter.grid(row=3, column=4)
-	
-	def creermine(self):
-		self.macommande = "mine"
 
-	def creerville(self):
-		self.macommande = "ville"
+    def infoShop(self, typeBatiment):
+        #couts
+        c = Cout()
+        
+        #creer cadre
+        if self.cadreInfoShop:
+            self.cadreInfoShop.grid_forget()
+            self.cadreInfoShop = None
+        else:
+            pass
+        self.cadreInfoShop =  Frame(self.cadreShop, width=200, height=100)
+        self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+        #Infos batiment
+        labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
+        labelNom = Label(self.cadreInfoShop, text="Ville")
+        labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
+        #Infos ressources Batiment
+        #label = Label(self.cadreInfoShop, text="Ressources")
+        #label.grid(row=0,column=3)
+        #labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Metal")
+        #labelInfo2 = Label(self.cadreInfoShop, text="+1/sec Food")
+        #labelInfo3 = Label(self.cadreInfoShop, text="+1/sec Energie")
+        #Cout batiment
+        label = Label(self.cadreInfoShop, text="Cout")
+        label.grid(row=0,column=2, columnspan= 2)
+        label = Label(self.cadreInfoShop, text="Metal")
+        label.grid(row=1, column=2)
+        label = Label(self.cadreInfoShop, text="Energie")
+        label.grid(row=2, column=2)
+        label = Label(self.cadreInfoShop, text="Food")
+        label.grid(row=3, column=2)
+        
+        labelCoutMetal = Label(self.cadreInfoShop, text="")
+        labelCoutEnergie = Label(self.cadreInfoShop, text="")
+        labelCoutFood = Label(self.cadreInfoShop, text="")
+        
+        #Boutons
+        boutonAcheter = Button(self.cadreInfoShop, text="Acheter")
+        
+        if typeBatiment is "ville":
+            labelImage.config(image=self.images["miniVille"])
+            labelNom.config(text="Ville")
+            labelCoutMetal.config(text=c.ville["metal"])
+            labelCoutEnergie.config(text=c.ville["energie"])
+            labelCoutFood.config(text=c.ville["nourriture"])
+            boutonAcheter.config(command=self.creerville)
+        elif typeBatiment is "mine":
+            labelImage.config(image=self.images["miniMine"])
+            labelNom.config(text="Mine")
+            labelCoutMetal.config(text=c.mine["metal"])
+            labelCoutEnergie.config(text=c.mine["energie"])
+            labelCoutFood.config(text=c.mine["nourriture"])
+            boutonAcheter.config(command=self.creermine)
+        elif typeBatiment is "generatrice":
+            labelImage.config(image=self.images["miniGen"])
+            labelNom.config(text="Generatrice")
+            labelCoutMetal.config(text=c.generatrice["metal"])
+            labelCoutEnergie.config(text=c.generatrice["energie"])
+            labelCoutFood.config(text=c.generatrice["nourriture"])
+            boutonAcheter.config(command=self.creergeneratrice)
+        elif typeBatiment is "ferme":
+            labelImage.config(image=self.images["miniFerm"])
+            labelNom.config(text="Ferme")
+            labelCoutMetal.config(text=c.generatrice["metal"])
+            labelCoutEnergie.config(text=c.generatrice["energie"])
+            labelCoutFood.config(text=c.generatrice["nourriture"])
+            boutonAcheter.config(command=self.creeferme)
+        elif typeBatiment is "barrack":
+            labelImage.config(image=self.images["miniBarra"])
+            labelNom.config(text="Barrack")
+            labelCoutMetal.config(text=c.generatrice["metal"])
+            labelCoutEnergie.config(text=c.generatrice["energie"])
+            labelCoutFood.config(text=c.generatrice["nourriture"])
+            boutonAcheter.config(command=self.creeBarrack)
+            
+        #grid tout
+            #batiment
+        labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
+        labelNom.grid(row=2,column=0, columnspan=2)
+        labelLvl.grid(row=3,column=0, columnspan=2)
+            #ressources +
+        #labelInfo1.grid(row=1, column=3)
+        #labelInfo2.grid(row=2, column=3)
+        #labelInfo3.grid(row=3, column=3)
+        
+            #ressources -
+        labelCoutMetal.grid(row=1, column=3)
+        labelCoutEnergie.grid(row=2, column=3)
+        labelCoutFood.grid(row=3, column=3)
+            #bouton
+        boutonAcheter.grid(row=4, column=4)
+        
+    def infoVille(self):
+        self.infoShop("ville")
+    def infoMine(self):
+        self.infoShop("mine")    
+    def infoGeneratrice(self):
+        self.infoShop("generatrice")
+    def infoFerme(self):
+        self.infoShop("ferme")
+    def infoBarrack(self):
+        self.infoShop("barrack")
+        
+        
+    def creermine(self):
+        self.macommande = "mine"
 
-	def creergeneratrice(self):
-		self.macommande = "generatrice"
-		print('WOW une génératrice')
+    def creerville(self):
+        self.macommande = "ville"
 
-	def creeferme(self):
-		self.macommande = "ferme"
-		print('MOOOooooo')
+    def creergeneratrice(self):
+        self.macommande = "generatrice"
+        print('WOW une génératrice')
 
-	def creeBarrack(self):
-		self.macommande = "barrack"
-		print('Fo\' the emperor!')
+    def creeferme(self):
+        self.macommande = "ferme"
+        print('MOOOooooo')
 
-	def voirsysteme(self):
-		for i in self.modele.joueurs[self.parent.nom].systemesvisites:
-			if i.id == self.systeme:
-				self.parent.voirsysteme(i)
+    def creeBarrack(self):
+        self.macommande = "barrack"
+        print('Fo\' the emperor!')
 
-	def initplanete(self, sys, plane):
-		s = None
-		p = None
-		for i in self.modele.joueurs[self.parent.nom].systemesvisites:
-			if i.id == sys:
-				s = i
-				for j in i.planetes:
-					if j.id == plane:
-						p = j
-						break
-		self.systemeid = sys
-		self.planeteid = plane
-		self.affichermodelestatique(s, p)
-		
-		#! MODIF ICI
-		#Ajoute les bâtiments déjà existants sur la planète
-		for i in self.planete.infrastructures:
-			self.parent.afficherBatiment(i)
+    def voirsysteme(self):
+        for i in self.modele.joueurs[self.parent.nom].systemesvisites:
+            if i.id == self.systeme:
+                self.parent.voirsysteme(i)
 
-	def affichermodelestatique(self, s, p):
-		self.chargeimages()
-		xl = self.largeur / 2
-		yl = self.hauteur / 2
-		mini = 2
-		UAmini = 4
-		t = 200 / p.terrainTailleCarre  # 200 c'Est la taille du du minimap
+    def initplanete(self, sys, plane):
+        s = None
+        p = None
+        for i in self.modele.joueurs[self.parent.nom].systemesvisites:
+            if i.id == sys:
+                s = i
+                for j in i.planetes:
+                    if j.id == plane:
+                        p = j
+                        break
+        self.systemeid = sys
+        self.planeteid = plane
+        self.affichermodelestatique(s, p)
+        
+        for i in self.planete.infrastructures:
+			      self.parent.afficherBatiment(i)
 
-		#self.canevas.create_image(p.posXatterrissage, p.posYatterrissage, image=self.images["ville"])
+    def affichermodelestatique(self, s, p):
+        self.chargeimages()
+        xl = self.largeur / 2
+        yl = self.hauteur / 2
+        mini = 2
+        UAmini = 4
+        t = 200 / p.terrainTailleCarre  # 200 c'Est la taille du du minimap
 
-		for i in range(p.terrainTailleCarre):
-			for j in range(p.terrainTailleCarre):
-				self.minimap.create_rectangle(i * t, j * t, i * t + t, j * t + t, fill=p.terrainColor[i][j],
-				                              outline="");
+        self.canevas.create_image(p.posXatterrissage, p.posYatterrissage, image=self.images["ville"])
 
-		canl = int(p.posXatterrissage - 100) / self.largeur
-		canh = int(p.posYatterrissage - 100) / self.hauteur
-		self.canevas.xview(MOVETO, canl)
-		self.canevas.yview(MOVETO, canh)
-		
+        for i in range(p.terrainTailleCarre):
+            for j in range(p.terrainTailleCarre):
+                self.minimap.create_rectangle(i * t, j * t, i * t + t, j * t + t, fill=p.terrainColor[i][j],
+                                              outline="");
 
-	def chargeimages(self):
-		im = Image.open("./images/ville_100.png")
-		self.images["ville"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/mine_100.png")
-		self.images["mine"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/generatrice_100.png")
-		self.images["generatrice"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/ferme_100.png")
-		self.images["ferme"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/mine_100.png")
-		self.images["barrack"] = ImageTk.PhotoImage(im)
+        canl = int(p.posXatterrissage - 100) / self.largeur
+        canh = int(p.posYatterrissage - 100) / self.hauteur
+        self.canevas.xview(MOVETO, canl)
+        self.canevas.yview(MOVETO, canh)
 
-		im = Image.open("./images/ville_50.png")
-		self.images["miniVille"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/mine_50.png")
-		self.images["miniMine"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/generatrice_50.png")
-		self.images["miniGen"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/ferme_50.png")
-		self.images["miniFerm"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/mine_50.png")
-		self.images["miniBarra"] = ImageTk.PhotoImage(im)
-		
-	def afficherdecor(self):
-		pass
+    def chargeimages(self):
+        im = Image.open("./images/ville_100.png")
+        self.images["ville"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/mine_100.png")
+        self.images["mine"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/generatrice_100.png")
+        self.images["generatrice"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/ferme_100.png")
+        self.images["ferme"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/mine_100.png")
+        self.images["barrack"] = ImageTk.PhotoImage(im)
 
-	def afficherpartie(self, mod):  # ! -----------------------------------------------------
-		# t = 200 / self.largeur  # 200 c'Est la taille du du minimap
-		#  p = 200/ self.planete.terrainTailleCarre
+        im = Image.open("./images/ville_50.png")
+        self.images["miniVille"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/mine_50.png")
+        self.images["miniMine"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/generatrice_50.png")
+        self.images["miniGen"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/ferme_50.png")
+        self.images["miniFerm"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/mine_50.png")
+        self.images["miniBarra"] = ImageTk.PhotoImage(im)
+        
+    def afficherdecor(self):
+        pass
 
-		#  self.canevas.delete("infrastructure")
+    def afficherpartie(self, mod):  # ! -----------------------------------------------------
+        # t = 200 / self.largeur  # 200 c'Est la taille du du minimap
+        #  p = 200/ self.planete.terrainTailleCarre
 
-		#   for i in self.planete.infrastructures:
-		#      x=i.x
-		#      y=i.y
+        #  self.canevas.delete("infrastructure")
 
-		#      self.minimap.create_oval(x*t - p, y*t - p, x*t + p, y*t + p,  fill = "white",tags=["infrastructure"])
-		# ! -----------------------------------------------------------------------
-		pass
+        #   for i in self.planete.infrastructures:
+        #      x=i.x
+        #      y=i.y
 
-	def changerproprietaire(self, prop, couleur, systeme):
-		pass
+        #      self.minimap.create_oval(x*t - p, y*t - p, x*t + p, y*t + p,  fill = "white",tags=["infrastructure"])
+        # ! -----------------------------------------------------------------------
+        pass
 
-	def afficherselection(self):
-		pass
+    def changerproprietaire(self, prop, couleur, systeme):
+        pass
+
+    def afficherselection(self):
+        pass
+
+    def montresystemeselection(self):
+        self.changecadreetat(self.cadreetataction)
+
+    def montrevaisseauxselection(self):
+        self.changecadreetat(self.cadreetatmsg)
+
+    def afficherartefacts(self, joueurs):
+        pass  # print("ARTEFACTS de ",self.nom)
+
+    def cliquerminimap(self, evt):
+        x = evt.x
+        y = evt.y
+        largeur = self.tailleterrainpixel
+        hauteur = self.tailleterrainpixel
+        xn = largeur / int(self.minimap.winfo_width())
+        yn = hauteur / int(self.minimap.winfo_height())
+
+        ee = self.canevas.winfo_width()
+        ii = self.canevas.winfo_height()
+        eex = int(ee) / largeur / 2
+        eey = int(ii) / hauteur / 2
+
+        self.canevas.xview(MOVETO, (x * xn / largeur) - eex)
+        self.canevas.yview(MOVETO, (y * yn / hauteur) - eey)
 
 	def cliquervue(self, evt):
 		
@@ -1403,30 +1492,6 @@ class VuePlanete(Perspective):
 				self.parent.parent.creerbarrack(self.parent.nom, self.systemeid, self.planeteid, x, y)
 				self.macommande = None
 
-	def montresystemeselection(self):
-		self.changecadreetat(self.cadreetataction)
-
-	def montrevaisseauxselection(self):
-		self.changecadreetat(self.cadreetatmsg)
-
-	def afficherartefacts(self, joueurs):
-		pass  # print("ARTEFACTS de ",self.nom)
-
-	def cliquerminimap(self, evt):
-		x = evt.x
-		y = evt.y
-		largeur = self.tailleterrainpixel
-		hauteur = self.tailleterrainpixel
-		xn = largeur / int(self.minimap.winfo_width())
-		yn = hauteur / int(self.minimap.winfo_height())
-
-		ee = self.canevas.winfo_width()
-		ii = self.canevas.winfo_height()
-		eex = int(ee) / largeur / 2
-		eey = int(ii) / hauteur / 2
-
-		self.canevas.xview(MOVETO, (x * xn / largeur) - eex)
-		self.canevas.yview(MOVETO, (y * yn / hauteur) - eey)
 
 
 if __name__ == '__main__':

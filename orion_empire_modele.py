@@ -40,7 +40,7 @@ class Modele():
 		self.creersystemes(int(qteIA))  # nombre d'ias a ajouter
 
 	def creersystemes(self, nbias):  # IA ajout du parametre du nombre d'ias a ajouter
-		
+
 		for i in range(self.nbsystemes):
 			x = random.randrange(self.diametre * 10) / 10
 			y = random.randrange(self.diametre * 10) / 10
@@ -107,6 +107,7 @@ class Modele():
 			self.ias.append(ia)  # IA
 			
 	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
+
 		self.parent.actions.append([self.parent.monnom, "creervaisseauSolaire", (systeme, planete, typeVaisseau)])
 	
 	def creervaisseauGalactique(self, systeme):  # ! Changer nom

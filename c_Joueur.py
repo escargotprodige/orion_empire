@@ -255,6 +255,7 @@ class Joueur():
 				i.orbite()
 		
 		#Génération des ressources tous les 20 mises à jours
+
 		self.delais = self.delais -1
 		if self.delais <= 0:
 			self.delais = 20
@@ -264,7 +265,7 @@ class Joueur():
 						if i.proprietaire == self.nom:
 							i.generer()
 							#print(self.ressource1,self.ressource2,self.ressource3)
-							
+
 
 	def dechargervaisseaugalactique(self, rep):
 		v = None

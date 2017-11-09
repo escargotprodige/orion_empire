@@ -23,7 +23,10 @@ from IdMaker import Id
 
 
 class Modele():
+<<<<<<< HEAD
 
+=======
+>>>>>>> vaisseau galactique
 	def __init__(self, parent, joueurs, dd):
 		self.parent = parent
 		self.id = Id.prochainid()
@@ -41,7 +44,11 @@ class Modele():
 		self.creersystemes(int(qteIA))  # nombre d'ias a ajouter
 
 	def creersystemes(self, nbias):  # IA ajout du parametre du nombre d'ias a ajouter
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> vaisseau galactique
 		for i in range(self.nbsystemes):
 			x = random.randrange(self.diametre * 10) / 10
 			y = random.randrange(self.diametre * 10) / 10
@@ -94,8 +101,13 @@ class Modele():
 						np -= 1
 
 		couleurs = ["cyan", "goldenrod", "orangered", "greenyellow",
+<<<<<<< HEAD
 					"dodgerblue", "yellow2", "maroon1", "chartreuse3",
 					"firebrick1", "MediumOrchid2", "DeepPink2", "blue"]  # IA ajout de 3 couleurs
+=======
+		            "dodgerblue", "yellow2", "maroon1", "chartreuse3",
+		            "firebrick1", "MediumOrchid2", "DeepPink2", "blue"]  # IA ajout de 3 couleurs
+>>>>>>> vaisseau galactique
 
 		for i in self.joueurscles:
 			self.joueurs[i] = Joueur(self, i, planes.pop(0), couleurs.pop(0))
@@ -106,6 +118,7 @@ class Modele():
 			ia = IA(self, nomia, planes.pop(0), couleurs.pop(0))
 			self.joueurs[nomia] = ia  # IA
 			self.ias.append(ia)  # IA
+<<<<<<< HEAD
 	
 	def creerlazerboi(self):
 		self.parent.actions.append([self.parent.monnom, "creerlazerboi", barrack])
@@ -113,12 +126,22 @@ class Modele():
 			
 	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
 		self.parent.actions.append([self.parent.monnom, "creervaisseauSolaire", systeme, planete, typeVaisseau])
+=======
+			
+	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
+		self.parent.actions.append([self.parent.monnom, "creervaisseauSolaire", (systeme, planete, typeVaisseau)])
+>>>>>>> vaisseau galactique
 	
 	def creervaisseauGalactique(self, systeme):  # ! Changer nom
 		self.parent.actions.append([self.parent.monnom, "creervaisseauGalactique", systeme])
 
+<<<<<<< HEAD
 	def creerstationGalactique(self, systeme):  #############################################################  MODIF TRISTAN
 		print([self.parent.monnom, "creerstationGalactique", systeme])
+=======
+	def creerstationGalactique(self,
+	                           systeme):  #############################################################  MODIF TRISTAN
+>>>>>>> vaisseau galactique
 		self.parent.actions.append([self.parent.monnom, "creerstationGalactique", systeme])
 
 	def prochaineaction(self, cadre):  # Loop
@@ -139,10 +162,15 @@ class Modele():
 		for i in self.systemes:
 			for p in i.planetes:
 				p.orbiter()
+<<<<<<< HEAD
 		
 		for i in self.joueurs: #################################################################################### MODIF TRISTAN
 			for s in self.joueurs[i].stationGalactiques:
 				s.orbiter()
+=======
+				
+
+>>>>>>> vaisseau galactique
 		self.parent.vue.modecourant.updateRessources(self.joueurs[self.parent.monnom])  # !
 
 	def changeetatsystem(self, nom, systeme):  # ! ------------------------------ AJOUTER M�THODE
@@ -152,7 +180,11 @@ class Modele():
 		self.parent.changerproprietaire(nom, couleur, syst)
 
 	def dechargerVaisseauGalactique(self, id,
+<<<<<<< HEAD
 									systeme):  # ! ------------------------------------------------------ METHODE A AJOUTER
+=======
+	                                systeme):  # ! ------------------------------------------------------ METHODE A AJOUTER
+>>>>>>> vaisseau galactique
 		self.parent.actions.append([self.parent.monnom, "dechargervausseaugalactique", (id, systeme)])
 
 	# print("ENVOIE DEMANDE DECHARGEMENT")
@@ -163,3 +195,7 @@ class Modele():
 
 	def chargedansvaisseaugalactique(self, vg, vs):
 		self.parent.actions.append([self.parent.monnom, "chargedansvaisseaugalactique", (vg, vs)])
+<<<<<<< HEAD
+=======
+		
+>>>>>>> vaisseau galactique

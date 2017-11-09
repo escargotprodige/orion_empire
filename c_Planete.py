@@ -16,7 +16,7 @@ class Planete():
 	def __init__(self, parent, type, dist, taille, angle):
 		self.parent = parent
 		self.id = Id.prochainid()
-		self.parent = parent
+		#self.parent = parent
 		self.posXatterrissage = random.randrange(5000)
 		self.posYatterrissage = random.randrange(5000)
 		self.infrastructures = []  # A CONTINUER

@@ -1,5 +1,4 @@
 from orion_empire_modele import *
-import random
 
 
 class Vaisseau():
@@ -16,6 +15,7 @@ class Vaisseau():
 		self.taille = 16
 		self.cargo = 0
 		self.energie = 100
+<<<<<<< HEAD
 		self.vitesse = random.choice([0.001, 0.003, 0.005, 0.01]) * 5  # 0.5
 		self.cible = None
 		# self.essence = (random.randrange(5) +5) * 100  # ------------------ essence entre 500 et 1000 unitee
@@ -24,6 +24,23 @@ class Vaisseau():
 		self.niveau = 1
 		self.systeme_courant = systeme
 
+=======
+		self.vitesse = 0  # 0.5
+		self.cible = None
+		# self.essence = (random.randrange(5) +5) * 100  # ------------------ essence entre 500 et 1000 unitee
+		#self.vaisseauxtransportee = []
+		self.vie = 100
+		self.niveau = 1
+		self.systeme_courant = systeme
+		
+	def avancer(self):
+		pass
+	
+	def ciblerdestination(self,p):
+		pass
+
+	"""
+>>>>>>> vaisseau galactique
 	def avancer(self):
 		rep = None
 		if self.cible:
@@ -40,7 +57,11 @@ class Vaisseau():
 			# else: # ----------------------------------------- s'il n'y a plus d'essence, le vaisseau tombe en panne
 			# print("Vaisseau ",self.id," : position ",self.x,",",self.y, " n'a plus d'essence!")
 			# self.cible=None # ---------------------------- arrete d'essayer d'aller a sa cible destination
+<<<<<<< HEAD
 
+=======
+			
+>>>>>>> vaisseau galactique
 	def ciblerdestination(self, p):
 		self.cible = p
 		self.angletrajet = hlp.calcAngle(self.x, self.y, p.x, p.y)
@@ -48,7 +69,12 @@ class Vaisseau():
 		dist = hlp.calcDistance(self.x, self.y, p.x, p.y)
 
 	# print("Distance",dist," en ", int(dist/self.vitesse))
+<<<<<<< HEAD
 
+=======
+	
+"""
+>>>>>>> vaisseau galactique
 	def recevoir_dmg(self, dmg):
 		if self.vie - dmg <= 0:
 			self.meurt()
@@ -57,7 +83,11 @@ class Vaisseau():
 
 	def meurt(self):
 		pass
+<<<<<<< HEAD
 
+=======
+		
+>>>>>>> vaisseau galactique
 	def upgrade(self):
 		self.niveau += 1
 
@@ -68,18 +98,83 @@ class Vaisseau():
 	def recycler(self):
 		pass
 
+<<<<<<< HEAD
 	def sortir_systeme(self):
 		pass
+=======
+	#def sortir_systeme(self):
+	#	pass
+>>>>>>> vaisseau galactique
 
 	def upgradeVitesse(self, boost):
 		# print("upgrade vitesse")
 		self.vitesse += boost
 		pass
 
+<<<<<<< HEAD
 
 class VaisseauTransport(Vaisseau):
 	def __init__(self, parent, nom, systeme):
 		super().__init__(parent, nom, systeme)
+=======
+class VaisseauSolaire(Vaisseau):
+	def __init__(self,parent,nom,systeme,planete,type):
+		Vaisseau.__init__(self,parent,nom,systeme)
+		self.planete_courrant=planete
+		self.vitesse = random.choice([0.01, 0.03, 0.05, 0.1]) * 5
+
+		self.x,self.y = hlp.getAngledPoint(math.radians(self.planete_courrant.angle),self.planete_courrant.distance,0,0)
+		#print(self.x,self.y)
+		self.type=type
+		
+	def avancer(self):
+		rep = None
+		if self.cible:
+			x = 0
+			y = 0
+			if type(self.cible) is Planete:
+				x,y =  hlp.getAngledPoint(math.radians(self.cible.angle),self.cible.distance,0,0)
+				
+			elif isinstance(self.cible, VaisseauSolaire):
+				x = self.cible.x
+				y = self.cible.y
+				
+			self.x, self.y = hlp.getAngledPoint(self.angletrajet, self.vitesse, self.x, self.y)
+			
+			self.ciblerdestination(self.cible)
+			if hlp.calcDistance(self.x, self.y, x, y) - self.cible.taille <= self.vitesse:
+				rep = self.cible
+				if type(self.cible) is Planete:
+					self.planete_courrant = self.cible
+				self.cible = None
+			return rep
+		
+	
+	def ciblerdestination(self,p):
+		if not self.cible:
+			self.cible = p
+			self.planete_courrant = None
+		x =0
+		y = 0
+		if type(p) is Planete:
+			x,y = hlp.getAngledPoint(math.radians(p.angle),p.distance,0,0)
+		elif isinstance(p, VaisseauSolaire):
+			x = p.x
+			y = p.y
+			
+		self.angletrajet = hlp.calcAngle(self.x, self.y, x, y)
+		self.degre = 360 - hlp.calcDegre(self.x, self.y, x, y)
+		#dist = hlp.calcDistance(self.x, self.y, p.x, p.y)
+		
+	def orbite(self):
+		if self.planete_courrant:
+			self.x,self.y = hlp.getAngledPoint(math.radians(self.planete_courrant.angle),self.planete_courrant.distance+self.planete_courrant.taille,0,0)
+
+
+class VaisseauTransport(VaisseauSolaire):
+	def __init__(self, parent, nom, systeme,planete):
+		super().__init__(parent, nom, systeme,planete,"transport")
+>>>>>>> vaisseau galactique
 		self.units = []
 		self.max_units = 4
 
@@ -97,9 +192,15 @@ class VaisseauTransport(Vaisseau):
 				return self.units.pop(i)
 
 
+<<<<<<< HEAD
 class VaisseauCombat(Vaisseau):
 	def __init__(self, parent, nom, systeme):
 		super().__init__(parent, nom, systeme)
+=======
+class VaisseauCombat(VaisseauSolaire):
+	def __init__(self, parent, nom, systeme,planete):
+		super().__init__(parent, nom, systeme,planete,"combat")
+>>>>>>> vaisseau galactique
 		self.dmg = 5
 		self.rayon = 10
 
@@ -111,6 +212,10 @@ class VaisseauGalactique(Vaisseau):
 	def __init__(self, parent, nom, systeme):
 		Vaisseau.__init__(self, parent, nom, systeme)
 		self.vaisseauxtransportee = []
+<<<<<<< HEAD
+=======
+		self.vitesse = random.choice([0.001, 0.003, 0.005, 0.01]) * 5 
+>>>>>>> vaisseau galactique
 
 	def dechargervaisseaugalactique(self, systeme):
 		# EN CONSTRUCTION #
@@ -118,7 +223,11 @@ class VaisseauGalactique(Vaisseau):
 			print("DECHARGEMENT VAISSEAU")
 			etoile = systeme.etoile
 			for v in self.vaisseauxtransportee:
+<<<<<<< HEAD
 				angle = random.randrange(360) / 360 * 2 * math.pi
+=======
+				angle = randrange(360) / 360 * 2 * math.pi
+>>>>>>> vaisseau galactique
 
 				x, y = hlp.getAngledPoint(angle, etoile.taille, etoile.x, etoile.y)
 
@@ -157,3 +266,12 @@ class VaisseauGalactique(Vaisseau):
 				self.systeme_courant = None
 			# ! -------------------------------- FIN MODIF
 			return rep
+<<<<<<< HEAD
+=======
+		
+	def ciblerdestination(self, p):
+		self.cible = p
+		self.angletrajet = hlp.calcAngle(self.x, self.y, p.x, p.y)
+		self.degre = 360 - hlp.calcDegre(self.x, self.y, p.x, p.y)
+		dist = hlp.calcDistance(self.x, self.y, p.x, p.y)
+>>>>>>> vaisseau galactique

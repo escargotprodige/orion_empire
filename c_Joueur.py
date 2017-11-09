@@ -1,6 +1,5 @@
 from orion_empire_modele import *
-import c_Vaisseau
-from c_StationGalactique import *
+
 
 class Joueur():
 	def __init__(self, parent, nom, systemeorigine, couleur):
@@ -31,6 +30,9 @@ class Joueur():
 		                "creervaisseauSolaire": self.creervaisseauSolaire
 		                }
 
+		self.stationGalactiques = []
+		self.barrackMere = None
+
 		self.planeteOrigine = random.choice(self.systemeorigine.planetes)
 		self.planeteOrigine.proprietaire = self.nom
 		# self.creerVilleOrigine()
@@ -41,6 +43,8 @@ class Joueur():
 		self.ressource1 = 100
 		self.ressource2 = 100
 		self.ressource3 = 100
+		
+		self.delais = 20
 
 	def creerVilleOrigine(self):
 		ville = Ville(self, self.nom, self.systemeorigine, self.planeteOrigine, 25, 25)  ### TEST ICI  ###
@@ -53,14 +57,20 @@ class Joueur():
 
 		# return coords
 
-	def creervaisseauSolaire(self, listeparams): #, systemeid, planeteid, type_vaisseau=c_Vaisseau.VaisseauTransport):
+	def creervaisseauSolaire(self, listeparams):
+		
+		dict_vaisseau = {0:VaisseauTransport,
+						1:VaisseauCombat}
+
 		systemeid, planeteid, type_vaisseau = listeparams
+		print("creer vaisseau solaire",systemeid,planeteid,type_vaisseau)
 		for i in self.systemesvisites:
 			if i.id == systemeid:
 				for j in i.planetes:
 					if j.id == planeteid:
-						v = type_vaisseau(i, self.nom, j)
-						i.vaisseaux.append(v)
+						print(i,j)
+						v = dict_vaisseau[type_vaisseau](i, self.nom, i,j)
+						self.vaisseauxinterplanetaires.append(v)
 						return 1
 
 	# ajout
@@ -126,7 +136,11 @@ class Joueur():
 				for j in i.planetes:
 					if j.id == planeteid:
 						barrack = Barrack(self, nom, systemeid, planeteid, x, y)
-						barrack.setBarrackMere(self.barrackMere)
+						
+						if self.barrackMere:
+							barrack.setBarrackMere(self.barrackMere)
+						else:
+							self.barrackMere = barrack
 						j.infrastructures.append(barrack)
 						# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
 						self.parent.parent.afficherBatiment(barrack)
@@ -153,15 +167,14 @@ class Joueur():
 				v = VaisseauGalactique(self, self.nom, i)
 				self.vaisseauxinterstellaires.append(v)
 				return 1
-			
-	def creerstationGalactique(self, id):  ##################################################################  MODIF TRISTAN
-		print('creerstationGalactique')
+
+	def creerstationGalactique(self,
+	                           id):  ##################################################################  MODIF TRISTAN
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
-
 
 	# debut modif
 	def creerLazerBoi(self, listeparams):
@@ -198,6 +211,17 @@ class Joueur():
 					if j.id == iddesti:
 						i.ciblerdestination(j)
 						return
+		
+		for i in self.vaisseauxinterplanetaires:
+			if i.id == idori:
+				for j in i.systeme_courant.planetes:
+					if j.id == iddesti:
+						i.ciblerdestination(j)
+						return
+				for k in self.parent.joueurscles:
+					for j in self.parent.joueurs[k].vaisseauxinterplanetaires:
+						if j.id == iddesti:
+							i.ciblerdestination(j)
 
 	def prochaineaction(self):  # NOTE : cette fonction sera au coeur de votre developpement
 		for i in self.vaisseauxinterstellaires:
@@ -221,6 +245,26 @@ class Joueur():
 						if self.nom == self.parent.parent.monnom:
 							if self.parent.parent.vue.modecourant == self.parent.parent.vue.modes["galaxie"]:
 								self.parent.parent.vue.deplacerCanevas(i.x, i.y)
+		
+		for i in self.vaisseauxinterplanetaires:
+			if i.cible:
+				rep=i.avancer()
+				if rep:
+					print(rep)
+			else:
+				i.orbite()
+		
+		#Génération des ressources tous les 20 mises à jours
+		self.delais = self.delais -1
+		if self.delais <= 0:
+			self.delais = 20
+			for s in self.systemesvisites:
+				for p in s.planetes:
+					for i in p.infrastructures:
+						if i.proprietaire == self.nom:
+							i.generer()
+							#print(self.ressource1,self.ressource2,self.ressource3)
+							
 
 	def dechargervaisseaugalactique(self, rep):
 		v = None
@@ -237,20 +281,6 @@ class Joueur():
 		if s and v:
 			v.dechargervaisseaugalactique(s)
 
-	def dechargervaisseaugalactique(self, rep):
-		v = None
-		s = None
-		for i in self.vaisseauxinterstellaires:
-			if i.id == rep[0]:
-				v = i
-				break
-		for i in self.parent.systemes:
-			if i.id == rep[1]:
-				s = i
-				break
-
-		if s and v:
-			v.dechargervaisseaugalactique(s)
 
 	def upgradeVitesseVaisseau(self, rep):
 		id = rep[0]
@@ -287,3 +317,11 @@ class Joueur():
 		vg.chargementvaisseau(vs)
 
 		self.vaisseauxinterstellaires.pop(vs)
+
+	def creerstationGalactique(self, rep):
+		pass
+	
+	def ajoutessource(self,metaux=0,energie=0,food=0):
+		self.ressource1 += metaux
+		self.ressource2 += energie
+		self.ressource3 += food

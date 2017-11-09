@@ -237,21 +237,6 @@ class Joueur():
 		if s and v:
 			v.dechargervaisseaugalactique(s)
 
-	def dechargervaisseaugalactique(self, rep):
-		v = None
-		s = None
-		for i in self.vaisseauxinterstellaires:
-			if i.id == rep[0]:
-				v = i
-				break
-		for i in self.parent.systemes:
-			if i.id == rep[1]:
-				s = i
-				break
-
-		if s and v:
-			v.dechargervaisseaugalactique(s)
-
 	def upgradeVitesseVaisseau(self, rep):
 		id = rep[0]
 		ajout = rep[1]

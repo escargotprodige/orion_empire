@@ -222,8 +222,7 @@ class Vue():
                 self.deplacerCanevas(250, 250)
 
     def afficherBatiment(self, Batiment):
-        # 200 c'Est la taille du du minimap
-
+        # 200 c'Est la taille du minimap
         for i in self.modes["planetes"].keys():
             if i == Batiment.planeteid:
                 p = 200 / self.modes["planetes"][i].planete.terrainTailleCarre
@@ -234,7 +233,7 @@ class Vue():
 
                 im = self.modes["planetes"][i].images[Batiment.type]
                 self.modes["planetes"][i].canevas.create_image(Batiment.x, Batiment.y, image=im,
-                                                               tags=(Batiment.id, Batiment.type))
+                                                               tags=(Batiment.id, Batiment.type, "batiment"))
 
                 self.modes["planetes"][i].minimap.create_oval(x * t - p, y * t - p, x * t + p, y * t + p, fill=couleur,
                                                               tags=(Batiment.id, Batiment.type))
@@ -1122,33 +1121,9 @@ class VuePlanete(Perspective):
 
         self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
         self.boutonShop.grid(row=1, column=0, sticky= W)
-        self.boutonSelect = Button(self.cadreetat, text="Selection >", )
+        self.boutonSelect = Button(self.cadreetat, text="Selection >", command=self.afficherSelection)
         self.boutonSelect.grid(row=10,column=0,sticky = W)
 
-    def afficherSelection(self):
-        self.boutonSelect.config(text="Selection ˅")
-        if self.cadreShop:
-            self.cadreShop.grid_forget()
-            self.boutonShop.config(text="Shop ˃")
-            self.cadreShop = None
-        else: 
-            pass
-        
-        if self.cadreSelection:
-            self.cadreSelection.grid_forget()
-            self.boutonSelect.config(text="Selection ˃")
-            self.cadreSelection = None
-        else:
-            self.cadreSelection = Frame(self.cadreetat, width=200, height=400, bg="blue")
-            self.cadreSelection.grid(row=11, column=0, columnspan=5, rowspan=5)
-        
-        if self.maselection is None:
-            label = Label(self.cadreSelection, text="Veillez selectionner un objet")
-            label.grid()
-        else:
-            pass
-        
-        
     def afficherShop(self):
         self.boutonShop.config(text="Shop ˅")
         #enlever les autres cadres
@@ -1195,12 +1170,6 @@ class VuePlanete(Perspective):
         labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
         labelNom = Label(self.cadreInfoShop, text="Ville")
         labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
-        #Infos ressources Batiment
-        #label = Label(self.cadreInfoShop, text="Ressources")
-        #label.grid(row=0,column=3)
-        #labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Metal")
-        #labelInfo2 = Label(self.cadreInfoShop, text="+1/sec Food")
-        #labelInfo3 = Label(self.cadreInfoShop, text="+1/sec Energie")
         #Cout batiment
         label = Label(self.cadreInfoShop, text="Cout")
         label.grid(row=0,column=2, columnspan= 2)
@@ -1214,10 +1183,8 @@ class VuePlanete(Perspective):
         labelCoutMetal = Label(self.cadreInfoShop, text="")
         labelCoutEnergie = Label(self.cadreInfoShop, text="")
         labelCoutFood = Label(self.cadreInfoShop, text="")
-        
         #Boutons
         boutonAcheter = Button(self.cadreInfoShop, text="Acheter")
-        
         if typeBatiment is "ville":
             labelImage.config(image=self.images["miniVille"])
             labelNom.config(text="Ville")
@@ -1259,11 +1226,6 @@ class VuePlanete(Perspective):
         labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
         labelNom.grid(row=2,column=0, columnspan=2)
         labelLvl.grid(row=3,column=0, columnspan=2)
-            #ressources +
-        #labelInfo1.grid(row=1, column=3)
-        #labelInfo2.grid(row=2, column=3)
-        #labelInfo3.grid(row=3, column=3)
-        
             #ressources -
         labelCoutMetal.grid(row=1, column=3)
         labelCoutEnergie.grid(row=2, column=3)
@@ -1272,14 +1234,19 @@ class VuePlanete(Perspective):
         boutonAcheter.grid(row=4, column=4)
         
     def infoVille(self):
+        self.macommande = None
         self.infoShop("ville")
     def infoMine(self):
+        self.macommande = None
         self.infoShop("mine")    
     def infoGeneratrice(self):
+        self.macommande = None
         self.infoShop("generatrice")
     def infoFerme(self):
+        self.macommande = None
         self.infoShop("ferme")
     def infoBarrack(self):
+        self.macommande = None
         self.infoShop("barrack")
         
         
@@ -1382,19 +1349,70 @@ class VuePlanete(Perspective):
 
     def changerproprietaire(self, prop, couleur, systeme):
         pass
-
-    def afficherselection(self):
-        pass
-
-    def cliquervue(self, evt):
+    
+    #UI
+    def afficherSelection(self): #si on clique sur le bouton Selection
+        self.boutonSelect.config(text="Selection ˅")
+        #Fermer les autres cadres
+        if self.cadreShop:
+            self.cadreShop.grid_forget()
+            self.boutonShop.config(text="Shop ˃")
+            self.cadreShop = None
+        else: 
+            pass
+        #Si Selection est ouvert, fermer
+        if self.cadreSelection:
+            self.cadreSelection.grid_forget()
+            self.boutonSelect.config(text="Selection ˃")
+            self.cadreSelection = None
+        else:
+        #Sinon, on ouvre le cadre selection
+            self.cadreSelection = Frame(self.cadreetat, width=200, height=300, bg="blue")
+            self.cadreSelection.grid(row=11, column=0, columnspan=5, rowspan=5)
+        #Mais, si on a rien selectionne, demander de selectionner
+        if self.maselection is None:
+            label = Label(self.cadreSelection, text="Veillez selectionner un objet")
+            label.grid()
+        else:
+        #Si on a selectionne qqch, le montrer
+            self.selectBatiment()
+    def selectBatiment(self): #Si on clique sur un batiment, montrer selection
+        self.boutonSelect.config(text="Selection ˅")
+        #Fermer les autres cadres
+        if self.cadreShop:
+            self.cadreShop.grid_forget()
+            self.boutonShop.config(text="Shop ˃")
+            self.cadreShop = None
+        #S'assurer que le conteneur est ouvert
+        if self.cadreSelection is None:
+            self.cadreSelection = Frame(self.cadreetat, width=200, height=300, bg="blue")
+            self.cadreSelection.grid(row=11, column=0, columnspan=5, rowspan=5)
+        else:
+            pass
         
+        
+    def cliquervue(self, evt):
         t = self.canevas.gettags("current")
+        #afficherSelection
         if t and t[0] != "current":
-            if t[0] == self.parent.nom:
-                pass
-            elif t[1] == "mine":
-                print("mine mine mine") #!!!
-                pass
+            if t[2] == "batiment":
+                print("werk werk werk") #!!!
+                if t[0] == self.parent.nom:
+                    pass
+                elif t[1] == "mine":
+                    self.maselection = t[0]
+                    print(t[0])
+                    print("mine mine mine") #!!!
+                elif t[1] == "generatrice":
+                    self.maselection = "generatrice"
+                    print("generatriceeeee") #!!!
+                elif t[1] == "ferme":
+                    self.maselection = "ferme"
+                    print("moo moo moo") #!!!
+                elif t[1] == "ville":
+                    self.maselection = "ville"
+                    print("lalala") #!!!
+            
         else:
             x = self.canevas.canvasx(evt.x)
             y = self.canevas.canvasy(evt.y)

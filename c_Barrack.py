@@ -85,14 +85,14 @@ class Barrack(Batiment):
 
 	def creerLazerBoi(self):
 		t = self.dictUnitTemplate[AT_TYPE.LAZERBOI]
-		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], T[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
+		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], t[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
 		                        t[ATP.HP], t[ATP.SPEED], t[ATP.DEFENSE], t[ATP.SYSTEMID], t[ATP.PLANETEID],
 		                        t[ATP.PROPRIETAIRE], t[ATP.TYPE])
 		return soldat
 
 	def creerFistBoi(self):
 		t = self.dictUnitTemplate[AT_TYPE.FISTBOI]
-		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], T[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
+		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], t[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
 		                        t[ATP.HP], t[ATP.SPEED], t[ATP.DEFENSE], t[ATP.SYSTEMID], t[ATP.PLANETEID],
 		                        t[ATP.PROPRIETAIRE], t[ATP.TYPE])
 		return soldat

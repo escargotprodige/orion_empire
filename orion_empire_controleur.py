@@ -161,8 +161,8 @@ class Controleur():
 
 		# ! debut modif
 
-	def creerLazerBoi(self, systeme):
-		self.actions.append([self.monnom, "creerlazerboi", [self.monnom, barrack]])
+	def creerLazerboi(self, joueur, systeme, planete, x, y):
+		self.actions.append([self.monnom, "creerlazerboi", [self.monnom, systeme, planete, x, y]])
 
 	# !fin modif
 

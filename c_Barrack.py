@@ -53,7 +53,7 @@ class Barrack(Batiment):
 		                                      ATP.DEFENSE: 6,
 		                                      ATP.SYSTEMID: self.systemeid,
 		                                      ATP.PLANETEID: self.planeteid,
-		                                      ATP.PROPRIETAIRE: self.proprietaire,
+		                                      ATP.PROPRIETAIRE: None,
 		                                      ATP.TYPE: AT_TYPE.FISTBOI,
 		                                      ATP.PRIX: 100
 		                                      }
@@ -83,18 +83,18 @@ class Barrack(Batiment):
 		b[ATP.DEFENSE] = bm[ATP.DEFENSE]
 		b[ATP.PRIX] = bm[ATP.PRIX]
 
-	def creerLazerBoi(self):
+	def creerLazerBoi(self, proprietaire = None):
 		t = self.dictUnitTemplate[AT_TYPE.LAZERBOI]
 		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], t[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
 		                        t[ATP.HP], t[ATP.SPEED], t[ATP.DEFENSE], t[ATP.SYSTEMID], t[ATP.PLANETEID],
-		                        t[ATP.PROPRIETAIRE], t[ATP.TYPE])
+		                        proprietaire, t[ATP.TYPE])
 		return soldat
 
-	def creerFistBoi(self):
+	def creerFistBoi(self, proprietaire = None):
 		t = self.dictUnitTemplate[AT_TYPE.FISTBOI]
 		soldat = AttaquantTerre(t[ATP.NOM], t[ATP.X], t[ATP.Y], t[ATP.NEAR_RANGE], t[ATP.FAR_RANGE], t[ATP.ATK],
 		                        t[ATP.HP], t[ATP.SPEED], t[ATP.DEFENSE], t[ATP.SYSTEMID], t[ATP.PLANETEID],
-		                        t[ATP.PROPRIETAIRE], t[ATP.TYPE])
+		                        proprietaire, t[ATP.TYPE])
 		return soldat
 
 	def upgradeLazerBoi(self, scale):

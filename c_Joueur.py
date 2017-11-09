@@ -39,6 +39,7 @@ class Joueur():
 		# self.creerVilleOrigine()
 
 		self.barrackMere = Barrack(self, "barrack" + self.nom, None, None, -1, -1)
+		self.attaquantTerre = []
 		self.ressourcesTEMP = 100
 
 		self.ressource1 = 100
@@ -174,18 +175,18 @@ class Joueur():
 
 	
 	def creerLazerBoi(self, listeparams):
-		nom, systemeid, planeteid, x, y, barrackid = listeparams
+		nom, systemeid, planeteid, x, y = listeparams
 		for i in self.systemesvisites:
 			if i.id == systemeid:
 				for j in i.planetes:
 					if j.id == planeteid:
-						for infrastructure in j.infrastructures:
-							if infrastructure.id == barrackid:
-								lazerboi = infrastructure.creerLazerBoi()
-								lazerboi.x = infrastructure.x
-								lazerboi.y = infrastructure.y
-								self.attaquantTerre.append(lazerboi)
-								self.parent.parent.afficherLazerBoi(lazerboi)
+						lazerboi = self.barrackMere.creerLazerBoi(self.nom)
+						lazerboi.x = x
+						lazerboi.y = y
+						lazerboi.systemid = systemeid
+						lazerboi.planeteid = planeteid
+						self.attaquantTerre.append(lazerboi)
+						self.parent.parent.afficherLazerBoi(lazerboi)
 
 	# fin modif
 

@@ -11,267 +11,295 @@ from Couts import *
 
 
 class Vue():
-	def __init__(self, parent, ip, nom, largeur=800, hauteur=600):
-		self.root = Tk()
-		self.root.title(os.path.basename(sys.argv[0]))
-		self.root.protocol("WM_DELETE_WINDOW", self.fermerfenetre)
-		self.parent = parent
-		self.modele = None
-		self.nom = None
-		self.largeur = largeur
-		self.hauteur = hauteur
-		self.images = {}
-		self.modes = {}
-		self.modecourant = None
-		self.cadreactif = None
-		self.creercadres(ip, nom)
-		self.changecadre(self.cadresplash)
-		self.angleattente = 0
 
-	def changemode(self, cadre):
-		if self.modecourant:
-			self.modecourant.pack_forget()
-		self.modecourant = cadre
-		self.modecourant.pack(expand=1, fill=BOTH)
+    def __init__(self, parent, ip, nom, largeur=800, hauteur=600):
+        self.root = Tk()
+        self.root.title(os.path.basename(sys.argv[0]))
+        self.root.protocol("WM_DELETE_WINDOW", self.fermerfenetre)
+        self.parent = parent
+        self.modele = None
+        self.nom = None
+        self.largeur = largeur
+        self.hauteur = hauteur
+        self.images = {}
+        self.modes = {}
+        self.modecourant = None
+        self.cadreactif = None
+        self.creercadres(ip, nom)
+        self.changecadre(self.cadresplash)
+        self.angleattente = 0
 
-	def changecadre(self, cadre, etend=0):
-		if self.cadreactif:
-			self.cadreactif.pack_forget()
-		self.cadreactif = cadre
-		if etend:
-			self.cadreactif.pack(expand=1, fill=BOTH)
-		else:
-			self.cadreactif.pack()
+    def changemode(self, cadre):
+        if self.modecourant:
+            self.modecourant.pack_forget()
+        self.modecourant = cadre
+        self.modecourant.pack(expand=1, fill=BOTH)
 
-	def creercadres(self, ip, nom):
-		self.creercadresplash(ip, nom)
-		self.creercadrelobby()
-		self.creercadreloading()
-		self.cadrejeu = Frame(self.root, bg="blue")
-		self.modecourant = None
+    def changecadre(self, cadre, etend=0):
+        if self.cadreactif:
+            self.cadreactif.pack_forget()
+        self.cadreactif = cadre
+        if etend:
+            self.cadreactif.pack(expand=1, fill=BOTH)
+        else:
+            self.cadreactif.pack()
 
-	def creercadresplash(self, ip, nom):
-		self.cadresplash = Frame(self.root)
-		self.canevasplash = Canvas(self.cadresplash, width=640, height=480, bg="red")
-		self.canevasplash.pack()
-		self.nomsplash = Entry(bg="pink")
-		self.nomsplash.insert(0, nom)
-		self.ipsplash = Entry(bg="pink")
-		self.ipsplash.insert(0, ip)
-		labip = Label(text=ip, bg="red", borderwidth=0, relief=RIDGE)
-		btncreerpartie = Button(text="Creer partie", bg="pink", command=self.creerpartie)
-		btnconnecterpartie = Button(text="Connecter partie", bg="pink", command=self.connecterpartie)
-		self.canevasplash.create_window(200, 200, window=self.nomsplash, width=100, height=30)
-		self.canevasplash.create_window(200, 250, window=self.ipsplash, width=100, height=30)
-		self.canevasplash.create_window(200, 300, window=labip, width=100, height=30)
-		self.canevasplash.create_window(200, 350, window=btncreerpartie, width=100, height=30)
-		self.canevasplash.create_window(200, 400, window=btnconnecterpartie, width=100, height=30)
+    def creercadres(self, ip, nom):
+        self.creercadresplash(ip, nom)
+        self.creercadrelobby()
+        self.creercadreloading()
+        self.cadrejeu = Frame(self.root, bg="blue")
+        self.modecourant = None
 
-	def creercadrelobby(self):
-		self.cadrelobby = Frame(self.root)
-		self.canevaslobby = Canvas(self.cadrelobby, width=640, height=480, bg="lightblue")
-		self.canevaslobby.pack()
-		self.listelobby = Listbox(bg="red", borderwidth=0, relief=FLAT)
-		self.diametre = Entry(bg="pink")
-		self.diametre.insert(0, 5)
-		self.densitestellaire = Entry(bg="pink")
-		self.densitestellaire.insert(0, 2)
-		self.qteIA = Entry(bg="pink")
-		self.qteIA.insert(0, 0)
-		self.btnlancerpartie = Button(text="Lancer partie", bg="pink", command=self.lancerpartie, state=DISABLED)
-		self.canevaslobby.create_window(440, 240, window=self.listelobby, width=200, height=400)
-		self.canevaslobby.create_window(200, 200, window=self.diametre, width=100, height=30)
-		self.canevaslobby.create_text(20, 200, text="Diametre en annee lumiere")
+    def creercadresplash(self, ip, nom):
+        self.cadresplash = Frame(self.root)
+        self.canevasplash = Canvas(self.cadresplash, width=640, height=480, bg="red")
+        self.canevasplash.pack()
+        self.nomsplash = Entry(bg="pink")
+        self.nomsplash.insert(0, nom)
+        self.ipsplash = Entry(bg="pink")
+        self.ipsplash.insert(0, ip)
+        labip = Label(text=ip, bg="red", borderwidth=0, relief=RIDGE)
+        btncreerpartie = Button(text="Creer partie", bg="pink", command=self.creerpartie)
+        btnconnecterpartie = Button(text="Connecter partie", bg="pink", command=self.connecterpartie)
+        self.canevasplash.create_window(200, 200, window=self.nomsplash, width=100, height=30)
+        self.canevasplash.create_window(200, 250, window=self.ipsplash, width=100, height=30)
+        self.canevasplash.create_window(200, 300, window=labip, width=100, height=30)
+        self.canevasplash.create_window(200, 350, window=btncreerpartie, width=100, height=30)
+        self.canevasplash.create_window(200, 400, window=btnconnecterpartie, width=100, height=30)
 
-		self.canevaslobby.create_window(200, 250, window=self.densitestellaire, width=100, height=30)
-		self.canevaslobby.create_text(20, 250, text="Nb systeme/AL cube")
+    def creercadrelobby(self):
+        self.cadrelobby = Frame(self.root)
+        self.canevaslobby = Canvas(self.cadrelobby, width=640, height=480, bg="lightblue")
+        self.canevaslobby.pack()
+        self.listelobby = Listbox(bg="red", borderwidth=0, relief=FLAT)
+        self.diametre = Entry(bg="pink")
+        self.diametre.insert(0, 5)
+        self.densitestellaire = Entry(bg="pink")
+        self.densitestellaire.insert(0, 2)
+        self.qteIA = Entry(bg="pink")
+        self.qteIA.insert(0, 0)
+        self.btnlancerpartie = Button(text="Lancer partie", bg="pink", command=self.lancerpartie, state=DISABLED)
+        self.canevaslobby.create_window(440, 240, window=self.listelobby, width=200, height=400)
+        self.canevaslobby.create_window(200, 200, window=self.diametre, width=100, height=30)
+        self.canevaslobby.create_text(20, 200, text="Diametre en annee lumiere")
 
-		self.canevaslobby.create_window(200, 300, window=self.qteIA, width=100, height=30)
-		self.canevaslobby.create_text(20, 300, text="Nb d'IA")
+        self.canevaslobby.create_window(200, 250, window=self.densitestellaire, width=100, height=30)
+        self.canevaslobby.create_text(20, 250, text="Nb systeme/AL cube")
 
-		self.canevaslobby.create_window(200, 450, window=self.btnlancerpartie, width=100, height=30)
+        self.canevaslobby.create_window(200, 300, window=self.qteIA, width=100, height=30)
+        self.canevaslobby.create_text(20, 300, text="Nb d'IA")
 
-	def creercadreloading(self):
-		self.cadreloading = Frame(self.root)
-		self.canevasloading = Canvas(self.cadreloading, width=640, height=480, bg="white")
-		self.canevasloading.create_text(320, 240, font=("Arial", 36), text="Chargement en cours...")
-		self.canevasloading.pack()
+        self.canevaslobby.create_window(200, 450, window=self.btnlancerpartie, width=100, height=30)
 
-	def voirgalaxie(self):
-		# A FAIRE comme pour voirsysteme et voirplanete, tester si on a deja la vuegalaxie
-		#         sinon si on la cree en centrant la vue sur le systeme d'ou on vient
-		s = self.modes["galaxie"]
-		self.changemode(s)
+    def creercadreloading(self):
+        self.cadreloading = Frame(self.root)
+        self.canevasloading = Canvas(self.cadreloading, width=640, height=480, bg="white")
+        self.canevasloading.create_text(320, 240, font=("Arial", 36), text="Chargement en cours...")
+        self.canevasloading.pack()
 
-	def voirsysteme(self, systeme=None):
-		if systeme:
-			sid = systeme.id
-			if sid in self.modes["systemes"].keys():
-				s = self.modes["systemes"][sid]
-			else:
-				s = VueSysteme(self)
-				self.modes["systemes"][sid] = s
-				s.initsysteme(systeme)
-			self.changemode(s)
+    def voirgalaxie(self):
+        # A FAIRE comme pour voirsysteme et voirplanete, tester si on a deja la vuegalaxie
+        #         sinon si on la cree en centrant la vue sur le systeme d'ou on vient
+        s = self.modes["galaxie"]
+        self.changemode(s)
 
-	def voirplanete(self, maselection=None):
-		s = self.modes["planetes"]
+    def voirsysteme(self, systeme=None):
+        if systeme:
+            sid = systeme.id
+            if sid in self.modes["systemes"].keys():
+                s = self.modes["systemes"][sid]
+            else:
+                s = VueSysteme(self)
+                self.modes["systemes"][sid] = s
+                s.initsysteme(systeme)
+            self.changemode(s)
 
-		if maselection:
-			sysid = maselection[5]
-			planeid = maselection[2]
-			if planeid in self.modes["planetes"].keys():
-				s = self.modes["planetes"][planeid]
-			else:
-				s = VuePlanete(self, sysid, planeid)
-				self.modes["planetes"][planeid] = s
-				s.initplanete(sysid, planeid)
-			self.changemode(s)
-		else:
-			print("aucune planete selectionnee pour atterrissage")
+    def voirplanete(self, maselection=None):
+        s = self.modes["planetes"]
 
-	def voirplaneteP(self, idplanete, idsysteme):
-		s = self.modes["planetes"]
+        if maselection:
+            sysid = maselection[5]
+            planeid = maselection[2]
+            if planeid in self.modes["planetes"].keys():
+                s = self.modes["planetes"][planeid]
+            else:
+                s = VuePlanete(self, sysid, planeid)
+                self.modes["planetes"][planeid] = s
+                s.initplanete(sysid, planeid)
+            self.changemode(s)
+        else:
+            print("aucune planete selectionnee pour atterrissage")
 
-		sysid = idsysteme
-		planeid = idplanete
-		if planeid in self.modes["planetes"].keys():
-			s = self.modes["planetes"][planeid]
-		else:
-			s = VuePlanete(self, sysid, planeid)
-			self.modes["planetes"][planeid] = s
-			s.initplanete(sysid, planeid)
-		self.changemode(s)
+    def voirplaneteP(self, idplanete, idsysteme):
+        s = self.modes["planetes"]
 
-	def creerpartie(self):
-		nom = self.nomsplash.get()
-		ip = self.ipsplash.get()
-		if nom and ip:
-			self.parent.creerpartie()
-			self.btnlancerpartie.config(state=NORMAL)
-			self.connecterpartie()
+        sysid = idsysteme
+        planeid = idplanete
+        if planeid in self.modes["planetes"].keys():
+            s = self.modes["planetes"][planeid]
+        else:
+            s = VuePlanete(self, sysid, planeid)
+            self.modes["planetes"][planeid] = s
+            s.initplanete(sysid, planeid)
+        self.changemode(s)
 
-	def connecterpartie(self):
-		nom = self.nomsplash.get()
-		ip = self.ipsplash.get()
-		if nom and ip:
-			self.parent.inscrirejoueur()
-			self.changecadre(self.cadrelobby)
-			self.parent.boucleattente()
+    def creerpartie(self):
+        nom = self.nomsplash.get()
+        ip = self.ipsplash.get()
+        if nom and ip:
+            self.parent.creerpartie()
+            self.btnlancerpartie.config(state=NORMAL)
+            self.connecterpartie()
 
-	def attenteloading(self):
-		self.angleattente += 5
-		if self.angleattente >= 360:
-			self.angleattente = 0
+    def connecterpartie(self):
+        nom = self.nomsplash.get()
+        ip = self.ipsplash.get()
+        if nom and ip:
+            self.parent.inscrirejoueur()
+            self.changecadre(self.cadrelobby)
+            self.parent.boucleattente()
 
-		angle = (self.angleattente / 360) * (2 * math.pi)
+    def attenteloading(self):
+        self.angleattente += 5
+        if self.angleattente >= 360:
+            self.angleattente = 0
 
-		x, y = hlp.getAngledPoint(angle, 10, 320, 350)
+        angle = (self.angleattente / 360) * (2 * math.pi)
 
-		self.canevasloading.delete("loading")
+        x, y = hlp.getAngledPoint(angle, 10, 320, 350)
 
-		self.canevasloading.create_oval(x - 10, y - 10, x + 10, y + 10, tags=("loading"), fill="red")
-		self.root.update_idletasks()
+        self.canevasloading.delete("loading")
 
-	def lancerpartie(self):
-		diametre = self.diametre.get()
-		densitestellaire = self.densitestellaire.get()
-		qteIA = self.qteIA.get()  # IA
+        self.canevasloading.create_oval(x - 10, y - 10, x + 10, y + 10, tags=("loading"), fill="red")
+        self.root.update_idletasks()
 
-		print("Loading...")
-		if diametre:
-			diametre = float(diametre)
-		else:
-			diametre = None
-		if densitestellaire:
-			densitestellaire = float(densitestellaire)
-		else:
-			densitestellaire = None
-		self.parent.lancerpartie(diametre, densitestellaire, qteIA)  # IA
+    def lancerpartie(self):
+        diametre = self.diametre.get()
+        densitestellaire = self.densitestellaire.get()
+        qteIA = self.qteIA.get()  # IA
 
-	def affichelisteparticipants(self, lj):
-		self.listelobby.delete(0, END)
-		for i in lj:
-			self.listelobby.insert(END, i)
+        print("Loading...")
+        if diametre:
+            diametre = float(diametre)
+        else:
+            diametre = None
+        if densitestellaire:
+            densitestellaire = float(densitestellaire)
+        else:
+            densitestellaire = None
+        self.parent.lancerpartie(diametre, densitestellaire, qteIA)  # IA
 
-	def afficherinitpartie(self, mod):
-		self.nom = self.parent.monnom
-		self.modele = mod
+    def affichelisteparticipants(self, lj):
+        self.listelobby.delete(0, END)
+        for i in lj:
+            self.listelobby.insert(END, i)
 
-		self.modes["galaxie"] = VueGalaxie(self)
-		self.modes["systemes"] = {}
-		self.modes["planetes"] = {}
+    def afficherinitpartie(self, mod):
+        self.nom = self.parent.monnom
+        self.modele = mod
 
-		g = self.modes["galaxie"]
-		g.labid.config(text=self.nom)
-		g.labid.config(fg=mod.joueurs[self.nom].couleur)
+        self.modes["galaxie"] = VueGalaxie(self)
+        self.modes["systemes"] = {}
+        self.modes["planetes"] = {}
 
-		g.chargeimages(mod)
-		g.afficherdecor()  # pourrait etre remplace par une image fait avec PIL -> moins d'objets
-		self.changecadre(self.cadrejeu, 1)
-		self.changemode(self.modes["galaxie"])
+        g = self.modes["galaxie"]
+        g.labid.config(text=self.nom)
+        g.labid.config(fg=mod.joueurs[self.nom].couleur)
 
-		self.voirsysteme(
-			mod.joueurs[self.nom].systemeorigine)  # Commencer en Vue SystemeOrigine si PlaneteOrigine pas disponible
-		for i in mod.joueurs[self.nom].systemeorigine.planetes:  # Trouver planete origine
-			# print(mod.joueurs[self.nom].systemeorigine)
-			# print(i.proprietaire)
-			if i.proprietaire == self.nom:
-				self.voirplaneteP(i.id, mod.joueurs[self.nom].systemeorigine.id)  # Afficher planeteOrigine
-				mod.joueurs[self.nom].creerVilleOrigine()
-				self.deplacerCanevas(250, 250)
+        g.chargeimages(mod)
+        g.afficherdecor()  # pourrait etre remplace par une image fait avec PIL -> moins d'objets
+        self.changecadre(self.cadrejeu, 1)
+        self.changemode(self.modes["galaxie"])
 
-	def afficherBatiment(self, Batiment):
-		# 200 c'Est la taille du minimap
-		for i in self.modes["planetes"].keys():
-			if i == Batiment.planeteid:
-				p = 200 / self.modes["planetes"][i].planete.terrainTailleCarre
-				couleur = self.modele.joueurs[Batiment.proprietaire].couleur
-				t = 200 / self.modes["planetes"][i].largeur
-				x = Batiment.x
-				y = Batiment.y
+        self.voirsysteme(
+            mod.joueurs[self.nom].systemeorigine)  # Commencer en Vue SystemeOrigine si PlaneteOrigine pas disponible
+        for i in mod.joueurs[self.nom].systemeorigine.planetes:  # Trouver planete origine
+            # print(mod.joueurs[self.nom].systemeorigine)
+            # print(i.proprietaire)
+            if i.proprietaire == self.nom:
+                self.voirplaneteP(i.id, mod.joueurs[self.nom].systemeorigine.id)  # Afficher planeteOrigine
+                mod.joueurs[self.nom].creerVilleOrigine()
+                self.deplacerCanevas(250, 250)
 
-				im = self.modes["planetes"][i].images[Batiment.type]
-				self.modes["planetes"][i].canevas.create_image(Batiment.x, Batiment.y, image=im,
-															   tags=(Batiment.id, Batiment.type, "batiment"))
+    def afficherBatiment(self, Batiment):
+        # 200 c'Est la taille du minimap
+        for i in self.modes["planetes"].keys():
+            if i == Batiment.planeteid:
+                p = 200 / self.modes["planetes"][i].planete.terrainTailleCarre
+                couleur = self.modele.joueurs[Batiment.proprietaire].couleur
+                t = 200 / self.modes["planetes"][i].largeur
+                x = Batiment.x
+                y = Batiment.y
 
-				self.modes["planetes"][i].minimap.create_oval(x * t - p, y * t - p, x * t + p, y * t + p, fill=couleur,
-															  tags=(Batiment.id, Batiment.type))
+                im = self.modes["planetes"][i].images[Batiment.type]
+                self.modes["planetes"][i].canevas.create_image(Batiment.x, Batiment.y, image=im,
+                                                               tags=(Batiment.id, Batiment.type, "batiment"))
 
-				break
+                self.modes["planetes"][i].minimap.create_oval(x * t - p, y * t - p, x * t + p, y * t + p, fill=couleur,
+                                                              tags=(Batiment.id, Batiment.type))
 
-	def effacerBatiment(self, Batiment):
-		for i in self.modes["planetes"].keys():
-			if i == Batiment.planeteid:
-				self.modes["planetes"][i].canevas.delete(Batiment.id)
-				self.modes["planetes"][i].minimap(Batiment.id)
-				break;
+                break
 
-	def fermerfenetre(self):
-		# Ici, on pourrait mettre des actions a faire avant de fermer (sauvegarder, avertir etc)
-		self.parent.fermefenetre()
+    def effacerBatiment(self, Batiment):
+        for i in self.modes["planetes"].keys():
+            if i == Batiment.planeteid:
+                self.modes["planetes"][i].canevas.delete(Batiment.id)
+                self.modes["planetes"][i].minimap(Batiment.id)
+                break;
 
-	def deplacerCanevas(self, x, y):  # ------------------- centre la vue sur une position x y
-		mode = self.modecourant
+    def afficherLazerBoi(self, lazerBoi):
+        # 200 c'Est la taille du minimap
+        for i in self.modes["planetes"].keys():
+            if i == lazerBoi.planeteid:
+                p = 200 / self.modes["planetes"][i].planete.terrainTailleCarre
+                print(self.modele.joueurs)
+                couleur = self.modele.joueurs[lazerBoi.proprietaire].couleur
+                t = 200 / self.modes["planetes"][i].largeur
+                x = lazerBoi.x
+                y = lazerBoi.y
 
-		ee = mode.canevas.winfo_width()
-		ii = mode.canevas.winfo_height()
-		eex = int(ee) / mode.largeur / 2
-		eey = int(ii) / mode.hauteur / 2
+                im = self.modes["planetes"][i].images["lazerboi"]
+                self.modes["planetes"][i].canevas.create_image(lazerBoi.x, lazerBoi.y, image=im,
+                                                               tags=(lazerBoi.id, lazerBoi.type, "lazerboi"))
 
-		ratio = 1
-		if mode == self.modes["galaxie"]:
-			ratio = mode.AL2pixel
-			print("G", ratio)
-		elif mode in self.modes["planetes"]:
-			ratio = mode.KM2pixel
-			print("P")
-		elif mode in self.modes["systemes"]:
-			ratio = mode.UA2pixel
-			print("S")
+                self.modes["planetes"][i].minimap.create_oval(x * t - p, y * t - p, x * t + p, y * t + p, fill=couleur,
+                                                              tags=(lazerBoi.id, lazerBoi.type))
 
-		mode.canevas.xview(MOVETO, (x * ratio / mode.largeur) - eex)
-		mode.canevas.yview(MOVETO, (y * ratio / mode.hauteur) - eey)
+                break
+            
+    def effacerBatiment(self, lazerBoi):
+        for i in self.modes["planetes"].keys():
+            if i == lazerBoi.planeteid:
+                self.modes["planetes"][i].canevas.delete(lazerBoi.id)
+                self.modes["planetes"][i].minimap(lazerBoi.id)
+                break;
+    
+    def fermerfenetre(self):
+        # Ici, on pourrait mettre des actions a faire avant de fermer (sauvegarder, avertir etc)
+        self.parent.fermefenetre()
+
+    def deplacerCanevas(self, x, y):  # ------------------- centre la vue sur une position x y
+        mode = self.modecourant
+
+        ee = mode.canevas.winfo_width()
+        ii = mode.canevas.winfo_height()
+        eex = int(ee) / mode.largeur / 2
+        eey = int(ii) / mode.hauteur / 2
+
+        ratio = 1
+        if mode == self.modes["galaxie"]:
+            ratio = mode.AL2pixel
+            print("G", ratio)
+        elif mode in self.modes["planetes"]:
+            ratio = mode.KM2pixel
+            print("P")
+        elif mode in self.modes["systemes"]:
+            ratio = mode.UA2pixel
+            print("S")
+
+        mode.canevas.xview(MOVETO, (x * ratio / mode.largeur) - eex)
+        mode.canevas.yview(MOVETO, (y * ratio / mode.hauteur) - eey)
 
 
 class Perspective(Frame):
@@ -1155,7 +1183,7 @@ class VuePlanete(Perspective):
             shopBarrack.grid(row=1, column=1)
             
             #À EFFACER, TEMPORAIRE
-            shopLazerboi = Button(self.cadreShop, text="Lazerboi", image=self.images["miniBarra"], compound="top",  command=self.infoLazerboi)
+            shopLazerboi = Button(self.cadreShop, text="Lazerboi", image=self.images["lazerboi"], compound="top",  command=self.infoLazerboi)
             shopLazerboi.grid(row=1, column=2)
 
 
@@ -1225,6 +1253,13 @@ class VuePlanete(Perspective):
             labelCoutEnergie.config(text=c.generatrice["energie"])
             labelCoutFood.config(text=c.generatrice["nourriture"])
             boutonAcheter.config(command=self.creeBarrack)
+        elif typeBatiment is "lazerboi":
+            labelImage.config(image=self.images["miniBarra"])
+            labelNom.config(text="Barrack")
+            labelCoutMetal.config(text=c.generatrice["metal"])
+            labelCoutEnergie.config(text=c.generatrice["energie"])
+            labelCoutFood.config(text=c.generatrice["nourriture"])
+            boutonAcheter.config(command=self.creeLazerboi)
             
         #grid tout
             #batiment
@@ -1345,6 +1380,8 @@ class VuePlanete(Perspective):
         self.images["miniFerm"] = ImageTk.PhotoImage(im)
         im = Image.open("./images/mine_50.png")
         self.images["miniBarra"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/Fichier_2.png")
+        self.images["lazerboi"] = ImageTk.PhotoImage(im)
         
     def afficherdecor(self):
         pass
@@ -1444,6 +1481,9 @@ class VuePlanete(Perspective):
                 elif t[1] == "ville":
                     self.maselection = "ville"
                     print("lalala") #!!!
+                elif t[1] == "lazerboi":
+                    self.maselection = "lazerboi"
+                    print("lazerboi at your service, pew pew.") #!!!
 
         else:
             x = self.canevas.canvasx(evt.x)
@@ -1473,6 +1513,7 @@ class VuePlanete(Perspective):
                 self.parent.parent.creerbarrack(self.parent.nom, self.systemeid, self.planeteid, x, y)
                 self.macommande = None
             elif self.macommande is "lazerboi":
+                print("hey!")
                 self.parent.parent.creerLazerboi(self.parent.nom, self.systemeid, self.planeteid, x, y)
                 self.macommande = None
 

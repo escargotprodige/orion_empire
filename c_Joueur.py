@@ -163,7 +163,7 @@ class Joueur():
 				self.vaisseauxinterstellaires.append(v)
 				return 1
 			
-	def creerstationGalactique(self, id):  ##################################################################  MODIF TRISTAN
+	def creerstationGalactique(self, id):  
 		print('creerstationGalactique')
 		for i in self.systemesvisites:
 			if i.id == id:
@@ -172,7 +172,7 @@ class Joueur():
 				return 1
 
 
-	# debut modif
+	
 	def creerLazerBoi(self, listeparams):
 		nom, systemeid, planeteid, x, y, barrackid = listeparams
 		for i in self.systemesvisites:

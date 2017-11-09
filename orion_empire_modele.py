@@ -15,7 +15,7 @@ from c_Systeme import *
 from c_Vaisseau import *
 from c_Ferme import *
 from c_Generatrice import *
-from c_StationGalactique import *  ###########################################################  MODIF TRISTAN
+from c_StationGalactique import *  
 from c_Joueur import *
 from c_IA import *
 from c_Batiment import *

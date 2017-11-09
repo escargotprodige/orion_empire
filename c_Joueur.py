@@ -35,7 +35,7 @@ class Joueur():
 		self.planeteOrigine.proprietaire = self.nom
 		# self.creerVilleOrigine()
 
-
+		self.barrackMere = Barrack(self, "barrack" + self.nom, None, None, -1, -1)
 		self.ressourcesTEMP = 100
 
 		self.ressource1 = 100

@@ -31,6 +31,9 @@ class Joueur():
 		                "creervaisseauSolaire": self.creervaisseauSolaire
 		                }
 
+		self.stationGalactiques = []
+		self.barrackMere = None
+
 		self.planeteOrigine = random.choice(self.systemeorigine.planetes)
 		self.planeteOrigine.proprietaire = self.nom
 		# self.creerVilleOrigine()
@@ -41,6 +44,8 @@ class Joueur():
 		self.ressource1 = 100
 		self.ressource2 = 100
 		self.ressource3 = 100
+		
+		self.delais = 20
 
 	def creerVilleOrigine(self):
 		ville = Ville(self, self.nom, self.systemeorigine, self.planeteOrigine, 25, 25)  ### TEST ICI  ###
@@ -126,7 +131,11 @@ class Joueur():
 				for j in i.planetes:
 					if j.id == planeteid:
 						barrack = Barrack(self, nom, systemeid, planeteid, x, y)
-						barrack.setBarrackMere(self.barrackMere)
+						
+						if self.barrackMere:
+							barrack.setBarrackMere(self.barrackMere)
+						else:
+							self.barrackMere = barrack
 						j.infrastructures.append(barrack)
 						# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
 						self.parent.parent.afficherBatiment(barrack)
@@ -221,6 +230,17 @@ class Joueur():
 						if self.nom == self.parent.parent.monnom:
 							if self.parent.parent.vue.modecourant == self.parent.parent.vue.modes["galaxie"]:
 								self.parent.parent.vue.deplacerCanevas(i.x, i.y)
+		
+		#G�n�ration des ressources tous les 20 mises � jours
+		self.delais = self.delais -1
+		if self.delais <= 0:
+			self.delais = 20
+			for s in self.systemesvisites:
+				for p in s.planetes:
+					for i in p.infrastructures:
+						if i.proprietaire == self.nom:
+							i.generer()
+							#print(self.ressource1,self.ressource2,self.ressource3)
 
 	def dechargervaisseaugalactique(self, rep):
 		v = None
@@ -237,20 +257,6 @@ class Joueur():
 		if s and v:
 			v.dechargervaisseaugalactique(s)
 
-	def dechargervaisseaugalactique(self, rep):
-		v = None
-		s = None
-		for i in self.vaisseauxinterstellaires:
-			if i.id == rep[0]:
-				v = i
-				break
-		for i in self.parent.systemes:
-			if i.id == rep[1]:
-				s = i
-				break
-
-		if s and v:
-			v.dechargervaisseaugalactique(s)
 
 	def upgradeVitesseVaisseau(self, rep):
 		id = rep[0]
@@ -287,3 +293,11 @@ class Joueur():
 		vg.chargementvaisseau(vs)
 
 		self.vaisseauxinterstellaires.pop(vs)
+
+	def creerstationGalactique(self, rep):
+		pass
+	
+	def ajoutessource(self,metaux=0,energie=0,food=0):
+		self.ressource1 += metaux
+		self.ressource2 += energie
+		self.ressource3 += food

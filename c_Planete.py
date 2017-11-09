@@ -1,6 +1,7 @@
 from orion_empire_modele import *
 import random
 from mathPlus import *
+from IdMaker import Id
 
 
 #
@@ -18,7 +19,7 @@ class Planete():
 		self.parent = parent
 		self.posXatterrissage = random.randrange(5000)
 		self.posYatterrissage = random.randrange(5000)
-		self.infrastructures = ["""Ville(self)"""]  # A CONTINUER
+		self.infrastructures = []  # A CONTINUER
 		self.proprietaire = "inconnu"
 		self.visiteurs = {}
 		self.distance = dist

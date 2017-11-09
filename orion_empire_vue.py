@@ -1631,7 +1631,7 @@ class VuePlanete(Perspective):
         else: 
             pass
         #Si Selection est ouvert, fermer
-        if self.cadreSelection:
+        if self.cadreSelection != None:
             self.cadreSelection.grid_forget()
             self.boutonSelect.config(text="Selection ˃")
             self.cadreSelection = None
@@ -1639,13 +1639,13 @@ class VuePlanete(Perspective):
         #Sinon, on ouvre le cadre selection
             self.cadreSelection = Frame(self.cadreetat, width=200, height=300, bg="blue")
             self.cadreSelection.grid(row=11, column=0, columnspan=5, rowspan=5)
-        #Mais, si on a rien selectionne, demander de selectionner
-        if self.maselection is None:
-            label = Label(self.cadreSelection, text="Veillez selectionner un objet")
-            label.grid()
-        else:
-        #Si on a selectionne qqch, le montrer
-            self.selectBatiment()
+            if self.maselection is None:
+                #Mais, si on a rien selectionne, demander de selectionner
+                label = Label(self.cadreSelection, text="Veillez selectionner un objet")
+                label.grid()
+            else:
+                #Si on a selectionne qqch, le montrer
+                self.selectBatiment()
     def selectBatiment(self): #Si on clique sur un batiment, montrer selection
         self.boutonSelect.config(text="Selection ˅")
         #Fermer les autres cadres
@@ -1658,7 +1658,21 @@ class VuePlanete(Perspective):
             self.cadreSelection = Frame(self.cadreetat, width=200, height=300, bg="blue")
             self.cadreSelection.grid(row=11, column=0, columnspan=5, rowspan=5)
         else:
-            pass
+            for widget in self.cadreSelection.winfo_children():
+                    widget.destroy()
+            #Cadre selection
+            if self.maselection and self.maselection[0] != "current":
+                if self.maselection[2] == "batiment":
+                    self.selectBatiment()
+                    if self.maselection[1] == "mine":
+                        pass
+                    elif self.maselection[1] == "generatrice":
+                        pass
+                    elif self.maselection[1] == "ferme":
+                        pass
+                    elif self.maselection[1] == "ville":
+                        pass
+        
         
         
     def cliquervue(self, evt):
@@ -1667,10 +1681,11 @@ class VuePlanete(Perspective):
         if t and t[0] != "current":
             if t[2] == "batiment":
                 print("werk werk werk") #!!!
+                self.selectBatiment()
                 if t[0] == self.parent.nom:
                     pass
                 elif t[1] == "mine":
-                    self.maselection = t[0]
+                    self.maselection = t
                     print(t[0])
                     print("mine mine mine") #!!!
                 elif t[1] == "generatrice":
@@ -1682,10 +1697,17 @@ class VuePlanete(Perspective):
                 elif t[1] == "ville":
                     self.maselection = "ville"
                     print("lalala") #!!!
-            
         else:
             x = self.canevas.canvasx(evt.x)
             y = self.canevas.canvasy(evt.y)
+            #if not clicked on Object
+            self.maselection = None
+            #Reset all selection
+            if self.cadreSelection != None:
+                self.cadreSelection.grid_forget()
+                self.boutonSelect.config(text="Selection ˃")
+                self.cadreSelection = None
+            
 
             if self.macommande == "mine":
                 self.parent.parent.creermine(self.parent.nom, self.systemeid, self.planeteid, x, y)

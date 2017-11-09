@@ -24,11 +24,10 @@ class ATP(Enum):  # ATTAQUANT_TERRE PARAMETRE
 
 
 class Barrack(Batiment):
-	dictUnitTemplate = {}
 
 	def __init__(self, parent, proprietaire, systemeid, planeteid, x, y):
 		Batiment.__init__(self, parent, proprietaire, systemeid, planeteid, x, y, "barrack")
-		dictUnitTemplate = {AT_TYPE.LAZERBOI: {ATP.NOM: 'lazerBoi',
+		self.dictUnitTemplate = {AT_TYPE.LAZERBOI: {ATP.NOM: 'lazerBoi',
 		                                       ATP.X: self.x,
 		                                       ATP.Y: self.y,
 		                                       ATP.NEAR_RANGE: 10,
@@ -61,8 +60,9 @@ class Barrack(Batiment):
 		                    }
 
 	def setBarrackMere(self, barrackMere):
-		b = self.dictUnitTemplat[AT_TYPE.LAZERBOI]
-		bm = barrackMere.dictUnitTemplat[AT_TYPE.LAZERBOI]
+		print(self.dictUnitTemplate.keys())
+		b = self.dictUnitTemplate[AT_TYPE.LAZERBOI]
+		bm = barrackMere.dictUnitTemplate[AT_TYPE.LAZERBOI]
 		
 		b[ATP.NEAR_RANGE] = bm[ATP.NEAR_RANGE]
 		b[ATP.FAR_RANGE] = bm[ATP.FAR_RANGE]
@@ -72,8 +72,8 @@ class Barrack(Batiment):
 		b[ATP.DEFENSE] = bm[ATP.DEFENSE]
 		b[ATP.PRIX] = bm[ATP.PRIX]
 		
-		b = self.dictUnitTemplat[AT_TYPE.FISTBOI]
-		bm = barrackMere.dictUnitTemplat[AT_TYPE.FISTBOI]
+		b = self.dictUnitTemplate[AT_TYPE.FISTBOI]
+		bm = barrackMere.dictUnitTemplate[AT_TYPE.FISTBOI]
 		
 		b[ATP.NEAR_RANGE] = bm[ATP.NEAR_RANGE]
 		b[ATP.FAR_RANGE] = bm[ATP.FAR_RANGE]

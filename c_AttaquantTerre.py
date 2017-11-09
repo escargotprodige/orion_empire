@@ -29,6 +29,9 @@ class AttaquantTerre:
 		self.targetPositionX = None
 		self.targetPositionY = None
 
+	def setTarget(self, target):
+		self.target = target
+
 	def attaquer(self):
 		# v�rifie s'il existe un target
 		if self.target == None:
@@ -36,7 +39,7 @@ class AttaquantTerre:
 
 		# fait avancer l'Attaquant vers son target
 		dist = distance(self.x, self.y, self.target.x, self.target.y)
-		if (dist <= self.farRange and dist >= self.nearRange):
+		if (dist >= self.farRange and dist <= self.nearRange):
 			self.avancer(self.target.x, self.target.y)
 			self.isTargetInRange = False;
 		else:

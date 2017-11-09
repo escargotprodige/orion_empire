@@ -6,6 +6,8 @@ import random
 import math
 from helper import Helper as hlp
 from mathPlus import *
+from c_Ville import *
+from Couts import *
 
 
 class Vue():
@@ -274,1100 +276,1175 @@ class Vue():
 		mode.canevas.xview(MOVETO, (x * ratio / mode.largeur) - eex)
 		mode.canevas.yview(MOVETO, (y * ratio / mode.hauteur) - eey)
 
-
 class Perspective(Frame):
-	def __init__(self, parent):
-		Frame.__init__(self, parent.cadrejeu)
-		self.parent = parent
-		self.modele = None
-		self.cadreetatactif = None
-		self.images = {}
-		self.cadrevue = Frame(self, width=400, height=400, bg="lightgreen")
-		self.cadrevue.pack(side=LEFT, expand=1, fill=BOTH)
+    def __init__(self, parent):
+        Frame.__init__(self, parent.cadrejeu)
+        self.parent = parent
+        self.modele = None
+        self.cadreetatactif = None
+        self.images = {}
+        self.cadrevue = Frame(self, width=400, height=400, bg="lightgreen")
+        self.cadrevue.pack(side=LEFT, expand=1, fill=BOTH)
 
-		self.cadreinfo = Frame(self, width=200, height=200, bg="darkgrey")
-		self.cadreinfo.pack(side=LEFT, fill=Y)
-		self.cadreinfo.pack_propagate(0)
-		self.cadreetat = Frame(self.cadreinfo, width=200, height=200, bg="grey20")
-		self.cadreetat.pack()
+        self.cadreinfo = Frame(self, width=200, height=200, bg="darkgrey")
+        self.cadreinfo.pack(side=LEFT, fill=Y)
+        self.cadreinfo.pack_propagate(0)
+        self.cadreetat = Frame(self.cadreinfo, width=200, height=200, bg="grey20")
+        self.cadreetat.pack()
 
-		self.cadreetat.grid(row=0, column=0)
-		self.cadreetat.pack(expand=TRUE)
+        self.cadreetat.grid(row=0, column=0)
+        self.cadreetat.pack(expand=TRUE)
 
-		self.scrollX = Scrollbar(self.cadrevue, orient=HORIZONTAL)
-		self.scrollY = Scrollbar(self.cadrevue)
-		self.canevas = Canvas(self.cadrevue, width=800, height=600, bg="grey11",
-		                      xscrollcommand=self.scrollX.set,
-		                      yscrollcommand=self.scrollY.set)
+        self.scrollX = Scrollbar(self.cadrevue, orient=HORIZONTAL)
+        self.scrollY = Scrollbar(self.cadrevue)
+        self.canevas = Canvas(self.cadrevue, width=800, height=600, bg="grey11",
+                              xscrollcommand=self.scrollX.set,
+                              yscrollcommand=self.scrollY.set)
 
-		self.canevas.bind("<Button>", self.cliquervue)
+        self.canevas.bind("<Button>", self.cliquervue)
 
-		self.scrollX.config(command=self.canevas.xview)
-		self.scrollY.config(command=self.canevas.yview)
-		self.canevas.grid(column=0, row=0, sticky=N + E + W + S)
-		self.cadrevue.columnconfigure(0, weight=1)
-		self.cadrevue.rowconfigure(0, weight=1)
-		self.scrollX.grid(column=0, row=1, sticky=E + W)
-		self.scrollY.grid(column=1, row=0, sticky=N + S)
+        self.scrollX.config(command=self.canevas.xview)
+        self.scrollY.config(command=self.canevas.yview)
+        self.canevas.grid(column=0, row=0, sticky=N + E + W + S)
+        self.cadrevue.columnconfigure(0, weight=1)
+        self.cadrevue.rowconfigure(0, weight=1)
+        self.scrollX.grid(column=0, row=1, sticky=E + W)
+        self.scrollY.grid(column=1, row=0, sticky=N + S)
 
-		self.labid = Label(self.cadreetat, text=self.parent.nom)
-		self.labid.grid(row=8, column=0)
 
-		# self.labid=Label(self.cadreinfo,width= 200,text=self.parent.nom) #!
-		# self.labid.pack()
+        #label id joueur nom
+        self.labid = Label(self.cadreetat, text=self.parent.nom)
+        self.labid.grid(row=20, column=0)
 
-		self.cadreetataction = Frame(self.cadreetat, width=200, height=200, bg="grey20")
+        # self.labid=Label(self.cadreinfo,width= 200,text=self.parent.nom) #!
+        # self.labid.pack()
 
-		self.cadreetatmsg = Frame(self.cadreetat, width=200, height=200, bg="grey20")
+        self.cadreetataction = Frame(self.cadreetat, width=200, height=200, bg="grey20")
 
-		self.cadreminimap = Frame(self.cadreinfo, width=200, height=200, bg="grey20")
-		self.cadreminimap.pack(side=BOTTOM)
-		self.minimap = Canvas(self.cadreminimap, width=200, height=200, bg="grey11")
-		self.minimap.bind("<Button>", self.cliquerminimap)
-		self.minimap.pack()
+        self.cadreetatmsg = Frame(self.cadreetat, width=200, height=200, bg="grey20")
 
-		self.afficherUI()
+        self.cadreminimap = Frame(self.cadreinfo, width=200, height=200, bg="grey20")
+        self.cadreminimap.pack(side=BOTTOM)
+        self.minimap = Canvas(self.cadreminimap, width=200, height=200, bg="grey11")
+        self.minimap.bind("<Button>", self.cliquerminimap)
+        self.minimap.pack()
 
-		self.cadreRessources = Frame(self.cadreinfo, width=200, height=50, bg="white")
-		self.cadreRessources.pack()
+        self.afficherUI()
 
-		# self.cadreRessources1=Frame(self.cadreRessources,width=100,height=30,bg="yellow")
-		# self.cadreRessources1.pack()
+        # Afficher Ressources 
+        self.cadreRessources = Frame(self.cadreinfo, width=200, height=50, bg="white")
+        self.cadreRessources.pack()
 
-		self.r1 = StringVar();
-		self.r2 = StringVar();
-		self.r3 = StringVar();
+        self.r1 = StringVar();
+        self.r2 = StringVar();
+        self.r3 = StringVar();
 
-		rWidth = 9
-		rHeight = 2
-		self.ressources = Label(self.cadreRessources, width=rWidth, height=rHeight, bg="yellow",
-		                        textvariable=self.r1)  # !
-		self.ressources.pack(side=LEFT)
-		self.ressources = Label(self.cadreRessources, width=rWidth, height=rHeight, bg="green",
-		                        textvariable=self.r2)  # !
-		self.ressources.pack(side=LEFT)
-		self.ressources = Label(self.cadreRessources, width=rWidth, height=rHeight, bg="red", textvariable=self.r3)  # !
-		self.ressources.pack(side=LEFT)
+        rWidth = 9
+        rHeight = 2
+        self.ressources = Label(self.cadreRessources, width=rWidth, height=rHeight, bg="brown",
+                                textvariable=self.r1)  # !
+        self.ressources.pack(side=LEFT)
+        self.ressources = Label(self.cadreRessources, width=rWidth, height=rHeight, bg="yellow",
+                                textvariable=self.r2)  # !
+        self.ressources.pack(side=LEFT)
+        self.ressources = Label(self.cadreRessources, width=rWidth, height=rHeight, bg="green", textvariable=self.r3)  # !
+        self.ressources.pack(side=LEFT)
 
-	def cliquervue(self, evt):
-		pass
+    def afficherRessources(self):
+        pass
+    
+    def cliquervue(self, evt):
+        pass
 
-	def cliquerminimap(self, evt):
-		pass
+    def cliquerminimap(self, evt):
+        pass
 
-	def changecadreetat(self, cadre):
+    def changecadreetat(self, cadre):
 
-		if self.cadreetatactif:
-			self.cadreetatactif.pack_forget()
-			self.cadreetatactif = None
-		if cadre:
-			self.cadreetatactif = cadre
-			self.cadreetatactif.grid()
+        if self.cadreetatactif:
+            self.cadreetatactif.pack_forget()
+            self.cadreetatactif = None
+        if cadre:
+            self.cadreetatactif = cadre
+            self.cadreetatactif.grid()
 
-	def afficherUI(self):
-		for child in self.cadreetataction.winfo_children():
-			child.destroy()
-		for child in self.cadreetatmsg.winfo_children():
-			child.destroy()
+    def afficherUI(self):
+        for child in self.cadreetataction.winfo_children():
+            child.destroy()
+        for child in self.cadreetatmsg.winfo_children():
+            child.destroy()
 
-	def updateRessources(self, joueur):
+    def updateRessources(self, joueur):
 
-		self.r1.set(str(joueur.ressource1))
-		self.r2.set(str(joueur.ressource2))
-		self.r3.set(str(joueur.ressource3))
+        self.r1.set(str(joueur.ressource1))
+        self.r2.set(str(joueur.ressource2))
+        self.r3.set(str(joueur.ressource3))
 
 
 class VueGalaxie(Perspective):
-	def __init__(self, parent):
-		Perspective.__init__(self, parent)
-		self.modele = self.parent.modele
-		self.maselection = None
-		self.AL2pixel = 100
-
-		self.largeur = int(self.modele.diametre * self.AL2pixel)
-		self.hauteur = self.largeur
-
-		self.canevas.config(scrollregion=(0, 0, self.largeur, self.hauteur))
-
-		self.afficherUI()
-
-	def afficherUI(self):
-		Perspective.afficherUI(self)
-
-		self.cadreShop = None
-		self.cadreJoueur = None
-		self.cadreSelection = None
-
-		boutonNext = Button(self.cadreetat, text="→", command=self.voirsysteme)
-		boutonNext.grid(row=0, column=5)
-
-		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
-		self.boutonShop.grid(row=2, column=0)
-
-		self.cadreSelectionVaisseau = Frame(self.cadreetat, bg="grey20")  # MODIF début
-
-		self.lbselectecible = Label(self.cadreSelectionVaisseau, text="Choisir cible", bg="darkgrey")
-		self.lbselectecible.grid(row=0, column=0)
-
-		self.btndechargervaisseau = Button(self.cadreSelectionVaisseau, text="Décharger vaisseau",
-		                                   command=self.dechargerVaisseauGalactique)
-		self.btndechargervaisseau.grid(row=1, column=0)
-
-		self.btncreervaisseau = Button(self.cadreSelectionVaisseau, text="Upgrade vitesse vaisseau",
-		                               command=self.upgradeVitesseVaisseau)
-		self.btncreervaisseau.grid(row=2, column=0)
-
-	def afficherShop(self):
-		self.boutonShop.config(text="Shop ˅")
-		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
-
-		if self.cadreShop:
-			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
-			self.cadreShop = None
-		else:
-			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
-			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-			shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.creervaisseauGalactique)
-			shopVaisseau.grid(row=0, column=0)
-			shopStation = Button(self.cadreShop, text="Station", command=self.creerstationGalactique)
-			shopStation.grid(row=0, column=1)  # MODIF fin
-
-	def voirsysteme(self, systeme=None):
-		if systeme == None:
-			if self.maselection and self.maselection[0] == self.parent.nom and self.maselection[1] == "systeme":
-				sid = self.maselection[2]
-				for i in self.modele.joueurs[self.parent.nom].systemesvisites:
-					if i.id == sid:
-						s = i
-						break
-
-				self.parent.parent.visitersysteme(sid)
-				self.parent.voirsysteme(s)  # normalement devrait pas planter
-		else:
-			sid = systeme.id
-			for i in self.modele.joueurs[self.parent.nom].systemesvisites:
-				if i.id == sid:
-					s = i
-					break
-			# NOTE passer par le serveur est-il requis ????????????
-			self.parent.parent.visitersysteme(sid)
-			self.parent.voirsysteme(s)  # normalement devrait pas planter
-
-	def chargeimages(self, mod):
-		# self.images["chasseur"] = Image.open("./images/chasseur.png")
-		self.images["chasseur"] = {}
-		for j in mod.joueurscles:
-			image = Image.open("./images/chasseur.png")
-
-			pixel = image.load()
-			couleur = image.convert("RGB")
-			for i in range(image.size[0]):
-				for k in range(image.size[1]):
-					r, g, b = couleur.getpixel((i, k))
-					if r == 255 and g == 255 and b == 255:
-						bouton = Button()
-						r, g, b = bouton.winfo_rgb(mod.joueurs[j].couleur)
-						r = int(r / 256)
-						g = int(g / 256)
-						b = int(b / 256)
-						pixel[i, k] = (r, g, b)
-
-			self.images["chasseur"][j] = image
-		self.img = {}
-
-	def afficherdecor(self):
-		self.creerimagefond()
-		self.affichermodelestatique()
-
-	def creerimagefond(
-			self):  # NOTE - au lieu de la creer a chaque fois on aurait pu utiliser une meme image de fond cree avec PIL
-		imgfondpil = Image.new("RGBA", (self.largeur, self.hauteur), "black")
-		draw = ImageDraw.Draw(imgfondpil)
-		for i in range(self.largeur * 2):
-			x = random.randrange(self.largeur)
-			y = random.randrange(self.hauteur)
-			# draw.ellipse((x,y,x+1,y+1), fill="white")
-			draw.ellipse((x, y, x + 0.1, y + 0.11), fill="white")
-		self.images["fond"] = ImageTk.PhotoImage(imgfondpil)
-		self.canevas.create_image(self.largeur / 2, self.hauteur / 2, image=self.images["fond"])
-
-	def affichermodelestatique(self):
-		mini = self.largeur / 200
-		e = self.AL2pixel
-		me = 200 / self.modele.diametre
-		m = 3
-
-		for i in self.modele.systemes:
-			t = i.etoile.taille * 3
-			if t < 3:
-				t = 3
-			
-			self.canevas.create_oval((i.x * e) - t, (i.y * e) - t, (i.x * e) + t, (i.y * e) + t, fill=i.etoile.outline,
-			                         tags=("inconnu", "systeme", i.id, str(i.x), str(i.y)))
-
-			# NOTE pour voir les id des objets systeme, decommentez la ligne suivantes
-			# self.canevas.create_text((i.x*e)-t,(i.y*e)-(t*2),text=str(i.id),fill="white")
-
-		# for i in self.modele.joueurscles:
-		#    couleur=self.modele.joueurs[i].couleur
-
-		#    for j in self.modele.joueurs[i].systemesvisites:
-		#        s=self.canevas.find_withtag(j.id)
-		#        self.canevas.addtag_withtag(i, s)
-		#        self.canevas.itemconfig(s,fill="grey80")
-		#
-		#        self.minimap.create_oval((j.x*me)-m,(j.y*me)-m,(j.x*me)+m,(j.y*me)+m,fill="grey80",tags=("systeme",j.id))
-
-		i = self.modele.joueurs[self.parent.parent.monnom]
-
-		for j in i.systemesvisites:
-			s = self.canevas.find_withtag(j.id)
-			self.canevas.addtag_withtag(self.parent.parent.monnom, s)
-			self.canevas.itemconfig(s, fill=j.etoile.type)
-
-			self.minimap.create_oval((j.x * me) - m, (j.y * me) - m, (j.x * me) + m, (j.y * me) + m, fill=j.etoile.type,
-			                         tags=("systeme", j.id))
-
-	# ************************ FIN DE LA SECTION D'AMORCE DE LA PARTIE
-
-	def identifierplanetemere(self, evt):
-		j = self.modele.joueurs[self.parent.nom]
-		couleur = j.couleur
-		x = j.systemeorigine.x * self.AL2pixel
-		y = j.systemeorigine.y * self.AL2pixel
-		id = j.systemeorigine.id
-		t = 10
-		self.canevas.create_oval(x - t, y - t, x + t, y + t, dash=(3, 3), width=2, outline=couleur,
-		                         tags=(self.parent.nom, "selecteur", id, ""))
-		xx = x / self.largeur
-		yy = y / self.hauteur
-		ee = self.canevas.winfo_width()
-		ii = self.canevas.winfo_height()
-		eex = int(ee) / self.largeur / 2
-		self.canevas.xview(MOVETO, xx - eex)
-		eey = int(ii) / self.hauteur / 2
-		self.canevas.yview(MOVETO, yy - eey)
-
-	def creervaisseauGalactique(self):
-		if self.maselection:
-			self.parent.parent.creervaisseauGalactique(self.maselection[2])
-			self.maselection = None
-			self.canevas.delete("selecteur")
-
-	def creerstation(self):
-		print("Creer station EN CONSTRUCTION")
-
-	def creerstationGalactique(self):
-		print("station Galactique EN CONSTRUCTION")
-		if self.maselection:
-			self.parent.parent.creerstationGalactique(self.maselection[2])
-			self.maselection = None
-			self.canevas.delete("selecteur")
-
-	def afficherpartie(self, mod):
-		self.canevas.delete("artefact")
-		self.canevas.delete("pulsar")
-		self.afficherselection()
-		self.minimap.delete("vaisseauinterstellaire")
-
-		e = self.AL2pixel
-		me = 200 / self.modele.diametre
-		m = 2
-
-		for i in mod.pulsars:  # ------------------------- cree les pulsars en premier pour les afficher  sous les vaisseaux
-			t = i.taille
-			self.canevas.create_oval((i.x * e) - t, (i.y * e) - t, (i.x * e) + t, (i.y * e) + t, fill="orchid3",
-			                         dash=(1, 1),
-			                         outline="maroon1", width=2,
-			                         tags=("inconnu", "pulsar", i.id))
-
-		for k in mod.joueurscles:
-			i = mod.joueurs[k]
-			self.img[k] = []
-			index = 0
-			for j in i.vaisseauxinterstellaires:
-				jx = j.x * e
-				jy = j.y * e
-
-				# self.canevas.create_line(x,y,x0,y0,fill="yellow",width=3,
-				#                         tags=(j.proprietaire,"vaisseauinterstellaire",j.id,"artefact"))
-				# self.canevas.create_line(x0,y0,x1,y1,fill=i.couleur,width=4,
-				#                         tags=(j.proprietaire,"vaisseauinterstellaire",j.id,"artefact"))
-				# self.canevas.create_line(x1,y1,x2,y2,fill="red",width=2,
-				#                         tags=(j.proprietaire,"vaisseauinterstellaire",j.id,"artefact"))
-				#
-				# self.img[k] = ImageTk.PhotoImage(self.images["chasseur"].rotate(j.degre -90))
-
-
-				self.img[k].append(ImageTk.PhotoImage(self.images["chasseur"][k].rotate(j.degre - 90)))
-
-				self.canevas.create_image(jx, jy, image=self.img[k][index],
-				                          tags=(j.proprietaire, "vaisseauinterstellaire", j.id, "artefact"))
-				index += 1
-
-				# Afficher vaisseaux sur minimap
-				if i.nom == self.parent.nom:
-					self.minimap.create_rectangle((j.x * me) - m, (j.y * me) - m, (j.x * me) + m, (j.y * me) + m,
-					                              fill=i.couleur,
-					                              tags=("vaisseauinterstellaire", j.id))
-
-
-
-					# ------------------------ Afficher vaisseaux sur minimap
-				if i.nom == self.parent.nom:
-					self.minimap.create_rectangle((j.x * me) - m, (j.y * me) - m, (j.x * me) + m, (j.y * me) + m,
-					                              fill=i.couleur,
-					                              tags=("vaisseauinterstellaire", j.id))
-
-		for i in mod.joueurscles:
-			i = mod.joueurs[i]
-			for j in i.stationGalactiques:
-				self.canevas.create_oval(j.x * e - 5, j.y * e - 5, j.x * e - 15, j.y * e - 15, fill=i.couleur,
-				                         outline="white", tags=(j.proprietaire, "StationGalactique", j.id, "artefact"))
-
-	def changeetatsystem(self, nom, systeme):
-		id = str(systeme.id)
-		lp = self.canevas.find_withtag(id)
-		self.canevas.addtag_withtag(nom, id)
-
-		m = 3
-		me = 200 / self.modele.diametre
-
-		self.canevas.itemconfig(lp[0], fill=systeme.etoile.type)
-
-		self.minimap.create_oval((systeme.x * me) - m, (systeme.y * me) - m, (systeme.x * me) + m, (systeme.y * me) + m,
-		                         fill=systeme.etoile.type, tags=("systeme", systeme.id))
-
-	def changerproprietaire(self, prop, couleur, systeme):
-		# lp=self.canevas.find_withtag(systeme.id)
-		self.canevas.addtag_withtag(prop, systeme.id)
-
-	def changerproprietaire1(self, prop, couleur, systeme):
-		id = str(systeme.id)
-		lp = self.canevas.find_withtag(id)
-		self.canevas.itemconfig(lp[0], fill=couleur)
-		t = (prop, "systeme", id, "systemevisite", str(len(systeme.planetes)), systeme.etoile.type)
-		self.canevas.itemconfig(lp[0], tags=t)
-
-	def afficherselection(self):
-		self.canevas.delete("selecteur")
-		if self.maselection != None:
-			joueur = self.modele.joueurs[self.parent.nom]
-
-			e = self.AL2pixel
-			if self.maselection[1] == "systeme":
-				for i in joueur.systemesvisites:
-					if i.id == self.maselection[2]:
-						x = i.x
-						y = i.y
-						t = 10
-						self.canevas.create_oval((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
-						                         outline=joueur.couleur,
-						                         tags=("select", "selecteur"))
-			elif self.maselection[1] == "vaisseauinterstellaire":
-				for i in joueur.vaisseauxinterstellaires:
-					if i.id == self.maselection[2]:
-						x = i.x
-						y = i.y
-						t = 10
-						self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
-						                              outline=joueur.couleur,
-						                              tags=("select", "selecteur"))
-
-			elif self.maselection[1] == "StationGalactique":
-				for i in joueur.stationGalactiques:
-					if i.id == self.maselection[2]:
-						x = i.x
-						y = i.y
-						t = 10
-						self.canevas.create_oval((x * e), (y * e), (x * e - 20), (y * e - 20), dash=(2, 2),
-						                         outline=joueur.couleur,
-						                         tags=("select", "selecteur"))
-
-	def cliquervue(self, evt):
-		# self.changecadreetat(None)
-		t = self.canevas.gettags("current")
-		if t and t[0] != "current":
-
-			if t[1] == "vaisseauinterstellaire":
-				print("IN VAISSEAUINTERSTELLAIRE", t)
-				self.maselection = [self.parent.nom, t[1], t[2]]
-				self.montrevaisseauxselection()
-
-			elif t[1] == "systeme":
-				print("IN SYSTEME", t)
-				if self.maselection and self.maselection[1] == "vaisseauinterstellaire":
-					print("IN systeme + select VAISSEAUINTERSTELLAIRE")
-					self.parent.parent.ciblerdestination(self.maselection[2], t[2])
-				elif self.parent.nom in t:
-					print("IN systeme  PAS SELECTION")
-					self.maselection = [self.parent.nom, t[1], t[2]]
-					self.montresystemeselection()
-				else:
-					print("IN systeme + RIEN")
-					self.maselection = None
-					self.lbselectecible.pack_forget()
-					self.canevas.delete("selecteur")
-					# self.changecadreetat(None)
-
-			elif t[1] == "StationGalactique":
-				self.maselection = [self.parent.nom, t[1], t[2]]
-
-			elif t[1] == "pulsar":
-				print("IN PULSAR", t)
-				if self.maselection and self.maselection[1] == "vaisseauinterstellaire":
-					print("IN pulsar + select select VAISSEAUINTERSTELLAIRE")
-					self.parent.parent.ciblerdestination(self.maselection[2], t[2])
-
-			else:
-				print("Objet inconnu")
-		else:
-			print("Region inconnue")
-			self.maselection = None
-			self.lbselectecible.pack_forget()
-			self.canevas.delete("selecteur")
-			# self.changecadreetat(None)
-
-	def changecadreetat(self, cadre):
-		if self.cadreSelection:
-			self.cadreSelection.grid_forget()
-			# print("FORGET")
-		if cadre:
-			self.cadreSelection = cadre
-			self.cadreSelection.grid(row=10, column=0)
-
-	def montresystemeselection(self):
-		self.changecadreetat(None)
-
-	def montrevaisseauxselection(self):
-		self.changecadreetat(self.cadreSelectionVaisseau)
-
-	def afficherartefacts(self, joueurs):
-		pass  # print("ARTEFACTS de ",self.nom)
-
-	def cliquerminimap(self, evt):
-		x = evt.x
-		y = evt.y
-		xn = self.largeur / int(self.minimap.winfo_width())
-		yn = self.hauteur / int(self.minimap.winfo_height())
-
-		ee = self.canevas.winfo_width()
-		ii = self.canevas.winfo_height()
-		eex = int(ee) / self.largeur / 2
-		eey = int(ii) / self.hauteur / 2
-
-		self.canevas.xview(MOVETO, (x * xn / self.largeur) - eex)
-		self.canevas.yview(MOVETO, (y * yn / self.hauteur) - eey)
-
-	def dechargerVaisseauGalactique(self):
-		print("DEMANDE DECHARGEMENT")
-		e = self.AL2pixel
-		if self.maselection:
-			v = self.maselection[2]
-			print(v)
-			for j in self.parent.modele.joueurs[self.parent.nom].vaisseauxinterstellaires:
-				if j.id == v:
-					v = j
-					break
-			print(v)
-			item = self.canevas.find_overlapping(v.x * e - 20, v.y * e - 20, v.x * e + 20, v.y * e + 20)
-			t = None
-			s = None
-			for i in item:
-				# print(i)
-				t = self.canevas.gettags(i)
-				# print(t)
-				for j in range(len(t)):
-					if t[j] == "systeme":
-						print("IN SYSTEM", t[j], t[j + 1])
-						s = t[j + 1]
-						break
-
-			if s:
-				print("DECHARGEMENT")
-				self.parent.parent.dechargerVaisseauGalactique(self.maselection[2], s)
-			else:
-				print(self.maselection, " PAS A UN SYSTEME")
-				# self.maselection = None
-				# self.canevas.delete("selecteur")
-		pass
-
-	def upgradeVitesseVaisseau(self):
-		print("CLIQUER UPGRADE VITESSE VAISSEAU GALACTIQUE")
-
-		if self.maselection:
-			# print(self.maselection)
-			self.parent.parent.upgradeVitesseVaisseau(self.maselection[2], 0.003)
-
-		pass
-
+    def __init__(self, parent):
+        Perspective.__init__(self, parent)
+        self.modele = self.parent.modele
+        self.maselection = None
+        self.AL2pixel = 100
+
+        self.largeur = int(self.modele.diametre * self.AL2pixel)
+        self.hauteur = self.largeur
+
+        self.canevas.config(scrollregion=(0, 0, self.largeur, self.hauteur))
+
+        self.afficherUI()
+
+    def afficherUI(self):
+        Perspective.afficherUI(self)
+
+        self.cadreShop = None
+        self.cadreJoueur = None
+        self.cadreSelection = None
+
+        boutonNext = Button(self.cadreetat, text="→", command=self.voirsysteme)
+        boutonNext.grid(row=0, column=5, sticky= N + E)
+
+        self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
+        self.boutonShop.grid(row=2, column=0)
+
+        self.cadreSelectionVaisseau = Frame(self.cadreetat, bg="grey20")  # MODIF début
+
+        self.lbselectecible = Label(self.cadreSelectionVaisseau, text="Choisir cible", bg="darkgrey")
+        self.lbselectecible.grid(row=0, column=0)
+
+        self.btndechargervaisseau = Button(self.cadreSelectionVaisseau, text="Décharger vaisseau",
+                                           command=self.dechargerVaisseauGalactique)
+        self.btndechargervaisseau.grid(row=1, column=0)
+
+        self.btncreervaisseau = Button(self.cadreSelectionVaisseau, text="Upgrade vitesse vaisseau",
+                                       command=self.upgradeVitesseVaisseau)
+        self.btncreervaisseau.grid(row=2, column=0)
+
+    def afficherShop(self):
+        self.boutonShop.config(text="Shop ˅")
+        # self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
+
+        if self.cadreShop:
+            self.cadreShop.grid_forget()
+            self.boutonShop.config(text="Shop ˃")
+            self.cadreShop = None
+        else:
+            self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
+            self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+            shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.creervaisseauGalactique)
+            shopVaisseau.grid(row=0, column=0)
+            shopStation = Button(self.cadreShop, text="Station", command=self.creerstationGalactique)
+            shopStation.grid(row=0, column=1)  # MODIF fin
+
+    def voirsysteme(self, systeme=None):
+        if systeme == None:
+            if self.maselection and self.maselection[0] == self.parent.nom and self.maselection[1] == "systeme":
+                sid = self.maselection[2]
+                for i in self.modele.joueurs[self.parent.nom].systemesvisites:
+                    if i.id == sid:
+                        s = i
+                        break
+
+                self.parent.parent.visitersysteme(sid)
+                self.parent.voirsysteme(s)  # normalement devrait pas planter
+        else:
+            sid = systeme.id
+            for i in self.modele.joueurs[self.parent.nom].systemesvisites:
+                if i.id == sid:
+                    s = i
+                    break
+            # NOTE passer par le serveur est-il requis ????????????
+            self.parent.parent.visitersysteme(sid)
+            self.parent.voirsysteme(s)  # normalement devrait pas planter
+
+    def chargeimages(self, mod):
+        # self.images["chasseur"] = Image.open("./images/chasseur.png")
+        self.images["chasseur"] = {}
+        for j in mod.joueurscles:
+            image = Image.open("./images/chasseur.png")
+
+            pixel = image.load()
+            couleur = image.convert("RGB")
+            for i in range(image.size[0]):
+                for k in range(image.size[1]):
+                    r, g, b = couleur.getpixel((i, k))
+                    if r == 255 and g == 255 and b == 255:
+                        bouton = Button()
+                        r, g, b = bouton.winfo_rgb(mod.joueurs[j].couleur)
+                        r = int(r / 256)
+                        g = int(g / 256)
+                        b = int(b / 256)
+                        pixel[i, k] = (r, g, b)
+
+            self.images["chasseur"][j] = image
+        self.img = {}
+
+    def afficherdecor(self):
+        self.creerimagefond()
+        self.affichermodelestatique()
+
+    def creerimagefond(
+            self):  # NOTE - au lieu de la creer a chaque fois on aurait pu utiliser une meme image de fond cree avec PIL
+        imgfondpil = Image.new("RGBA", (self.largeur, self.hauteur), "black")
+        draw = ImageDraw.Draw(imgfondpil)
+        for i in range(self.largeur * 2):
+            x = random.randrange(self.largeur)
+            y = random.randrange(self.hauteur)
+            # draw.ellipse((x,y,x+1,y+1), fill="white")
+            draw.ellipse((x, y, x + 0.1, y + 0.11), fill="white")
+        self.images["fond"] = ImageTk.PhotoImage(imgfondpil)
+        self.canevas.create_image(self.largeur / 2, self.hauteur / 2, image=self.images["fond"])
+
+    def affichermodelestatique(self):
+        mini = self.largeur / 200
+        e = self.AL2pixel
+        me = 200 / self.modele.diametre
+        m = 3
+
+        for i in self.modele.systemes:
+            t = i.etoile.taille * 3
+            if t < 3:
+                t = 3
+            
+            self.canevas.create_oval((i.x * e) - t, (i.y * e) - t, (i.x * e) + t, (i.y * e) + t, fill=i.etoile.outline,
+                                     tags=("inconnu", "systeme", i.id, str(i.x), str(i.y)))
+
+            # NOTE pour voir les id des objets systeme, decommentez la ligne suivantes
+            # self.canevas.create_text((i.x*e)-t,(i.y*e)-(t*2),text=str(i.id),fill="white")
+
+        # for i in self.modele.joueurscles:
+        #    couleur=self.modele.joueurs[i].couleur
+
+        #    for j in self.modele.joueurs[i].systemesvisites:
+        #        s=self.canevas.find_withtag(j.id)
+        #        self.canevas.addtag_withtag(i, s)
+        #        self.canevas.itemconfig(s,fill="grey80")
+        #
+        #        self.minimap.create_oval((j.x*me)-m,(j.y*me)-m,(j.x*me)+m,(j.y*me)+m,fill="grey80",tags=("systeme",j.id))
+
+        i = self.modele.joueurs[self.parent.parent.monnom]
+
+        for j in i.systemesvisites:
+            s = self.canevas.find_withtag(j.id)
+            self.canevas.addtag_withtag(self.parent.parent.monnom, s)
+            self.canevas.itemconfig(s, fill=j.etoile.type)
+
+            self.minimap.create_oval((j.x * me) - m, (j.y * me) - m, (j.x * me) + m, (j.y * me) + m, fill=j.etoile.type,
+                                     tags=("systeme", j.id))
+
+    # ************************ FIN DE LA SECTION D'AMORCE DE LA PARTIE
+
+    def identifierplanetemere(self, evt):
+        j = self.modele.joueurs[self.parent.nom]
+        couleur = j.couleur
+        x = j.systemeorigine.x * self.AL2pixel
+        y = j.systemeorigine.y * self.AL2pixel
+        id = j.systemeorigine.id
+        t = 10
+        self.canevas.create_oval(x - t, y - t, x + t, y + t, dash=(3, 3), width=2, outline=couleur,
+                                 tags=(self.parent.nom, "selecteur", id, ""))
+        xx = x / self.largeur
+        yy = y / self.hauteur
+        ee = self.canevas.winfo_width()
+        ii = self.canevas.winfo_height()
+        eex = int(ee) / self.largeur / 2
+        self.canevas.xview(MOVETO, xx - eex)
+        eey = int(ii) / self.hauteur / 2
+        self.canevas.yview(MOVETO, yy - eey)
+
+    def creervaisseauGalactique(self):
+        if self.maselection:
+            self.parent.parent.creervaisseauGalactique(self.maselection[2])
+            self.maselection = None
+            self.canevas.delete("selecteur")
+
+    def creerstation(self):
+        print("Creer station EN CONSTRUCTION")
+
+    def creerstationGalactique(self):
+        print("station Galactique EN CONSTRUCTION")
+        if self.maselection:
+            self.parent.parent.creerstationGalactique(self.maselection[2])
+            self.maselection = None
+            self.canevas.delete("selecteur")
+
+    def afficherpartie(self, mod):
+        self.canevas.delete("artefact")
+        self.canevas.delete("pulsar")
+        self.afficherselection()
+        self.minimap.delete("vaisseauinterstellaire")
+
+        e = self.AL2pixel
+        me = 200 / self.modele.diametre
+        m = 2
+
+        for i in mod.pulsars:  # ------------------------- cree les pulsars en premier pour les afficher  sous les vaisseaux
+            t = i.taille
+            self.canevas.create_oval((i.x * e) - t, (i.y * e) - t, (i.x * e) + t, (i.y * e) + t, fill="orchid3",
+                                     dash=(1, 1),
+                                     outline="maroon1", width=2,
+                                     tags=("inconnu", "pulsar", i.id))
+
+        for k in mod.joueurscles:
+            i = mod.joueurs[k]
+            self.img[k] = []
+            index = 0
+            for j in i.vaisseauxinterstellaires:
+                jx = j.x * e
+                jy = j.y * e
+
+                # self.canevas.create_line(x,y,x0,y0,fill="yellow",width=3,
+                #                         tags=(j.proprietaire,"vaisseauinterstellaire",j.id,"artefact"))
+                # self.canevas.create_line(x0,y0,x1,y1,fill=i.couleur,width=4,
+                #                         tags=(j.proprietaire,"vaisseauinterstellaire",j.id,"artefact"))
+                # self.canevas.create_line(x1,y1,x2,y2,fill="red",width=2,
+                #                         tags=(j.proprietaire,"vaisseauinterstellaire",j.id,"artefact"))
+                #
+                # self.img[k] = ImageTk.PhotoImage(self.images["chasseur"].rotate(j.degre -90))
+
+
+                self.img[k].append(ImageTk.PhotoImage(self.images["chasseur"][k].rotate(j.degre - 90)))
+
+                self.canevas.create_image(jx, jy, image=self.img[k][index],
+                                          tags=(j.proprietaire, "vaisseauinterstellaire", j.id, "artefact"))
+                index += 1
+
+                # Afficher vaisseaux sur minimap
+                if i.nom == self.parent.nom:
+                    self.minimap.create_rectangle((j.x * me) - m, (j.y * me) - m, (j.x * me) + m, (j.y * me) + m,
+                                                  fill=i.couleur,
+                                                  tags=("vaisseauinterstellaire", j.id))
+
+
+
+                    # ------------------------ Afficher vaisseaux sur minimap
+                if i.nom == self.parent.nom:
+                    self.minimap.create_rectangle((j.x * me) - m, (j.y * me) - m, (j.x * me) + m, (j.y * me) + m,
+                                                  fill=i.couleur,
+                                                  tags=("vaisseauinterstellaire", j.id))
+
+        for i in mod.joueurscles:
+            i = mod.joueurs[i]
+            for j in i.stationGalactiques:
+                self.canevas.create_oval(j.x * e - 5, j.y * e - 5, j.x * e - 15, j.y * e - 15, fill=i.couleur,
+                                         outline="white", tags=(j.proprietaire, "StationGalactique", j.id, "artefact"))
+
+    def changeetatsystem(self, nom, systeme):
+        id = str(systeme.id)
+        lp = self.canevas.find_withtag(id)
+        self.canevas.addtag_withtag(nom, id)
+
+        m = 3
+        me = 200 / self.modele.diametre
+
+        self.canevas.itemconfig(lp[0], fill=systeme.etoile.type)
+
+        self.minimap.create_oval((systeme.x * me) - m, (systeme.y * me) - m, (systeme.x * me) + m, (systeme.y * me) + m,
+                                 fill=systeme.etoile.type, tags=("systeme", systeme.id))
+
+    def changerproprietaire(self, prop, couleur, systeme):
+        # lp=self.canevas.find_withtag(systeme.id)
+        self.canevas.addtag_withtag(prop, systeme.id)
+
+    def changerproprietaire1(self, prop, couleur, systeme):
+        id = str(systeme.id)
+        lp = self.canevas.find_withtag(id)
+        self.canevas.itemconfig(lp[0], fill=couleur)
+        t = (prop, "systeme", id, "systemevisite", str(len(systeme.planetes)), systeme.etoile.type)
+        self.canevas.itemconfig(lp[0], tags=t)
+
+    def afficherselection(self):
+        self.canevas.delete("selecteur")
+        if self.maselection != None:
+            joueur = self.modele.joueurs[self.parent.nom]
+
+            e = self.AL2pixel
+            if self.maselection[1] == "systeme":
+                for i in joueur.systemesvisites:
+                    if i.id == self.maselection[2]:
+                        x = i.x
+                        y = i.y
+                        t = 10
+                        self.canevas.create_oval((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
+                                                 outline=joueur.couleur,
+                                                 tags=("select", "selecteur"))
+            elif self.maselection[1] == "vaisseauinterstellaire":
+                for i in joueur.vaisseauxinterstellaires:
+                    if i.id == self.maselection[2]:
+                        x = i.x
+                        y = i.y
+                        t = 10
+                        self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
+                                                      outline=joueur.couleur,
+                                                      tags=("select", "selecteur"))
+
+            elif self.maselection[1] == "StationGalactique":
+                for i in joueur.stationGalactiques:
+                    if i.id == self.maselection[2]:
+                        x = i.x
+                        y = i.y
+                        t = 10
+                        self.canevas.create_oval((x * e), (y * e), (x * e - 20), (y * e - 20), dash=(2, 2),
+                                                 outline=joueur.couleur,
+                                                 tags=("select", "selecteur"))
+
+    def cliquervue(self, evt):
+        # self.changecadreetat(None)
+        t = self.canevas.gettags("current")
+        if t and t[0] != "current":
+
+            if t[1] == "vaisseauinterstellaire":
+                print("IN VAISSEAUINTERSTELLAIRE", t)
+                self.maselection = [self.parent.nom, t[1], t[2]]
+                self.montrevaisseauxselection()
+
+            elif t[1] == "systeme":
+                print("IN SYSTEME", t)
+                if self.maselection and self.maselection[1] == "vaisseauinterstellaire":
+                    print("IN systeme + select VAISSEAUINTERSTELLAIRE")
+                    self.parent.parent.ciblerdestination(self.maselection[2], t[2])
+                elif self.parent.nom in t:
+                    print("IN systeme  PAS SELECTION")
+                    self.maselection = [self.parent.nom, t[1], t[2]]
+                    self.montresystemeselection()
+                else:
+                    print("IN systeme + RIEN")
+                    self.maselection = None
+                    self.lbselectecible.pack_forget()
+                    self.canevas.delete("selecteur")
+                    # self.changecadreetat(None)
+
+            elif t[1] == "StationGalactique":
+                self.maselection = [self.parent.nom, t[1], t[2]]
+
+            elif t[1] == "pulsar":
+                print("IN PULSAR", t)
+                if self.maselection and self.maselection[1] == "vaisseauinterstellaire":
+                    print("IN pulsar + select select VAISSEAUINTERSTELLAIRE")
+                    self.parent.parent.ciblerdestination(self.maselection[2], t[2])
+
+            else:
+                print("Objet inconnu")
+        else:
+            print("Region inconnue")
+            self.maselection = None
+            self.lbselectecible.pack_forget()
+            self.canevas.delete("selecteur")
+            # self.changecadreetat(None)
+
+    def changecadreetat(self, cadre):
+        if self.cadreSelection:
+            self.cadreSelection.grid_forget()
+            # print("FORGET")
+        if cadre:
+            self.cadreSelection = cadre
+            self.cadreSelection.grid(row=10, column=0)
+
+    def montresystemeselection(self):
+        self.changecadreetat(None)
+
+    def montrevaisseauxselection(self):
+        self.changecadreetat(self.cadreSelectionVaisseau)
+
+    def afficherartefacts(self, joueurs):
+        pass  # print("ARTEFACTS de ",self.nom)
+
+    def cliquerminimap(self, evt):
+        x = evt.x
+        y = evt.y
+        xn = self.largeur / int(self.minimap.winfo_width())
+        yn = self.hauteur / int(self.minimap.winfo_height())
+
+        ee = self.canevas.winfo_width()
+        ii = self.canevas.winfo_height()
+        eex = int(ee) / self.largeur / 2
+        eey = int(ii) / self.hauteur / 2
+
+        self.canevas.xview(MOVETO, (x * xn / self.largeur) - eex)
+        self.canevas.yview(MOVETO, (y * yn / self.hauteur) - eey)
+
+    def dechargerVaisseauGalactique(self):
+        print("DEMANDE DECHARGEMENT")
+        e = self.AL2pixel
+        if self.maselection:
+            v = self.maselection[2]
+            print(v)
+            for j in self.parent.modele.joueurs[self.parent.nom].vaisseauxinterstellaires:
+                if j.id == v:
+                    v = j
+                    break
+            print(v)
+            item = self.canevas.find_overlapping(v.x * e - 20, v.y * e - 20, v.x * e + 20, v.y * e + 20)
+            t = None
+            s = None
+            for i in item:
+                # print(i)
+                t = self.canevas.gettags(i)
+                # print(t)
+                for j in range(len(t)):
+                    if t[j] == "systeme":
+                        print("IN SYSTEM", t[j], t[j + 1])
+                        s = t[j + 1]
+                        break
+
+            if s:
+                print("DECHARGEMENT")
+                self.parent.parent.dechargerVaisseauGalactique(self.maselection[2], s)
+            else:
+                print(self.maselection, " PAS A UN SYSTEME")
+                # self.maselection = None
+                # self.canevas.delete("selecteur")
+        pass
+
+    def upgradeVitesseVaisseau(self):
+        print("CLIQUER UPGRADE VITESSE VAISSEAU GALACTIQUE")
+
+        if self.maselection:
+            # print(self.maselection)
+            self.parent.parent.upgradeVitesseVaisseau(self.maselection[2], 0.003)
+
+        pass
 
 class VueSysteme(Perspective):
-	def __init__(self, parent):
-		Perspective.__init__(self, parent)
-		self.modele = self.parent.modele
-		self.planetes = {}
-		self.systeme = None
-		self.maselection = None
+    def __init__(self, parent):
+        Perspective.__init__(self, parent)
+        self.modele = self.parent.modele
+        self.planetes = {}
+        self.systeme = None
+        self.maselection = None
 
-		self.UA2pixel = 20  # Grandeur soleil # ainsi la terre serait a 100 pixels du soleil et Uranus a 19 Unites Astronomiques
-		self.largeur = 1000
-		self.hauteur = self.largeur
+        self.UA2pixel = 20  # Grandeur soleil # ainsi la terre serait a 100 pixels du soleil et Uranus a 19 Unites Astronomiques
+        self.largeur = 1000
+        self.hauteur = self.largeur
 
-		self.afficherUI()
+        self.afficherUI()
 
-	def afficherUI(self):
-		Perspective.afficherUI(self)
+    def afficherUI(self):
+        Perspective.afficherUI(self)
 
-		self.cadreShop = None
-		self.cadreJoueur = None
-		self.cadreSelection = None
+        self.cadreShop = None
+        self.cadreJoueur = None
+        self.cadreSelection = None
 
-		boutonBack = Button(self.cadreetat, text="←", command=self.voirgalaxie)
-		boutonBack.grid(row=0, column=0)
-		boutonNext = Button(self.cadreetat, text="→", command=self.voirplanete)
-		boutonNext.grid(row=0, column=5)
+        boutonBack = Button(self.cadreetat, text="←", command=self.voirgalaxie)
+        boutonBack.grid(row=0, column=0, sticky= N + W)
+        boutonNext = Button(self.cadreetat, text="→", command=self.voirplanete)
+        boutonNext.grid(row=0, column=5, sticky= N + E)
 
-		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
-		self.boutonShop.grid(row=2, column=0)
+        self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
+        self.boutonShop.grid(row=2, column=0)
 
-	def afficherShop(self):
-		self.boutonShop.config(text="Shop ˅")
-		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
+    def afficherShop(self):
+        self.boutonShop.config(text="Shop ˅")
+        # self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
 
-		if self.cadreShop:
-			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
-			self.cadreShop = None
-		else:
-			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
-			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-			shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.creervaisseau)
-			shopVaisseau.grid(row=0, column=0)
-			shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
-			shopStation.grid(row=0, column=1)
+        if self.cadreShop:
+            self.cadreShop.grid_forget()
+            self.boutonShop.config(text="Shop ˃")
+            self.cadreShop = None
+        else:
+            self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
+            self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+            shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.creervaisseau)
+            shopVaisseau.grid(row=0, column=0)
+            shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
+            shopStation.grid(row=0, column=1)
 
-	def voirplanete(self):
-		self.parent.voirplanete(self.maselection)
+    def voirplanete(self):
+        self.parent.voirplanete(self.maselection)
 
-	def voirgalaxie(self):
-		self.parent.voirgalaxie()
+    def voirgalaxie(self):
+        self.parent.voirgalaxie()
 
-	def initsysteme(self, i):
-		self.systeme = i
-		self.canevas.config(scrollregion=(0, 0, self.largeur, self.hauteur))
-		self.afficherdecor(i)
+    def initsysteme(self, i):
+        self.systeme = i
+        self.canevas.config(scrollregion=(0, 0, self.largeur, self.hauteur))
+        self.afficherdecor(i)
 
-	def affichermodelestatique(self, i):
-		xl = self.largeur / 2
-		yl = self.hauteur / 2
-		n = i.etoile.taille * self.UA2pixel / 2
+    def affichermodelestatique(self, i):
+        xl = self.largeur / 2
+        yl = self.hauteur / 2
+        n = i.etoile.taille * self.UA2pixel / 2
 
-		couleur = i.etoile.type
-		outcolor = i.etoile.outline
-		mini = 2
-		UAmini = 4
-		self.canevas.create_oval(xl - n, yl - n, xl + n, yl + n, fill=couleur, dash=(1, 2), width=4, outline=outcolor,
-		                         tags=("systeme", i.id, "etoile", str(n),))
-		self.minimap.create_oval(100 - mini, 100 - mini, 100 + mini, 100 + mini, fill=couleur)
+        couleur = i.etoile.type
+        outcolor = i.etoile.outline
+        mini = 2
+        UAmini = 4
+        self.canevas.create_oval(xl - n, yl - n, xl + n, yl + n, fill=couleur, dash=(1, 2), width=4, outline=outcolor,
+                                 tags=("systeme", i.id, "etoile", str(n),))
+        self.minimap.create_oval(100 - mini, 100 - mini, 100 + mini, 100 + mini, fill=couleur)
 
-		# for p in i.planetes:
-		#    x,y=hlp.getAngledPoint(math.radians(p.angle),p.distance*self.UA2pixel,xl,yl)
-		#    n=p.taille*self.UA2pixel
-		#    self.canevas.create_oval(x-n,y-n,x+n,y+n,fill="red",tags=(i.proprietaire,"planete",p.id,"inconnu",i.id,int(x),int(y)))
-		#    x,y=hlp.getAngledPoint(math.radians(p.angle),p.distance*UAmini,100,100)
-		#    self.minimap.create_oval(x-mini,y-mini,x+mini,y+mini,fill="red",tags=("planete"))
+        # for p in i.planetes:
+        #    x,y=hlp.getAngledPoint(math.radians(p.angle),p.distance*self.UA2pixel,xl,yl)
+        #    n=p.taille*self.UA2pixel
+        #    self.canevas.create_oval(x-n,y-n,x+n,y+n,fill="red",tags=(i.proprietaire,"planete",p.id,"inconnu",i.id,int(x),int(y)))
+        #    x,y=hlp.getAngledPoint(math.radians(p.angle),p.distance*UAmini,100,100)
+        #    self.minimap.create_oval(x-mini,y-mini,x+mini,y+mini,fill="red",tags=("planete"))
 
-		# NOTE Il y a un probleme ici je ne parviens pas a centrer l'objet convenablement comme dans la fonction 'identifierplanetemere'
-		canl = int(self.canevas.cget("width")) / 2
-		canh = int(self.canevas.cget("height")) / 2
-		self.canevas.xview(MOVETO, ((self.largeur / 2) - canl) / self.largeur)
-		self.canevas.yview(MOVETO, ((self.hauteur / 2) - canh) / self.hauteur)
+        # NOTE Il y a un probleme ici je ne parviens pas a centrer l'objet convenablement comme dans la fonction 'identifierplanetemere'
+        canl = int(self.canevas.cget("width")) / 2
+        canh = int(self.canevas.cget("height")) / 2
+        self.canevas.xview(MOVETO, ((self.largeur / 2) - canl) / self.largeur)
+        self.canevas.yview(MOVETO, ((self.hauteur / 2) - canh) / self.hauteur)
 
-	def creerimagefond(self, i):
-		imgfondpil = Image.new("RGBA", (self.largeur, self.hauteur), "black")
-		draw = ImageDraw.Draw(imgfondpil)
-		xl = self.largeur / 2
-		yl = self.hauteur / 2
-		for p in i.planetes:
-			d = p.distance * self.UA2pixel
-			draw.ellipse((xl - d, yl - d, xl + d, yl + d), outline="white")
+    def creerimagefond(self, i):
+        imgfondpil = Image.new("RGBA", (self.largeur, self.hauteur), "black")
+        draw = ImageDraw.Draw(imgfondpil)
+        xl = self.largeur / 2
+        yl = self.hauteur / 2
+        for p in i.planetes:
+            d = p.distance * self.UA2pixel
+            draw.ellipse((xl - d, yl - d, xl + d, yl + d), outline="white")
 
-		self.images["fond"] = ImageTk.PhotoImage(imgfondpil)
-		self.canevas.create_image(self.largeur / 2, self.hauteur / 2, image=self.images["fond"])
+        self.images["fond"] = ImageTk.PhotoImage(imgfondpil)
+        self.canevas.create_image(self.largeur / 2, self.hauteur / 2, image=self.images["fond"])
 
-	def afficherdecor(self, i):
-		self.creerimagefond(i)
-		self.affichermodelestatique(i)
+    def afficherdecor(self, i):
+        self.creerimagefond(i)
+        self.affichermodelestatique(i)
 
-	def creervaisseau(self):
-		if self.maselection:
-			print(self.maselection)
-			self.parent.parent.creervaisseauSolaire(self.maselection[4],self.maselection[2],0)
-			self.maselection = None
-			self.canevas.delete("selecteur")
+    def creervaisseau(self):
+        if self.maselection:
+            print(self.maselection)
+            self.parent.parent.creervaisseauSolaire(self.maselection[4],self.maselection[2],0)
+            self.maselection = None
+            self.canevas.delete("selecteur")
 
-	def creerstation(self):
-		print("Creer station EN CONSTRUCTION")
+    def creerstation(self):
+        print("Creer station EN CONSTRUCTION")
 
-	def afficherpartie(self, mod):
-		self.canevas.delete("planete")
-		self.minimap.delete("planete")
+    def afficherpartie(self, mod):
+        self.canevas.delete("planete")
+        self.canevas.delete("vaisseau")
+        self.minimap.delete("planete")
 
-		xl = self.largeur / 2
-		yl = self.hauteur / 2
-		mini = 2
-		UAmini = 4
+        xl = self.largeur / 2
+        yl = self.hauteur / 2
+        mini = 2
+        UAmini = 4
 
-		for p in self.systeme.planetes:
-			x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * UAmini, 100, 100)
-			self.minimap.create_oval(x - mini, y - mini, x + mini, y + mini, fill=p.couleurPlanete, tags=("planete"))
-			x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * self.UA2pixel, xl, yl)
-			n = p.taille * self.UA2pixel
-			self.canevas.create_oval(x - n, y - n, x + n, y + n, fill=p.couleurPlanete, tags=(
-			self.systeme.proprietaire, "planete", p.id, "inconnu", self.systeme.id, int(x), int(y)))
+        for p in self.systeme.planetes:
+            x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * UAmini, 100, 100)
+            self.minimap.create_oval(x - mini, y - mini, x + mini, y + mini, fill=p.couleurPlanete, tags=("planete"))
+            x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * self.UA2pixel, xl, yl)
+            n = p.taille * self.UA2pixel
+            self.canevas.create_oval(x - n, y - n, x + n, y + n, fill=p.couleurPlanete, tags=(
+            self.systeme.proprietaire, "planete", p.id, "inconnu", self.systeme.id, int(x), int(y)))
 
-			if self.maselection != None:
-				if p.id == self.maselection[2]:
-					self.canevas.delete("select")
-					n += 2
-					self.canevas.create_oval((x) - n - 1, (y) - n - 1, (x) + n, (y) + n - 1, dash=(2, 2),
-					                         outline=self.modele.joueurs[self.parent.nom].couleur,
-					                         tags=("select", "selecteur"))
+            if self.maselection != None:
+                if p.id == self.maselection[2]:
+                    self.canevas.delete("select")
+                    n += 2
+                    self.canevas.create_oval((x) - n - 1, (y) - n - 1, (x) + n, (y) + n - 1, dash=(2, 2),
+                                             outline=self.modele.joueurs[self.parent.nom].couleur,
+                                             tags=("select", "selecteur"))
 
-	def changerproprietaire(self):
-		pass
+        for v in self.systeme.vaisseaux:
+            pass
 
-	def afficherselection(self):
-		self.canevas.delete("selecteur")
-		if self.maselection != None:
-			systemes = self.modele.systemes
+    def changerproprietaire(self):
+        pass
 
-			e = self.UA2pixel
+    def afficherselection(self):
+        self.canevas.delete("selecteur")
+        if self.maselection != None:
+            systemes = self.modele.systemes
 
-			# Pas obligé de faire la selection initiale mais plus satisfesant
-			if self.maselection[1] == "planete":
-				for j in systemes:
-					for p in j.planetes:
-						if p.id == self.maselection[2]:
-							t = (p.taille * e) * 5
-							x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * self.UA2pixel,
-							                          self.largeur / 2, self.largeur / 2)
+            e = self.UA2pixel
 
-							self.canevas.create_oval((x) - t, (y) - t, (x) + t, (y) + t, dash=(2, 2),
-							                         outline=self.modele.joueurs[self.parent.nom].couleur,
-							                         tags=("select", "selecteur"))
+            # Pas obligé de faire la selection initiale mais plus satisfesant
+            if self.maselection[1] == "planete":
+                for j in systemes:
+                    for p in j.planetes:
+                        if p.id == self.maselection[2]:
+                            t = (p.taille * e) * 5
+                            x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * self.UA2pixel,
+                                                      self.largeur / 2, self.largeur / 2)
 
-							p.selectionne = True
-			'''
-			elif self.maselection[1] == "vaisseauSolaire":
-				for i in joueur.vaisseauxinterstellaires:
-					if i.id == self.maselection[2]:
-						x = i.x
-						y = i.y
-						t = 10
-						self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
-						                              outline=joueur.couleur,
-						                              tags=("select", "selecteur"))
-			'''
-	def cliquervue(self, evt):
-		self.changecadreetat(None)
+                            self.canevas.create_oval((x) - t, (y) - t, (x) + t, (y) + t, dash=(2, 2),
+                                                     outline=self.modele.joueurs[self.parent.nom].couleur,
+                                                     tags=("select", "selecteur"))
 
-		t = self.canevas.gettags("current")
-		print(t)
-		if t and "etoile" in t:
-			print("IN_ETOILE")
-			pass
-		elif t and "planete" in t:
-			nom = t[0]
-			idplanete = t[2]
-			idsysteme = t[4]
-			self.maselection = [self.parent.nom, t[1], t[2], t[5], t[6],
-			                    t[4]]  # prop, type, id; self.canevas.find_withtag(CURRENT)#[0]
-			# !!! Modifie Paola 19-10-17
-			# if t[1] == "planete" and t[3]=="inconnu":
-			#   self.montreplaneteselection()
+                            p.selectionne = True
+            '''
+            elif self.maselection[1] == "vaisseauSolaire":
+                for i in joueur.vaisseauxinterstellaires:
+                    if i.id == self.maselection[2]:
+                        x = i.x
+                        y = i.y
+                        t = 10
+                        self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
+                                                      outline=joueur.couleur,
+                                                      tags=("select", "selecteur"))
+            '''
+    def cliquervue(self, evt):
+        self.changecadreetat(None)
 
-			# ici je veux envoyer un message comme quoi je visite cette planete
-			# et me mettre en mode planete sur cette planete, d'une shot
-			# ou est-ce que je fais selection seulement pour etre enteriner par un autre bouton
+        t = self.canevas.gettags("current")
+        print(t)
+        if t and "etoile" in t:
+            print("IN_ETOILE")
+            pass
+        elif t and "planete" in t:
+            nom = t[0]
+            idplanete = t[2]
+            idsysteme = t[4]
+            self.maselection = [self.parent.nom, t[1], t[2], t[5], t[6],
+                                t[4]]  # prop, type, id; self.canevas.find_withtag(CURRENT)#[0]
+            # !!! Modifie Paola 19-10-17
+            # if t[1] == "planete" and t[3]=="inconnu":
+            #   self.montreplaneteselection()
 
-			# self.parent.parent.atterrirdestination(nom,idsysteme,idplanete)
-		else:
-			print("Region inconnue")
-			self.maselection = None
-			# self.lbselectecible.pack_forget()
-			self.canevas.delete("selecteur")
+            # ici je veux envoyer un message comme quoi je visite cette planete
+            # et me mettre en mode planete sur cette planete, d'une shot
+            # ou est-ce que je fais selection seulement pour etre enteriner par un autre bouton
 
-	def montreplaneteselection(self):
-		self.changecadreetat(self.cadreetataction)
+            # self.parent.parent.atterrirdestination(nom,idsysteme,idplanete)
+        else:
+            print("Region inconnue")
+            self.maselection = None
+            # self.lbselectecible.pack_forget()
+            self.canevas.delete("selecteur")
 
-	def afficherartefacts(self, joueurs):
-		pass  # print("ARTEFACTS de ",self.nom)
+    def montreplaneteselection(self):
+        self.changecadreetat(self.cadreetataction)
 
-	def cliquerminimap(self, evt):
-		x = evt.x
-		y = evt.y
-		xn = self.largeur / int(self.minimap.winfo_width())
-		yn = self.hauteur / int(self.minimap.winfo_height())
+    def afficherartefacts(self, joueurs):
+        pass  # print("ARTEFACTS de ",self.nom)
 
-		ee = self.canevas.winfo_width()
-		ii = self.canevas.winfo_height()
-		eex = int(ee) / self.largeur / 2
-		eey = int(ii) / self.hauteur / 2
+    def cliquerminimap(self, evt):
+        x = evt.x
+        y = evt.y
+        xn = self.largeur / int(self.minimap.winfo_width())
+        yn = self.hauteur / int(self.minimap.winfo_height())
 
-		self.canevas.xview(MOVETO, (x * xn / self.largeur) - eex)
-		self.canevas.yview(MOVETO, (y * yn / self.hauteur) - eey)
+        ee = self.canevas.winfo_width()
+        ii = self.canevas.winfo_height()
+        eex = int(ee) / self.largeur / 2
+        eey = int(ii) / self.hauteur / 2
 
-	def chargedansvaisseaugalactique(self):
-		if self.maselection:
-			print("DEMANDE CHARGER DANS VAISSEAU GALACTIQUE")
-			print(self.maselection)
+        self.canevas.xview(MOVETO, (x * xn / self.largeur) - eex)
+        self.canevas.yview(MOVETO, (y * yn / self.hauteur) - eey)
 
-			x = self.systeme.x
-			y = self.systeme.y
-			e = self.parent.modes["galaxie"].Al2pixel
+    def chargedansvaisseaugalactique(self):
+        if self.maselection:
+            print("DEMANDE CHARGER DANS VAISSEAU GALACTIQUE")
+            print(self.maselection)
 
-			item = self.parent.modes["galaxie"].canevas.find_overlapping(x * e - 20, y * e - 20, x * e + 20, y * e + 20)
+            x = self.systeme.x
+            y = self.systeme.y
+            e = self.parent.modes["galaxie"].Al2pixel
 
-			vaisseau = None
+            item = self.parent.modes["galaxie"].canevas.find_overlapping(x * e - 20, y * e - 20, x * e + 20, y * e + 20)
 
-			for i in range(len(item)):
-				if "vaisseauinterstellaire" == item[i]:
-					id = item[i + 1]
-					joueurs = self.parent.parent.modele.joueurs
-					for j in joueurs:
-						for v in j.vaisseauinterstellaires:
-							if v.id == id:
-								vaisseau = item[i + 1]
-								break
+            vaisseau = None
 
-			if vaisseau:
-				print("CHARGEMENT DANS VAISSEAU GALACTIQUE", vaisseau)
-				self.parent.parent.chargedansvaisseaugalactique(vaisseau, self.maselection[2])
+            for i in range(len(item)):
+                if "vaisseauinterstellaire" == item[i]:
+                    id = item[i + 1]
+                    joueurs = self.parent.parent.modele.joueurs
+                    for j in joueurs:
+                        for v in j.vaisseauinterstellaires:
+                            if v.id == id:
+                                vaisseau = item[i + 1]
+                                break
 
-			else:
-				print("AUCUN VAISSEAU GALACTIQUE PRESENT À CE SYSTEME")
+            if vaisseau:
+                print("CHARGEMENT DANS VAISSEAU GALACTIQUE", vaisseau)
+                self.parent.parent.chargedansvaisseaugalactique(vaisseau, self.maselection[2])
 
-		pass
+            else:
+                print("AUCUN VAISSEAU GALACTIQUE PRESENT À CE SYSTEME")
+
+        pass
+
+    def chargeimages(self):
+        im = Image.open("./images/v_attaque.png")
+        self.images["attaque"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/v_collonie.png")
+        self.images["collonie"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/v_tranport.png")
+        self.images["transport"] = ImageTk.PhotoImage(im)
 
 
 class VuePlanete(Perspective):
-	def __init__(self, parent, syste, plane):
-		Perspective.__init__(self, parent)
-		self.modele = self.parent.modele
+    def __init__(self, parent, syste, plane):
+        Perspective.__init__(self, parent)
+        self.modele = self.parent.modele
 
-		self.planeteid = plane
-		self.planete = None
-		self.systeme = syste
-		#self.infrastructures = {}
-		self.maselection = None
-		self.macommande = None
+        self.planeteid = plane
+        self.planete = None
+        self.systeme = syste
+        self.infrastructures = {}
+        self.maselection = None
+        self.macommande = None
 
-		self.KM2pixel = 100  # ainsi la terre serait a 100 pixels du soleil et Uranus a 19 Unites Astronomique
-		self.largeur = int(self.modele.diametre * self.KM2pixel)
-		self.hauteur = self.largeur
+        self.KM2pixel = 100  # ainsi la terre serait a 100 pixels du soleil et Uranus a 19 Unites Astronomique
+        self.largeur = int(self.modele.diametre * self.KM2pixel)
+        self.hauteur = self.largeur
 
-		# recherche l'object planet actuel via planetid
-		for s in self.modele.systemes:
-			if s.id == self.systeme:
-				for p in s.planetes:
-					if p.id == self.planeteid:
-						self.planete = p
-						break						
-		
-		self.canevas.config(scrollregion=(0, 0, self.largeur * 5, self.hauteur * 5))
-		self.canevas.config(bg="black")
+        # recherche l'object planet actuel via planetid
+        for s in self.modele.systemes:
+            if s.id == self.systeme:
+                for p in s.planetes:
+                    if p.id == self.planeteid:
+                        self.planete = p
 
-		self.tailleTile = self.largeur * 5 / self.planete.terrainTailleCarre
+        self.canevas.config(scrollregion=(0, 0, self.largeur * 5, self.hauteur * 5))
+        self.canevas.config(bg="black")
 
-		self.tailleterrainpixel = self.tailleTile * self.planete.terrainTailleCarre  # ! AJOUTER VARIABLE
+        tailleTile = self.largeur * 5 / self.planete.terrainTailleCarre
 
-		# ajouter appliquer les couleurs de la carte
-		for i in range(self.planete.terrainTailleCarre):
-			for j in range(self.planete.terrainTailleCarre):
-				self.canevas.create_rectangle(i * self.tailleTile, j * self.tailleTile, i * self.tailleTile + self.tailleTile,
-				                              j * self.tailleTile + self.tailleTile, fill=self.planete.terrainColor[i][j],
-				                              outline="")
+        self.tailleterrainpixel = tailleTile * self.planete.terrainTailleCarre  # ! AJOUTER VARIABLE
 
-		self.afficherUI()
+        # ajouter appliquer les couleurs de la carte
+        for i in range(self.planete.terrainTailleCarre):
+            for j in range(self.planete.terrainTailleCarre):
+                self.canevas.create_rectangle(i * tailleTile, j * tailleTile, i * tailleTile + tailleTile,
+                                              j * tailleTile + tailleTile, fill=self.planete.terrainColor[i][j],
+                                              outline="")
 
-	def afficherUI(self):
-		Perspective.afficherUI(self)
-		self.cadreShop = None
-		self.cadreJoueur = None
-		self.cadreSelection = None
-		self.chargeimages()
+        self.afficherUI()
 
-		boutonBack = Button(self.cadreetat, text="←", command=self.voirsysteme)
-		boutonBack.grid(row=0, column=0)
-		# boutonNext=Button(self.cadreetat,text="→",command=self.voirsysteme)
-		# boutonNext.grid(row=0,column=5)
+    def afficherUI(self):
+        Perspective.afficherUI(self)
+        self.cadreShop = None
+        self.cadreInfoShop = None
+        self.cadreJoueur = None
+        self.cadreSelection = None
+        self.cadreJoueur = None
+        self.chargeimages()
 
-		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
-		self.boutonShop.grid(row=2, column=0)
+        boutonBack = Button(self.cadreetat, text="←", command=self.voirsysteme)
+        boutonBack.grid(row=0, column=0, sticky= N + W)
+        # boutonNext=Button(self.cadreetat,text="→",command=self.voirsysteme)
+        # boutonNext.grid(row=0,column=5)
 
-	def afficherShop(self):
-		self.boutonShop.config(text="Shop ˅")
-		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
-		
+        self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
+        self.boutonShop.grid(row=1, column=0, sticky= W)
+        self.boutonSelect = Button(self.cadreetat, text="Selection >", )
+        self.boutonSelect.grid(row=10,column=0,sticky = W)
 
-		if self.cadreShop:
-			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
-			self.cadreShop = None
-		else:
-			self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
-			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-			
-			shopVille = Button(self.cadreShop, text="Ville", image=self.images["miniVille"], compound="top", command=self.infoVilleShop)
-			shopVille.grid(row=0, column=0)
-			shopMine = Button(self.cadreShop, text="Mine", image=self.images["miniMine"], compound="top",  command=self.creermine)
-			shopMine.grid(row=0, column=1)
-			shopGeneratrice = Button(self.cadreShop, text="Generatrice", image=self.images["miniGen"], compound="top",  command=self.creergeneratrice)
-			shopGeneratrice.grid(row=0, column=2)
-			shopFerme = Button(self.cadreShop, text="Ferme", image=self.images["miniFerm"], compound="top",  command=self.creeferme)
-			shopFerme.grid(row=1, column=0)
-			shopBarrack = Button(self.cadreShop, text="Barrack", image=self.images["miniBarra"], compound="top",  command=self.creeBarrack)
-			shopBarrack.grid(row=1, column=1)
+    def afficherSelection(self):
+        self.boutonSelect.config(text="Selection ˅")
+        if self.cadreShop:
+            self.cadreShop.grid_forget()
+            self.boutonShop.config(text="Shop ˃")
+            self.cadreShop = None
+        else: 
+            pass
+        
+        if self.cadreSelection:
+            self.cadreSelection.grid_forget()
+            self.boutonSelect.config(text="Selection ˃")
+            self.cadreSelection = None
+        else:
+            self.cadreSelection = Frame(self.cadreetat, width=200, height=400, bg="blue")
+            self.cadreSelection.grid(row=11, column=0, columnspan=5, rowspan=5)
+        
+        if self.maselection is None:
+            label = Label(self.cadreSelection, text="Veillez selectionner un objet")
+            label.grid()
+        else:
+            pass
+        
+        
+    def afficherShop(self):
+        self.boutonShop.config(text="Shop ˅")
+        #enlever les autres cadres
+        if self.cadreSelection:
+            self.cadreSelection.grid_forget()
+            self.boutonSelect.config(text="Selection >")
+            self.cadreSelection = None
+        else:
+            pass    
+        
+        if self.cadreShop:
+            self.cadreShop.grid_forget()
+            self.boutonShop.config(text="Shop ˃")
+            self.cadreShop = None
+        else:
+            self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
+            self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+            
+            shopVille = Button(self.cadreShop, text="Ville", image=self.images["miniVille"], compound="top", command=self.infoVille)
+            shopVille.grid(row=0, column=0)
+            shopMine = Button(self.cadreShop, text="Mine", image=self.images["miniMine"], compound="top",  command=self.infoMine)
+            shopMine.grid(row=0, column=1)
+            shopGeneratrice = Button(self.cadreShop, text="Generatrice", image=self.images["miniGen"], compound="top",  command=self.infoGeneratrice)
+            shopGeneratrice.grid(row=0, column=2)
+            shopFerme = Button(self.cadreShop, text="Ferme", image=self.images["miniFerm"], compound="top",  command=self.infoFerme)
+            shopFerme.grid(row=1, column=0)
+            shopBarrack = Button(self.cadreShop, text="Barrack", image=self.images["miniBarra"], compound="top",  command=self.infoBarrack)
+            shopBarrack.grid(row=1, column=1)
 
-	def infoShop(self, typeBatiment):
-		self.cadreInfoShop =  Frame(self.cadreShop, width=200, height=100, bg="white")
-		self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-		#Infos batiment
-		labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
-		labelNom = Label(self.cadreInfoShop, text="Ville")
-		labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
-		#Infos ressources Batiment
-		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Metal")
-		labelInfo2 = Label(self.cadreInfoShop, text="+1/sec Food")
-		labelInfo3 = Label(self.cadreInfoShop, text="+1/sec Energie")
-		#Cout batiment
-		labelCout1 = Label(self.cadreInfoShop, text="-20 Metal")
-		labelCout2 = Label(self.cadreInfoShop, text="-20 Food")
-		labelCout3 = Label(self.cadreInfoShop, text="-20 Energie")
-		#Boutons
-		boutonAcheter = Button(self.cadreInfoShop, text="Acheter", command=self.creerville)
-		
-		if typeBatiment is "ville":
-			labelImage.config(image=self.images["miniVille"])
-			labelNom.config(text="Ville")
-			labelInfo1.config(text="")
-	
-		#grid tout
-			#batiment
-		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
-		labelNom.grid(row=2,column=0, columnspan=2, rowspan=2)
-		labelLvl.grid(row=3,column=0, columnspan=2, rowspan=2)
-			#ressources +
-		labelInfo1.grid(row=0, column=3)
-		labelInfo2.grid(row=1, column=3)
-		labelInfo3.grid(row=2, column=3)
-			#ressources -
-		labelCout1.grid(row=0, column=4)
-		labelCout2.grid(row=1, column=4)
-		labelCout3.grid(row=2, column=4)
-			#bouton
-		boutonAcheter.grid(row=3, column=4)
-		
-	def infoVilleShop(self):
-		self.cadreInfoShop =  Frame(self.cadreShop, width=200, height=100, bg="lightgray")
-		self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-		
-		labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
-		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
-		labelNom = Label(self.cadreInfoShop, text="Ville")
-		labelNom.grid(row=2,column=0)
-		labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
-		labelLvl.grid(row=3,column=0)
-		
-		#Infos Batiment
-		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Metal")
-		labelInfo1.grid(row=0, column=3)
-		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Food")
-		labelInfo1.grid(row=1, column=3)
-		labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Energie")
-		labelInfo1.grid(row=2, column=3)
-		
-		#Cout batiment
-		labelCout1 = Label(self.cadreInfoShop, text="-20 Metal")
-		labelCout1.grid(row=0, column=4)
-		labelCout1 = Label(self.cadreInfoShop, text="-20 Food")
-		labelCout1.grid(row=1, column=4)
-		labelCout1 = Label(self.cadreInfoShop, text="-20 Energie")
-		labelCout1.grid(row=2, column=4)
-		
-		#Boutons
-		boutonAcheter = Button(self.cadreInfoShop, text="Acheter", command=self.creerville)
-		boutonAcheter.grid(row=3, column=4)
-	
-	def creermine(self):
-		self.macommande = "mine"
 
-	def creerville(self):
-		self.macommande = "ville"
+    def infoShop(self, typeBatiment):
+        #couts
+        c = Cout()
+        
+        #creer cadre
+        if self.cadreInfoShop:
+            self.cadreInfoShop.grid_forget()
+            self.cadreInfoShop = None
+        else:
+            pass
+        self.cadreInfoShop =  Frame(self.cadreShop, width=200, height=100)
+        self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+        #Infos batiment
+        labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
+        labelNom = Label(self.cadreInfoShop, text="Ville")
+        labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
+        #Infos ressources Batiment
+        #label = Label(self.cadreInfoShop, text="Ressources")
+        #label.grid(row=0,column=3)
+        #labelInfo1 = Label(self.cadreInfoShop, text="+1/sec Metal")
+        #labelInfo2 = Label(self.cadreInfoShop, text="+1/sec Food")
+        #labelInfo3 = Label(self.cadreInfoShop, text="+1/sec Energie")
+        #Cout batiment
+        label = Label(self.cadreInfoShop, text="Cout")
+        label.grid(row=0,column=2, columnspan= 2)
+        label = Label(self.cadreInfoShop, text="Metal")
+        label.grid(row=1, column=2)
+        label = Label(self.cadreInfoShop, text="Energie")
+        label.grid(row=2, column=2)
+        label = Label(self.cadreInfoShop, text="Food")
+        label.grid(row=3, column=2)
+        
+        labelCoutMetal = Label(self.cadreInfoShop, text="")
+        labelCoutEnergie = Label(self.cadreInfoShop, text="")
+        labelCoutFood = Label(self.cadreInfoShop, text="")
+        
+        #Boutons
+        boutonAcheter = Button(self.cadreInfoShop, text="Acheter")
+        
+        if typeBatiment is "ville":
+            labelImage.config(image=self.images["miniVille"])
+            labelNom.config(text="Ville")
+            labelCoutMetal.config(text=c.ville["metal"])
+            labelCoutEnergie.config(text=c.ville["energie"])
+            labelCoutFood.config(text=c.ville["nourriture"])
+            boutonAcheter.config(command=self.creerville)
+        elif typeBatiment is "mine":
+            labelImage.config(image=self.images["miniMine"])
+            labelNom.config(text="Mine")
+            labelCoutMetal.config(text=c.mine["metal"])
+            labelCoutEnergie.config(text=c.mine["energie"])
+            labelCoutFood.config(text=c.mine["nourriture"])
+            boutonAcheter.config(command=self.creermine)
+        elif typeBatiment is "generatrice":
+            labelImage.config(image=self.images["miniGen"])
+            labelNom.config(text="Generatrice")
+            labelCoutMetal.config(text=c.generatrice["metal"])
+            labelCoutEnergie.config(text=c.generatrice["energie"])
+            labelCoutFood.config(text=c.generatrice["nourriture"])
+            boutonAcheter.config(command=self.creergeneratrice)
+        elif typeBatiment is "ferme":
+            labelImage.config(image=self.images["miniFerm"])
+            labelNom.config(text="Ferme")
+            labelCoutMetal.config(text=c.generatrice["metal"])
+            labelCoutEnergie.config(text=c.generatrice["energie"])
+            labelCoutFood.config(text=c.generatrice["nourriture"])
+            boutonAcheter.config(command=self.creeferme)
+        elif typeBatiment is "barrack":
+            labelImage.config(image=self.images["miniBarra"])
+            labelNom.config(text="Barrack")
+            labelCoutMetal.config(text=c.generatrice["metal"])
+            labelCoutEnergie.config(text=c.generatrice["energie"])
+            labelCoutFood.config(text=c.generatrice["nourriture"])
+            boutonAcheter.config(command=self.creeBarrack)
+            
+        #grid tout
+            #batiment
+        labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
+        labelNom.grid(row=2,column=0, columnspan=2)
+        labelLvl.grid(row=3,column=0, columnspan=2)
+            #ressources +
+        #labelInfo1.grid(row=1, column=3)
+        #labelInfo2.grid(row=2, column=3)
+        #labelInfo3.grid(row=3, column=3)
+        
+            #ressources -
+        labelCoutMetal.grid(row=1, column=3)
+        labelCoutEnergie.grid(row=2, column=3)
+        labelCoutFood.grid(row=3, column=3)
+            #bouton
+        boutonAcheter.grid(row=4, column=4)
+        
+    def infoVille(self):
+        self.infoShop("ville")
+    def infoMine(self):
+        self.infoShop("mine")    
+    def infoGeneratrice(self):
+        self.infoShop("generatrice")
+    def infoFerme(self):
+        self.infoShop("ferme")
+    def infoBarrack(self):
+        self.infoShop("barrack")
+        
+        
+    def creermine(self):
+        self.macommande = "mine"
 
-	def creergeneratrice(self):
-		self.macommande = "generatrice"
-		print('WOW une génératrice')
+    def creerville(self):
+        self.macommande = "ville"
 
-	def creeferme(self):
-		self.macommande = "ferme"
-		print('MOOOooooo')
+    def creergeneratrice(self):
+        self.macommande = "generatrice"
+        print('WOW une génératrice')
 
-	def creeBarrack(self):
-		self.macommande = "barrack"
-		print('Fo\' the emperor!')
+    def creeferme(self):
+        self.macommande = "ferme"
+        print('MOOOooooo')
 
-	def voirsysteme(self):
-		for i in self.modele.joueurs[self.parent.nom].systemesvisites:
-			if i.id == self.systeme:
-				self.parent.voirsysteme(i)
+    def creeBarrack(self):
+        self.macommande = "barrack"
+        print('Fo\' the emperor!')
 
-	def initplanete(self, sys, plane):
-		s = None
-		p = None
-		for i in self.modele.joueurs[self.parent.nom].systemesvisites:
-			if i.id == sys:
-				s = i
-				for j in i.planetes:
-					if j.id == plane:
-						p = j
-						break
-		self.systemeid = sys
-		self.planeteid = plane
-		self.affichermodelestatique(s, p)
-		
-		#! MODIF ICI
-		#Ajoute les bâtiments déjà existants sur la planète
-		for i in self.planete.infrastructures:
-			self.parent.afficherBatiment(i)
+    def voirsysteme(self):
+        for i in self.modele.joueurs[self.parent.nom].systemesvisites:
+            if i.id == self.systeme:
+                self.parent.voirsysteme(i)
 
-	def affichermodelestatique(self, s, p):
-		self.chargeimages()
-		xl = self.largeur / 2
-		yl = self.hauteur / 2
-		mini = 2
-		UAmini = 4
-		t = 200 / p.terrainTailleCarre  # 200 c'Est la taille du du minimap
+    def initplanete(self, sys, plane):
+        s = None
+        p = None
+        for i in self.modele.joueurs[self.parent.nom].systemesvisites:
+            if i.id == sys:
+                s = i
+                for j in i.planetes:
+                    if j.id == plane:
+                        p = j
+                        break
+        self.systemeid = sys
+        self.planeteid = plane
+        self.affichermodelestatique(s, p)
+        
+        for i in self.planete.infrastructures:
+			      self.parent.afficherBatiment(i)
 
-		#self.canevas.create_image(p.posXatterrissage, p.posYatterrissage, image=self.images["ville"])
+    def affichermodelestatique(self, s, p):
+        self.chargeimages()
+        xl = self.largeur / 2
+        yl = self.hauteur / 2
+        mini = 2
+        UAmini = 4
+        t = 200 / p.terrainTailleCarre  # 200 c'Est la taille du du minimap
 
-		for i in range(p.terrainTailleCarre):
-			for j in range(p.terrainTailleCarre):
-				self.minimap.create_rectangle(i * t, j * t, i * t + t, j * t + t, fill=p.terrainColor[i][j],
-				                              outline="");
+        self.canevas.create_image(p.posXatterrissage, p.posYatterrissage, image=self.images["ville"])
 
-		canl = int(p.posXatterrissage - 100) / self.largeur
-		canh = int(p.posYatterrissage - 100) / self.hauteur
-		self.canevas.xview(MOVETO, canl)
-		self.canevas.yview(MOVETO, canh)
-		
+        for i in range(p.terrainTailleCarre):
+            for j in range(p.terrainTailleCarre):
+                self.minimap.create_rectangle(i * t, j * t, i * t + t, j * t + t, fill=p.terrainColor[i][j],
+                                              outline="");
 
-	def chargeimages(self):
-		im = Image.open("./images/ville_100.png")
-		self.images["ville"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/mine_100.png")
-		self.images["mine"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/generatrice_100.png")
-		self.images["generatrice"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/ferme_100.png")
-		self.images["ferme"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/mine_100.png")
-		self.images["barrack"] = ImageTk.PhotoImage(im)
+        canl = int(p.posXatterrissage - 100) / self.largeur
+        canh = int(p.posYatterrissage - 100) / self.hauteur
+        self.canevas.xview(MOVETO, canl)
+        self.canevas.yview(MOVETO, canh)
 
-		im = Image.open("./images/ville_50.png")
-		self.images["miniVille"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/mine_50.png")
-		self.images["miniMine"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/generatrice_50.png")
-		self.images["miniGen"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/ferme_50.png")
-		self.images["miniFerm"] = ImageTk.PhotoImage(im)
-		im = Image.open("./images/mine_50.png")
-		self.images["miniBarra"] = ImageTk.PhotoImage(im)
-		
-	def afficherdecor(self):
-		pass
+    def chargeimages(self):
+        im = Image.open("./images/ville_100.png")
+        self.images["ville"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/mine_100.png")
+        self.images["mine"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/generatrice_100.png")
+        self.images["generatrice"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/ferme_100.png")
+        self.images["ferme"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/mine_100.png")
+        self.images["barrack"] = ImageTk.PhotoImage(im)
 
-	def afficherpartie(self, mod):  # ! -----------------------------------------------------
-		# t = 200 / self.largeur  # 200 c'Est la taille du du minimap
-		#  p = 200/ self.planete.terrainTailleCarre
+        im = Image.open("./images/ville_50.png")
+        self.images["miniVille"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/mine_50.png")
+        self.images["miniMine"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/generatrice_50.png")
+        self.images["miniGen"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/ferme_50.png")
+        self.images["miniFerm"] = ImageTk.PhotoImage(im)
+        im = Image.open("./images/mine_50.png")
+        self.images["miniBarra"] = ImageTk.PhotoImage(im)
+        
+    def afficherdecor(self):
+        pass
 
-		#  self.canevas.delete("infrastructure")
+    def afficherpartie(self, mod):  # ! -----------------------------------------------------
+        # t = 200 / self.largeur  # 200 c'Est la taille du du minimap
+        #  p = 200/ self.planete.terrainTailleCarre
 
-		#   for i in self.planete.infrastructures:
-		#      x=i.x
-		#      y=i.y
+        #  self.canevas.delete("infrastructure")
 
-		#      self.minimap.create_oval(x*t - p, y*t - p, x*t + p, y*t + p,  fill = "white",tags=["infrastructure"])
-		# ! -----------------------------------------------------------------------
-		pass
+        #   for i in self.planete.infrastructures:
+        #      x=i.x
+        #      y=i.y
 
-	def changerproprietaire(self, prop, couleur, systeme):
-		pass
+        #      self.minimap.create_oval(x*t - p, y*t - p, x*t + p, y*t + p,  fill = "white",tags=["infrastructure"])
+        # ! -----------------------------------------------------------------------
+        pass
 
-	def afficherselection(self):
-		pass
+    def changerproprietaire(self, prop, couleur, systeme):
+        pass
 
-	def cliquervue(self, evt):
-		
-		t = self.canevas.gettags("current")
-		if t and t[0] != "current":
-			if t[0] == self.parent.nom:
-				pass
-			elif t[1] == "mine":
-				print("mine mine mine") #!!!
-				pass
-		else:
-			#print(self.canevas.canvasx(evt.x),self.canevas.canvasy(evt.y))
-			x = self.canevas.canvasx(evt.x) / self.tailleTile
-			y = self.canevas.canvasy(evt.y) / self.tailleTile
-			#print(x,y)
+    def afficherselection(self):
+        pass
 
-			if self.macommande == "mine":
-				self.parent.parent.creermine(self.parent.nom, self.systemeid, self.planeteid, x, y)
-			elif self.macommande == "generatrice":
-				self.parent.parent.creergeneratrice(self.parent.nom, self.systemeid, self.planeteid, x, y)
-				print("image generatrice")
-			elif self.macommande == "ferme":
-				self.parent.parent.creerferme(self.parent.nom, self.systemeid, self.planeteid, x, y)
-				print("image ferme")
-				self.macommande = None
-			elif self.macommande is "ville":
-				self.parent.parent.creerville(self.parent.nom, self.systemeid, self.planeteid, x, y)
-				self.macommande = None
-			elif self.macommande is "barrack":
-				self.parent.parent.creerbarrack(self.parent.nom, self.systemeid, self.planeteid, x, y)
-				self.macommande = None
+    def cliquervue(self, evt):
+        
+        t = self.canevas.gettags("current")
+        if t and t[0] != "current":
+            if t[0] == self.parent.nom:
+                pass
+            elif t[1] == "mine":
+                print("mine mine mine") #!!!
+                pass
+        else:
+            x = self.canevas.canvasx(evt.x)
+            y = self.canevas.canvasy(evt.y)
 
-	def montresystemeselection(self):
-		self.changecadreetat(self.cadreetataction)
+            if self.macommande == "mine":
+                self.parent.parent.creermine(self.parent.nom, self.systemeid, self.planeteid, x, y)
+            elif self.macommande == "generatrice":
+                self.parent.parent.creergeneratrice(self.parent.nom, self.systemeid, self.planeteid, x, y)
+                print("image generatrice")
+            elif self.macommande == "ferme":
+                self.parent.parent.creerferme(self.parent.nom, self.systemeid, self.planeteid, x, y)
+                print("image ferme")
+                self.macommande = None
+            elif self.macommande is "ville":
+                self.parent.parent.creerville(self.parent.nom, self.systemeid, self.planeteid, x, y)
+                self.macommande = None
+            elif self.macommande is "barrack":
+                self.parent.parent.creerbarrack(self.parent.nom, self.systemeid, self.planeteid, x, y)
+                self.macommande = None
 
-	def montrevaisseauxselection(self):
-		self.changecadreetat(self.cadreetatmsg)
+    def montresystemeselection(self):
+        self.changecadreetat(self.cadreetataction)
 
-	def afficherartefacts(self, joueurs):
-		pass  # print("ARTEFACTS de ",self.nom)
+    def montrevaisseauxselection(self):
+        self.changecadreetat(self.cadreetatmsg)
 
-	def cliquerminimap(self, evt):
-		x = evt.x
-		y = evt.y
-		largeur = self.tailleterrainpixel
-		hauteur = self.tailleterrainpixel
-		xn = largeur / int(self.minimap.winfo_width())
-		yn = hauteur / int(self.minimap.winfo_height())
+    def afficherartefacts(self, joueurs):
+        pass  # print("ARTEFACTS de ",self.nom)
 
-		ee = self.canevas.winfo_width()
-		ii = self.canevas.winfo_height()
-		eex = int(ee) / largeur / 2
-		eey = int(ii) / hauteur / 2
+    def cliquerminimap(self, evt):
+        x = evt.x
+        y = evt.y
+        largeur = self.tailleterrainpixel
+        hauteur = self.tailleterrainpixel
+        xn = largeur / int(self.minimap.winfo_width())
+        yn = hauteur / int(self.minimap.winfo_height())
 
-		self.canevas.xview(MOVETO, (x * xn / largeur) - eex)
-		self.canevas.yview(MOVETO, (y * yn / hauteur) - eey)
+        ee = self.canevas.winfo_width()
+        ii = self.canevas.winfo_height()
+        eex = int(ee) / largeur / 2
+        eey = int(ii) / hauteur / 2
+
+        self.canevas.xview(MOVETO, (x * xn / largeur) - eex)
+        self.canevas.yview(MOVETO, (y * yn / hauteur) - eey)
 
 
 if __name__ == '__main__':
-	m = Vue(0, "jmd", "127.0.0.1")
-	m.root.mainloop()
+    m = Vue(0, "jmd", "127.0.0.1")
+    m.root.mainloop()

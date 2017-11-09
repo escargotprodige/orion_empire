@@ -1,7 +1,10 @@
 from IdMaker import *
 from mathPlus import *
-from test.test_threading_local import target
+from enum import Enum
 
+class AT_TYPE(Enum):
+	LAZERBOI = 0
+	FISTBOI = 1
 
 class AttaquantTerre:
 	def __init__(self, nom, x, y, nearRange, farRange, atk, hp, speed, defense, systemid, planeteid, proprietaire,
@@ -14,7 +17,7 @@ class AttaquantTerre:
 		self.speed = speed
 		self.x = x
 		self.y = y
-		self.id = ID.Id.prochainid()
+		self.id = Id.prochainid()
 		self.systemid = systemid
 		self.planeteid = planeteid
 		self.proprietaire = proprietaire
@@ -41,11 +44,11 @@ class AttaquantTerre:
 
 		# fait attaquer l'attaquant quand celui-ci est rendu a destination
 		if (self.isTargetInRange):
-			damage = self.atk - target.defense
+			damage = self.atk - self.target.defense
 			if (damage > 1):
-				target.hp -= damage
+				self.target.hp -= damage
 			else:
-				target.hp -= 1
+				self.target.hp -= 1
 
 	def avancer(self, x, y):
 		dirVers = directionVers(self.x, self.y, x, y)

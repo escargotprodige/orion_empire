@@ -1,5 +1,6 @@
 from orion_empire_modele import *
-
+import c_Vaisseau
+from c_StationGalactique import *
 
 class Joueur():
 	def __init__(self, parent, nom, systemeorigine, couleur):
@@ -57,7 +58,8 @@ class Joueur():
 
 		# return coords
 
-	def creervaisseauSolaire(self, systemeid, planeteid, type_vaisseau):
+	def creervaisseauSolaire(self, listeparams): #, systemeid, planeteid, type_vaisseau=c_Vaisseau.VaisseauTransport):
+		systemeid, planeteid, type_vaisseau = listeparams
 		for i in self.systemesvisites:
 			if i.id == systemeid:
 				for j in i.planetes:
@@ -160,14 +162,15 @@ class Joueur():
 				v = VaisseauGalactique(self, self.nom, i)
 				self.vaisseauxinterstellaires.append(v)
 				return 1
-
-	def creerstationGalactique(self,
-	                           id):  ##################################################################  MODIF TRISTAN
+			
+	def creerstationGalactique(self, id):  ##################################################################  MODIF TRISTAN
+		print('creerstationGalactique')
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
+
 
 	# debut modif
 	def creerLazerBoi(self, listeparams):
@@ -228,7 +231,7 @@ class Joueur():
 							if self.parent.parent.vue.modecourant == self.parent.parent.vue.modes["galaxie"]:
 								self.parent.parent.vue.deplacerCanevas(i.x, i.y)
 		
-		#Génération des ressources tous les 20 mises à jours
+		#Gï¿½nï¿½ration des ressources tous les 20 mises ï¿½ jours
 		self.delais = self.delais -1
 		if self.delais <= 0:
 			self.delais = 20

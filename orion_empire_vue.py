@@ -216,7 +216,7 @@ class Vue():
 			# print(i.proprietaire)
 			if i.proprietaire == self.nom:
 				self.voirplaneteP(i.id, mod.joueurs[self.nom].systemeorigine.id)  # Afficher planeteOrigine
-				mod.joueurs[self.nom].creerVilleOrigine()
+				#mod.joueurs[self.nom].creerVilleOrigine()
 				self.deplacerCanevas(250, 250)
 
 	def afficherBatiment(self, Batiment):
@@ -226,12 +226,14 @@ class Vue():
 			if i == Batiment.planeteid:
 				p = 200 / self.modes["planetes"][i].planete.terrainTailleCarre
 				couleur = self.modele.joueurs[Batiment.proprietaire].couleur
-				t = 200 / self.modes["planetes"][i].largeur
-				x = Batiment.x
-				y = Batiment.y
-
+				t = 200 / self.modes["planetes"][i].tailleterrainpixel
+				x = Batiment.x * self.modes["planetes"][i].tailleTile
+				y = Batiment.y * self.modes["planetes"][i].tailleTile
+				#r=Batiment.range * self.modes["planetes"][i].tailleTile
+				#print(x,y)
+				#self.modes["planetes"][i].canevas.create_oval(x-r,y-r,x+r,y+r,outline=couleur,tags=(Batiment.id,"range"))
 				im = self.modes["planetes"][i].images[Batiment.type]
-				self.modes["planetes"][i].canevas.create_image(Batiment.x, Batiment.y, image=im,
+				self.modes["planetes"][i].canevas.create_image(x, y, image=im,
 				                                               tags=(Batiment.id, Batiment.type))
 
 				self.modes["planetes"][i].minimap.create_oval(x * t - p, y * t - p, x * t + p, y * t + p, fill=couleur,
@@ -1059,7 +1061,7 @@ class VuePlanete(Perspective):
 		self.planeteid = plane
 		self.planete = None
 		self.systeme = syste
-		self.infrastructures = {}
+		#self.infrastructures = {}
 		self.maselection = None
 		self.macommande = None
 
@@ -1073,19 +1075,20 @@ class VuePlanete(Perspective):
 				for p in s.planetes:
 					if p.id == self.planeteid:
 						self.planete = p
-
+						break						
+		
 		self.canevas.config(scrollregion=(0, 0, self.largeur * 5, self.hauteur * 5))
 		self.canevas.config(bg="black")
 
-		tailleTile = self.largeur * 5 / self.planete.terrainTailleCarre
+		self.tailleTile = self.largeur * 5 / self.planete.terrainTailleCarre
 
-		self.tailleterrainpixel = tailleTile * self.planete.terrainTailleCarre  # ! AJOUTER VARIABLE
+		self.tailleterrainpixel = self.tailleTile * self.planete.terrainTailleCarre  # ! AJOUTER VARIABLE
 
 		# ajouter appliquer les couleurs de la carte
 		for i in range(self.planete.terrainTailleCarre):
 			for j in range(self.planete.terrainTailleCarre):
-				self.canevas.create_rectangle(i * tailleTile, j * tailleTile, i * tailleTile + tailleTile,
-				                              j * tailleTile + tailleTile, fill=self.planete.terrainColor[i][j],
+				self.canevas.create_rectangle(i * self.tailleTile, j * self.tailleTile, i * self.tailleTile + self.tailleTile,
+				                              j * self.tailleTile + self.tailleTile, fill=self.planete.terrainColor[i][j],
 				                              outline="")
 
 		self.afficherUI()
@@ -1095,6 +1098,7 @@ class VuePlanete(Perspective):
 		self.cadreShop = None
 		self.cadreJoueur = None
 		self.cadreSelection = None
+		self.chargeimages()
 
 		boutonBack = Button(self.cadreetat, text="←", command=self.voirsysteme)
 		boutonBack.grid(row=0, column=0)
@@ -1107,7 +1111,7 @@ class VuePlanete(Perspective):
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
 		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
-		self.chargeimages()
+		
 
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
@@ -1234,6 +1238,11 @@ class VuePlanete(Perspective):
 		self.systemeid = sys
 		self.planeteid = plane
 		self.affichermodelestatique(s, p)
+		
+		#! MODIF ICI
+		#Ajoute les bâtiments déjà existants sur la planète
+		for i in self.planete.infrastructures:
+			self.parent.afficherBatiment(i)
 
 	def affichermodelestatique(self, s, p):
 		self.chargeimages()
@@ -1243,7 +1252,7 @@ class VuePlanete(Perspective):
 		UAmini = 4
 		t = 200 / p.terrainTailleCarre  # 200 c'Est la taille du du minimap
 
-		self.canevas.create_image(p.posXatterrissage, p.posYatterrissage, image=self.images["ville"])
+		#self.canevas.create_image(p.posXatterrissage, p.posYatterrissage, image=self.images["ville"])
 
 		for i in range(p.terrainTailleCarre):
 			for j in range(p.terrainTailleCarre):
@@ -1254,6 +1263,7 @@ class VuePlanete(Perspective):
 		canh = int(p.posYatterrissage - 100) / self.hauteur
 		self.canevas.xview(MOVETO, canl)
 		self.canevas.yview(MOVETO, canh)
+		
 
 	def chargeimages(self):
 		im = Image.open("./images/ville_100.png")
@@ -1311,8 +1321,10 @@ class VuePlanete(Perspective):
 				print("mine mine mine") #!!!
 				pass
 		else:
-			x = self.canevas.canvasx(evt.x)
-			y = self.canevas.canvasy(evt.y)
+			#print(self.canevas.canvasx(evt.x),self.canevas.canvasy(evt.y))
+			x = self.canevas.canvasx(evt.x) / self.tailleTile
+			y = self.canevas.canvasy(evt.y) / self.tailleTile
+			#print(x,y)
 
 			if self.macommande == "mine":
 				self.parent.parent.creermine(self.parent.nom, self.systemeid, self.planeteid, x, y)

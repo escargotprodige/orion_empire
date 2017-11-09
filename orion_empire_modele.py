@@ -18,6 +18,8 @@ from c_Generatrice import *
 from c_StationGalactique import *  ###########################################################  MODIF TRISTAN
 from c_Joueur import *
 from c_IA import *
+from c_Batiment import *
+from IdMaker import Id
 
 
 class Modele():
@@ -132,6 +134,7 @@ class Modele():
 		for i in self.systemes:
 			for p in i.planetes:
 				p.orbiter()
+				
 
 		self.parent.vue.modecourant.updateRessources(self.joueurs[self.parent.monnom])  # !
 

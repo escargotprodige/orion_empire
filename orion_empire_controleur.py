@@ -11,8 +11,8 @@ import time  # IA
 from orion_empire_modele import *
 from orion_empire_vue import *
 from helper import Helper as hlp
-from IdMaker import Id
 from mathPlus import *
+from IdMaker import Id
 
 
 class Controleur():

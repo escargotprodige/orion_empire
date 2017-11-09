@@ -16,20 +16,20 @@ class Joueur():
 		self.vaisseauxinterplanetaires = []
 		self.stationGalactiques = []  ################################################# MODIF TRISTAN
 		self.actions = {"creervaisseauGalactique": self.creervaisseauGalactique,
-		                "ciblerdestination": self.ciblerdestination,
-		                "atterrirplanete": self.atterrirplanete,
-		                "visitersysteme": self.visitersysteme,
-		                "creermine": self.creermine,
-		                "creerville": self.creerville,
-		                "creergeneratrice": self.creergeneratrice,
-		                "creerferme": self.creerferme,
-		                "dechargervausseaugalactique": self.dechargervaisseaugalactique,
-		                "creerstationGalactique": self.creerstationGalactique,
-		                "upgradevitessevaisseau": self.upgradeVitesseVaisseau,
-		                "creerbarrack": self.creerbarrack,
-		                "creerlazerboi": self.creerLazerBoi,
-		                "creervaisseauSolaire": self.creervaisseauSolaire
-		                }
+						"ciblerdestination": self.ciblerdestination,
+						"atterrirplanete": self.atterrirplanete,
+						"visitersysteme": self.visitersysteme,
+						"creermine": self.creermine,
+						"creerville": self.creerville,
+						"creergeneratrice": self.creergeneratrice,
+						"creerferme": self.creerferme,
+						"dechargervausseaugalactique": self.dechargervaisseaugalactique,
+						"creerstationGalactique": self.creerstationGalactique,
+						"upgradevitessevaisseau": self.upgradeVitesseVaisseau,
+						"creerbarrack": self.creerbarrack,
+						"creerlazerboi": self.creerLazerBoi,
+						"creervaisseauSolaire": self.creervaisseauSolaire
+						}
 
 		self.stationGalactiques = []
 		self.barrackMere = None

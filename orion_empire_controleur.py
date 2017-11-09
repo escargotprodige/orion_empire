@@ -222,6 +222,7 @@ class Controleur():
     def upgradeVitesseVaisseau(self, id, boost):
         self.modele.upgradeVitesseVaisseau(id, boost)
 
+
     def chargedansvaisseaugalactique(self, vg, vs):
         self.modele.chargedansvaisseaugalactique(vg, vs)
 

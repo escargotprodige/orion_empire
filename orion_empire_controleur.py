@@ -37,8 +37,7 @@ class Controleur():
 		s.close()  # ferme le socket
 		return monip
 
-	def generernom(
-			self):  # generateur de nouveau nom - accelere l'entree de nom pour les tests - parfois a peut generer le meme nom mais c'est rare
+	def generernom(self):  # generateur de nouveau nom - accelere l'entree de nom pour les tests - parfois a peut generer le meme nom mais c'est rare
 		monnom = "Commandant_" + str(random.randrange(1000))
 		return monnom
 

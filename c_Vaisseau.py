@@ -108,7 +108,7 @@ class VaisseauSolaire(Vaisseau):
 			self.x, self.y = hlp.getAngledPoint(self.angletrajet, self.vitesse, self.x, self.y)
 			
 			self.ciblerdestination(self.cible)
-			if hlp.calcDistance(self.x, self.y, x, y) - self.cible.taille <= self.vitesse:
+			if hlp.calcDistance(self.x, self.y, x, y) <= self.vitesse:
 				rep = self.cible
 				if type(self.cible) is Planete:
 					self.planete_courrant = self.cible

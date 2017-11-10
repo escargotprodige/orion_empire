@@ -10,11 +10,3 @@ class Ville(Batiment):
 		Batiment.calculenergiegen(self)
 		Batiment.calculmetauxgen(self)
 		print(self.metauxgen,self.energiegen,self.foodgen)
- 
-    self.ressource =  {"metal": 20,
-                  "energie": 20,
-                  "nourriture": 20,}
-
-    def generer(self):
-        pass
-

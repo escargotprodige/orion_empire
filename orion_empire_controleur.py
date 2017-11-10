@@ -38,33 +38,19 @@ class Controleur():
 		s.close()  # ferme le socket
 		return monip
 
-<<<<<<< HEAD
-
 	def generernom(self):  # generateur de nouveau nom - accelere l'entree de nom pour les tests - parfois a peut generer le meme nom mais c'est rare
-=======
-	def generernom(
-			self):  # generateur de nouveau nom - accelere l'entree de nom pour les tests - parfois a peut generer le meme nom mais c'est rare
->>>>>>> vaisseau galactique
+
 		monnom = "Commandant_" + str(random.randrange(1000))
 		return monnom
 
 	def creerpartie(self):
 		if self.egoserveur == 0:
-			pid = Popen(["C:\\Python34\\Python.exe", "./orion_empire_serveur.py"],
-<<<<<<< HEAD
-						shell=1).pid  # on lance l'application serveur
-=======
-			            shell=1).pid  # on lance l'application serveur
->>>>>>> vaisseau galactique
+			pid = Popen(["C:\\Python34\\Python.exe", "./orion_empire_serveur.py"],shell=1).pid  # on lance l'application serveur
 			self.egoserveur = 1  # on note que c'est soi qui, ayant demarre le serveur, aura le privilege de lancer la simulation
 
 	## ----------- FONCTION POUR CELUI QUI A CREE LA PARTIE SEULEMENT
-	def lancerpartie(self, diametre=5, densitestellaire=5,
-<<<<<<< HEAD
-					 qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
-=======
-	                 qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
->>>>>>> vaisseau galactique
+	def lancerpartie(self, diametre=5, densitestellaire=5,qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
+
 		rep = self.serveur.lancerpartie(diametre, densitestellaire, qteIA)
 		## ----------- FIN --
 
@@ -78,11 +64,7 @@ class Controleur():
 			rep = self.serveur.inscrireclient(self.monnom)  # on averti le serveur de nous inscrire
 			# tester retour pour erreur de nom
 			# random.seed(rep[2])
-<<<<<<< HEAD
-			random.seed(644)
-=======
 			random.seed(64544)
->>>>>>> vaisseau galactique
 
 	def boucleattente(self):
 		rep = self.serveur.faireaction([self.monnom, 0, 0])
@@ -93,12 +75,8 @@ class Controleur():
 			self.vue.affichelisteparticipants(rep[2])
 			self.vue.root.after(50, self.boucleattente)
 
-	def initierpartie(self,
-<<<<<<< HEAD
-					  rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
-=======
-	                  rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
->>>>>>> vaisseau galactique
+	def initierpartie(self, rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
+
 		if rep[1][0][0] == "lancerpartie":
 			# print("REP",rep)
 			self.vue.changecadre(self.vue.cadreloading)
@@ -177,24 +155,11 @@ class Controleur():
 		self.vue.root.destroy()
 
 	# FONCTIONS DE COUP DU JOUEUR A ENVOYER AU SERVEUR
-<<<<<<< HEAD
-	def creervaisseau(self, systeme):
-		self.modele.creervaisseau(systeme)
-		# self.actions.append([self.monnom,"creervaisseau",""])
-
-		# ! debut modif
-
-	def creerLazerboi(self, joueur, systeme, planete, x, y):
-		self.actions.append([self.monnom, "creerlazerboi", [self.monnom, systeme, planete, x, y]])
-=======
 	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
 		self.modele.creervaisseauSolaire(systeme, planete, typeVaisseau)
 
 	def creerLazerBoi(self, systeme):
 		self.modele.creerlazerboi(systeme)
->>>>>>> vaisseau galactique
-
-	# !fin modif
 
 	def creerstationGalactique(self, systeme):
 		self.modele.creerstationGalactique(systeme)
@@ -244,8 +209,6 @@ class Controleur():
 	def voirplanete(self, idsysteme, idplanete):
 		pass
 
-<<<<<<< HEAD
-=======
 	def changerproprietaire(self, nom, couleur, systeme):
 		self.vue.modes["galaxie"].changerproprietaire(nom, couleur, systeme)
 
@@ -256,7 +219,6 @@ class Controleur():
 	def upgradeVitesseVaisseau(self, id, boost):
 		self.modele.upgradeVitesseVaisseau(id, boost)
 
->>>>>>> vaisseau galactique
 	def chargedansvaisseaugalactique(self, vg, vs):
 		self.modele.chargedansvaisseaugalactique(vg, vs)
 

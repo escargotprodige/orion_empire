@@ -171,27 +171,13 @@ class Joueur():
 				v = VaisseauGalactique(self, self.nom, i)
 				self.vaisseauxinterstellaires.append(v)
 				return 1
-<<<<<<< HEAD
-			
-	def creerstationGalactique(self, id):  
-		print('creerstationGalactique')
-=======
-
-	def creerstationGalactique(self,
-	                           id):  ##################################################################  MODIF TRISTAN
->>>>>>> vaisseau galactique
+	def creerstationGalactique(self,id):  ##################################################################  MODIF TRISTAN
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
 
-<<<<<<< HEAD
-
-	
-=======
-	# debut modif
->>>>>>> vaisseau galactique
 	def creerLazerBoi(self, listeparams):
 		nom, systemeid, planeteid, x, y = listeparams
 		for i in self.systemesvisites:
@@ -205,8 +191,6 @@ class Joueur():
 						lazerboi.planeteid = planeteid
 						self.attaquantTerre.append(lazerboi)
 						self.parent.parent.afficherLazerBoi(lazerboi)
-
-	# fin modif
 
 	def ciblerdestination(self, ids):
 		idori, iddesti = ids
@@ -260,10 +244,7 @@ class Joueur():
 						if self.nom == self.parent.parent.monnom:
 							if self.parent.parent.vue.modecourant == self.parent.parent.vue.modes["galaxie"]:
 								self.parent.parent.vue.deplacerCanevas(i.x, i.y)
-		
-<<<<<<< HEAD
-		#Gï¿½nï¿½ration des ressources tous les 20 mises ï¿½ jours
-=======
+
 		for i in self.vaisseauxinterplanetaires:
 			if i.cible:
 				rep=i.avancer()
@@ -271,12 +252,7 @@ class Joueur():
 					print(rep)
 			else:
 				i.orbite()
-		
-		#Génération des ressources tous les 20 mises à jours
-<<<<<<< HEAD
->>>>>>> vaisseau galactique
-=======
->>>>>>> Modif des images des vaisseaux
+
 		self.delais = self.delais -1
 		if self.delais <= 0:
 			self.delais = 20
@@ -286,14 +262,7 @@ class Joueur():
 						if i.proprietaire == self.nom:
 							i.generer()
 							#print(self.ressource1,self.ressource2,self.ressource3)
-<<<<<<< HEAD
-<<<<<<< HEAD
-=======
-							
->>>>>>> vaisseau galactique
-=======
-							
->>>>>>> Modif des images des vaisseaux
+
 
 	def dechargervaisseaugalactique(self, rep):
 		v = None

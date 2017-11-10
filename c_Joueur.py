@@ -273,7 +273,10 @@ class Joueur():
 				i.orbite()
 		
 		#Génération des ressources tous les 20 mises à jours
+<<<<<<< HEAD
 >>>>>>> vaisseau galactique
+=======
+>>>>>>> Modif des images des vaisseaux
 		self.delais = self.delais -1
 		if self.delais <= 0:
 			self.delais = 20
@@ -284,9 +287,13 @@ class Joueur():
 							i.generer()
 							#print(self.ressource1,self.ressource2,self.ressource3)
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 							
 >>>>>>> vaisseau galactique
+=======
+							
+>>>>>>> Modif des images des vaisseaux
 
 	def dechargervaisseaugalactique(self, rep):
 		v = None

@@ -24,4 +24,7 @@ class Ville(Batiment):
 		Batiment.calculenergiegen(self)
 		Batiment.calculmetauxgen(self)
 		print(self.metauxgen,self.energiegen,self.foodgen)
+<<<<<<< HEAD
 >>>>>>> vaisseau galactique
+=======
+>>>>>>> Modif des images des vaisseaux

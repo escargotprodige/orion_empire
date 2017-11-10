@@ -45,10 +45,14 @@ class Modele():
 
 	def creersystemes(self, nbias):  # IA ajout du parametre du nombre d'ias a ajouter
 <<<<<<< HEAD
+<<<<<<< HEAD
 
 =======
 		
 >>>>>>> vaisseau galactique
+=======
+		
+>>>>>>> Modif des images des vaisseaux
 		for i in range(self.nbsystemes):
 			x = random.randrange(self.diametre * 10) / 10
 			y = random.randrange(self.diametre * 10) / 10

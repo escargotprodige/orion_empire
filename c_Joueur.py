@@ -171,13 +171,14 @@ class Joueur():
 				v = VaisseauGalactique(self, self.nom, i)
 				self.vaisseauxinterstellaires.append(v)
 				return 1
+
 	def creerstationGalactique(self,id):  ##################################################################  MODIF TRISTAN
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
-
+				
 	def creerLazerBoi(self, listeparams):
 		nom, systemeid, planeteid, x, y = listeparams
 		for i in self.systemesvisites:
@@ -252,7 +253,8 @@ class Joueur():
 					print(rep)
 			else:
 				i.orbite()
-
+		
+		#Génération des ressources tous les 20 mises à jours
 		self.delais = self.delais -1
 		if self.delais <= 0:
 			self.delais = 20
@@ -262,6 +264,7 @@ class Joueur():
 						if i.proprietaire == self.nom:
 							i.generer()
 							#print(self.ressource1,self.ressource2,self.ressource3)
+							
 
 
 	def dechargervaisseaugalactique(self, rep):

@@ -39,18 +39,18 @@ class Controleur():
 		return monip
 
 	def generernom(self):  # generateur de nouveau nom - accelere l'entree de nom pour les tests - parfois a peut generer le meme nom mais c'est rare
-
 		monnom = "Commandant_" + str(random.randrange(1000))
 		return monnom
 
 	def creerpartie(self):
 		if self.egoserveur == 0:
-			pid = Popen(["C:\\Python34\\Python.exe", "./orion_empire_serveur.py"],shell=1).pid  # on lance l'application serveur
+			pid = Popen(["C:\\Python34\\Python.exe", "./orion_empire_serveur.py"],
+			            shell=1).pid  # on lance l'application serveur
 			self.egoserveur = 1  # on note que c'est soi qui, ayant demarre le serveur, aura le privilege de lancer la simulation
 
 	## ----------- FONCTION POUR CELUI QUI A CREE LA PARTIE SEULEMENT
-	def lancerpartie(self, diametre=5, densitestellaire=5,qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
-
+	def lancerpartie(self, diametre=5, densitestellaire=5,
+	                 qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
 		rep = self.serveur.lancerpartie(diametre, densitestellaire, qteIA)
 		## ----------- FIN --
 
@@ -74,9 +74,7 @@ class Controleur():
 		elif rep[0] == 0:
 			self.vue.affichelisteparticipants(rep[2])
 			self.vue.root.after(50, self.boucleattente)
-
-	def initierpartie(self, rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
-
+	def initierpartie(self,rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
 		if rep[1][0][0] == "lancerpartie":
 			# print("REP",rep)
 			self.vue.changecadre(self.vue.cadreloading)
@@ -160,7 +158,7 @@ class Controleur():
 
 	def creerLazerBoi(self, systeme):
 		self.modele.creerlazerboi(systeme)
-
+		
 	def creerstationGalactique(self, systeme):
 		self.modele.creerstationGalactique(systeme)
 

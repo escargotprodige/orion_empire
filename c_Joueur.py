@@ -1,4 +1,5 @@
 from orion_empire_modele import *
+from c_Station import Station
 
 
 class Joueur():
@@ -177,6 +178,15 @@ class Joueur():
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
+
+	def creer_station(self, systeme_id, planete_id):  ##################################################################  MODIF TRISTAN
+		for i in self.systemesvisites:
+			if i.id == systeme_id:
+				for j in i.planetes:
+					if j.id == planete_id:
+						sg = Station(self, self.nom, i, i.x, i.y)
+						self.stations.append(sg)
+						return 1
 
 	def creerLazerBoi(self, listeparams):
 		nom, systemeid, planeteid, x, y = listeparams

@@ -1,0 +1,108 @@
+Membres de l'équipe:
+
+	Zénon, Sarah, Iprahim, Paola, Tristan, Bryan, Vincent
+
+Fonctionnement:
+
+	Démarage et spécification:
+
+	-Lors du démarrage, vous arrivez sur une fenêtre vous offrant de choisir votre nom et l'ip de connexion 
+	et vous offre de créer une partie ''Creer partie'' ou de vous joindre à une partie ''Connecter partie''.
+
+	-Indépendement de votre choix, vous êtes amené à la fenêtre suivante. Il y a la liste des joueurs de cette partie 
+	à droite. Si vous avez créer la partie, vous pouvez choisir le nombre d'années lumières dans votre univers,
+	le nombre de systèmes et le nombre d'intelligence artificielle contre lesquels vous allez jouer.
+
+	-En lancant la partie. Un écran de chargement apparaît.
+
+
+	Le Jeu (planète):
+	
+	-Le jeu débute et vous vous trouvez sur une planète aléatoire, dans un système solaire aléatoire. Vous êtes le seul
+	individu dans ce système.
+
+	-La majorité de l'écran affiche la surface de la planète. Dans le bas à droite, vous voyez une mini-map offrant 
+	une vue d'ensemble de la planète et vous permettant de vous déplacez rapidement en cliquant sur l'endroit désiré
+	de la mini-map.
+
+	-Au-dessus de la mini-map ce trouve trois indicateurs numérique, un rouge, un jaune et un vert. Ces compteurs
+	indiquent respectivement votre quantité de métaux, énergies et nourritures.
+
+	-Vous verrez au-dessus de ces compteurs trois boutons. Une flèche pointant vers la gauche, nous y reviondront 
+	plus tard, un bouton ''Shop ->'' et un bouton ''Selection ->'' (qui n'est pas vraiment un bouton. Cliquer dessus
+	ne produit aucun effet en lui-même.)
+
+	-Tous d'abord, le bouton Shop. Appuyer sur ce bouton vous affichera un choix de 5 bâtiments: "Ville, Mine, 
+	Generatrice, Ferme et Barrack''. Sélectionner un de ces bâtiments vous affichera un tableau d'information 
+	indiquant les coûts d'achats et offrant l'option d'appuyer sur le bouton ''Acheter''. Appuyer sur ce bouton, 
+	puis appuyer n'importe où sur la planète construira ce bâtiment à l'endroit cliqué. 
+	(Au moment d'écrire ces lignes, aucun montant de ressources n'est retiré lors de la construction. 
+	Il est donc possible de créer une quantité virtuellement infini de bâtiment)
+
+	-Le bouton sélection n'est pas encore fonctionnel.
+
+	-La flèche vers la gauche maintenant. Ce bouton vous permet simplement de quitter l'interface de la planète
+	et d'aller agir dans l'interface du système solaire.
+
+
+	Le Jeu (solaire):
+
+	-Arrivé dans l'interface solaire vous verrez une des quatres types d'étoiles dans notre galaxie. (Blanc, bleu, 
+	rouge ou jaune) Autour de celle-ci vous verrez ses planètes orbiter. 
+
+	-Le système solaire possède aussi une mini-map ayant les mêmes fonctionnalités que celle des planètes.
+
+	-Vous pouvez sélectionner une planète en cliquant dessus. Vos sélections seront entouré d'un pointillé.
+
+	-Lorsque vous avez une planète de sélectionné, vous pouvez aller la visiter et appuyant sur le bouton ''->''.
+
+	-Les planètes sont de couleurs différentes et ont des ressources différentes, dépendement de leurs distances
+	avec l'étoile.
+
+	-Les boutons vaisseaux et stations ne sont pas fonctionnels.
+
+	-Appuyer sur le bouton ''<-'' vous permet d'accéder à l'interface galactique.
+
+
+	Le Jeu (galactique):
+
+	-Lorsque la galaxie vous est affiché, vous êtes au niveau de jeu le plus large de Orion Empire.
+
+	-À droite vous avez toujours vos ressources, votre mini-map (nous y reviendrons) et une menu avec les boutons:
+	''Shop >'' et ''->''. 
+
+	-L'interface principale vous affiche la galaxie. Elle contient différents systèmes solaires (représenté par des
+	étoiles aux couleurs diverses nommés plus haut), des pulsars (les ronds roses qui changent de taille) 
+	et un joli fond d'étoiles lointaine sur fond noir n'ayant aucune autre utilité que d'être joli.
+
+	-Vous repèrerez votre étoile, car c'est la seule qui n'est pas terne et foncée. Les autres étoiles sont 
+	plus sombres parce que vous ne les avez pas encore exploré. Vous pouvez sélectionner votre système sans problème,
+	mais tant que vous n'aurez pas envoyer un vaisseau visiter une étoile, vous ne pourrez ni cliquer dessus, 
+	ni entrer dans son système pour voir ses planètes. Dès qu'un de vos vaisseaux aura vue l'endroit, la couleur
+	deviendra plus brillante et vous pourrez faire votre sélection.
+
+	-Parlant de découverte, vous aurez surement constaté que votre mini-map paraît bien vide. Il ne devrait y avoir
+	que le système d'où vous venez qui est visible. La raison en est bien simple, votre carte se met à jour en temps
+	réel à chaque fois que vous découvrez de nouvelles étoiles. Ainsi, chaques étoiles vers lesquelles vous 
+	enverrez des vaisseaux vont apparaîtres sur votre mini-map à leur découverte. 
+
+	-Retour au menu, lorsque vous sélectionnez une étoile, vous aurez accès aux boutons ''Shop >'' et ''->'' comme 
+	mentionné plus haut. Le bouton ''->'' vous envois dans l'interface du système de cette étoile, vous donnant accès
+	à ses planètes. Le bouton ''Shop >'' vous permet d'acquérir des vaisseaux galactiques et des stations galactiques.
+
+	-Les stations galactiques sont des méga-structures permettant de fabriquer les vaisseaux. Vous devez établir une 
+	station avant de pouvoir fabriquer des vaisseaux. 
+	(Cette fonction n'est pas fonctionnelle au moment d'écrire ces lignes.)
+
+	-Les vaisseaux sont les seules unités mobiles de l'interface galactique. Ils ont deux fonctions. La première
+	explorer la galaxie et découvrir de nouveaux systèmes solaires. La second (pas encore implanté) est de transporter
+	les troupes d'une système solaire à un autre. 
+
+	
+
+	
+
+	
+
+	
+	

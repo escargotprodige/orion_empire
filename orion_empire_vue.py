@@ -819,19 +819,19 @@ class VueSysteme(Perspective):
 		self.cadreShop = None
 		self.cadreJoueur = None
 		self.cadreSelection = None
+		self.cadreShopVaisseau = None
 
 		boutonBack = Button(self.cadreetat, text="←", command=self.voirgalaxie)
-		boutonBack.grid(row=0, column=0)
+		boutonBack.grid(row=0, column=0, sticky = W)
 		boutonNext = Button(self.cadreetat, text="→", command=self.voirplanete)
-		boutonNext.grid(row=0, column=5)
+		boutonNext.grid(row=0, column=0, sticky = E)
 
 		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
-		self.boutonShop.grid(row=2, column=0)
+		self.boutonShop.grid(row=0, column=0)
 
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
 		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
-
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
 			self.boutonShop.config(text="Shop ˃")
@@ -839,10 +839,25 @@ class VueSysteme(Perspective):
 		else:
 			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
 			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-			shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.creervaisseau)
+			shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.afficherShopVaisseau)#command=self.creervaisseau)
 			shopVaisseau.grid(row=0, column=0)
 			shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
 			shopStation.grid(row=0, column=1)
+	
+	def afficherShopVaisseau(self):
+		
+		if self.cadreShop:
+			self.cadreShop.grid_forget()
+			self.boutonShop.config(text="Shop ˅")
+			self.cadreShop = None
+			self.cadreShop = Frame(self.cadreetat, width=150, height=200, bg="gray")
+			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+			shopVaisseau = Button(self.cadreShop, text="Transport", command=self.creervaisseau)
+			shopVaisseau.grid(row=0, column=0, sticky = W)
+			shopStation = Button(self.cadreShop, text="Combat", command=self.creervaisseau)
+			shopStation.grid(row=1, column=0, sticky = W)
+			shopVaisseau = Button(self.cadreShop, text="Colonisateur", command=self.creervaisseau)
+			shopVaisseau.grid(row=2, column=0, sticky = W)
 
 	def voirplanete(self):
 		self.parent.voirplanete(self.maselection)

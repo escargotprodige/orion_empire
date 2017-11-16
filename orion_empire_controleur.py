@@ -14,8 +14,6 @@ from helper import Helper as hlp
 from mathPlus import *
 from IdMaker import Id
 
-
-
 class Controleur():
 	def __init__(self):
 		print("IN CONTROLEUR")
@@ -40,6 +38,7 @@ class Controleur():
 
 	def generernom(self):  # generateur de nouveau nom - accelere l'entree de nom pour les tests - parfois a peut generer le meme nom mais c'est rare
 
+
 		monnom = "Commandant_" + str(random.randrange(1000))
 		return monnom
 
@@ -52,6 +51,7 @@ class Controleur():
 	def lancerpartie(self, diametre=5, densitestellaire=5,qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
 
 		rep = self.serveur.lancerpartie(diametre, densitestellaire, qteIA)
+		## ----------- FIN --
 		## ----------- FIN --
 
 	def inscrirejoueur(self):
@@ -76,7 +76,6 @@ class Controleur():
 			self.vue.root.after(50, self.boucleattente)
 
 	def initierpartie(self, rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
-
 		if rep[1][0][0] == "lancerpartie":
 			# print("REP",rep)
 			self.vue.changecadre(self.vue.cadreloading)
@@ -161,7 +160,9 @@ class Controleur():
 	def creerLazerBoi(self, systeme):
 		self.modele.creerlazerboi(systeme)
 
+
 	def creerstationGalactique(self, systeme):
+		print('TES')
 		self.modele.creerstationGalactique(systeme)
 
 	def creervaisseauGalactique(self, systeme):
@@ -218,6 +219,7 @@ class Controleur():
 
 	def upgradeVitesseVaisseau(self, id, boost):
 		self.modele.upgradeVitesseVaisseau(id, boost)
+
 
 	def chargedansvaisseaugalactique(self, vg, vs):
 		self.modele.chargedansvaisseaugalactique(vg, vs)

@@ -1,6 +1,5 @@
 from orion_empire_modele import *
 
-
 class StationGalactique():
 	def __init__(self,parent,nom,systeme,x,y):
 		self.parent=parent
@@ -23,3 +22,4 @@ class StationGalactique():
 			self.angle += 1
 			if self.angle >= 360:
 				self.angle = 0
+

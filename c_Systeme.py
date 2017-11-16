@@ -15,7 +15,6 @@ class Systeme():
 		self.etoile = Etoile(self, x, y)
 		self.planetes = []
 		self.planetesvisites = []
-		self.vaisseaux = []
 		self.creerplanetes()
 
 	def creerplanetes(self):

@@ -1,6 +1,5 @@
 from orion_empire_modele import *
-import c_Vaisseau
-from c_StationGalactique import *
+
 
 class Joueur():
 	def __init__(self, parent, nom, systemeorigine, couleur):
@@ -34,6 +33,9 @@ class Joueur():
 		self.stationGalactiques = []
 		self.barrackMere = None
 
+		self.stationGalactiques = []
+		self.barrackMere = None
+
 		self.planeteOrigine = random.choice(self.systemeorigine.planetes)
 		self.planeteOrigine.proprietaire = self.nom
 		# self.creerVilleOrigine()
@@ -59,14 +61,20 @@ class Joueur():
 
 		# return coords
 
-	def creervaisseauSolaire(self, listeparams): #, systemeid, planeteid, type_vaisseau=c_Vaisseau.VaisseauTransport):
+	def creervaisseauSolaire(self, listeparams):
+		
+		dict_vaisseau = {0:VaisseauTransport,
+						1:VaisseauCombat}
+
 		systemeid, planeteid, type_vaisseau = listeparams
+		print("creer vaisseau solaire",systemeid,planeteid,type_vaisseau)
 		for i in self.systemesvisites:
 			if i.id == systemeid:
 				for j in i.planetes:
 					if j.id == planeteid:
-						v = type_vaisseau(i, self.nom, j)
-						i.vaisseaux.append(v)
+						print(i,j)
+						v = dict_vaisseau[type_vaisseau](i, self.nom, i,j)
+						self.vaisseauxinterplanetaires.append(v)
 						return 1
 
 	# ajout
@@ -163,17 +171,14 @@ class Joueur():
 				v = VaisseauGalactique(self, self.nom, i)
 				self.vaisseauxinterstellaires.append(v)
 				return 1
-			
-	def creerstationGalactique(self, id):  
-		print('creerstationGalactique')
+
+	def creerstationGalactique(self,id):  ##################################################################  MODIF TRISTAN
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
-
-
-	
+				
 	def creerLazerBoi(self, listeparams):
 		nom, systemeid, planeteid, x, y = listeparams
 		for i in self.systemesvisites:
@@ -187,8 +192,6 @@ class Joueur():
 						lazerboi.planeteid = planeteid
 						self.attaquantTerre.append(lazerboi)
 						self.parent.parent.afficherLazerBoi(lazerboi)
-
-	# fin modif
 
 	def ciblerdestination(self, ids):
 		idori, iddesti = ids
@@ -208,6 +211,17 @@ class Joueur():
 					if j.id == iddesti:
 						i.ciblerdestination(j)
 						return
+		
+		for i in self.vaisseauxinterplanetaires:
+			if i.id == idori:
+				for j in i.systeme_courant.planetes:
+					if j.id == iddesti:
+						i.ciblerdestination(j)
+						return
+				for k in self.parent.joueurscles:
+					for j in self.parent.joueurs[k].vaisseauxinterplanetaires:
+						if j.id == iddesti:
+							i.ciblerdestination(j)
 
 	def prochaineaction(self):  # NOTE : cette fonction sera au coeur de votre developpement
 		for i in self.vaisseauxinterstellaires:
@@ -231,8 +245,16 @@ class Joueur():
 						if self.nom == self.parent.parent.monnom:
 							if self.parent.parent.vue.modecourant == self.parent.parent.vue.modes["galaxie"]:
 								self.parent.parent.vue.deplacerCanevas(i.x, i.y)
+
+		for i in self.vaisseauxinterplanetaires:
+			if i.cible:
+				rep=i.avancer()
+				if rep:
+					print(rep)
+			else:
+				i.orbite()
 		
-		#Gï¿½nï¿½ration des ressources tous les 20 mises ï¿½ jours
+		#Génération des ressources tous les 20 mises à jours
 		self.delais = self.delais -1
 		if self.delais <= 0:
 			self.delais = 20
@@ -242,6 +264,8 @@ class Joueur():
 						if i.proprietaire == self.nom:
 							i.generer()
 							#print(self.ressource1,self.ressource2,self.ressource3)
+							
+
 
 	def dechargervaisseaugalactique(self, rep):
 		v = None

@@ -15,6 +15,7 @@ from mathPlus import *
 from IdMaker import Id
 
 
+
 class Controleur():
 	def __init__(self):
 		print("IN CONTROLEUR")
@@ -37,7 +38,6 @@ class Controleur():
 		s.close()  # ferme le socket
 		return monip
 
-
 	def generernom(self):  # generateur de nouveau nom - accelere l'entree de nom pour les tests - parfois a peut generer le meme nom mais c'est rare
 		monnom = "Commandant_" + str(random.randrange(1000))
 		return monnom
@@ -45,12 +45,12 @@ class Controleur():
 	def creerpartie(self):
 		if self.egoserveur == 0:
 			pid = Popen(["C:\\Python34\\Python.exe", "./orion_empire_serveur.py"],
-						shell=1).pid  # on lance l'application serveur
+			            shell=1).pid  # on lance l'application serveur
 			self.egoserveur = 1  # on note que c'est soi qui, ayant demarre le serveur, aura le privilege de lancer la simulation
 
 	## ----------- FONCTION POUR CELUI QUI A CREE LA PARTIE SEULEMENT
 	def lancerpartie(self, diametre=5, densitestellaire=5,
-					 qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
+	                 qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
 		rep = self.serveur.lancerpartie(diametre, densitestellaire, qteIA)
 		## ----------- FIN --
 
@@ -64,7 +64,7 @@ class Controleur():
 			rep = self.serveur.inscrireclient(self.monnom)  # on averti le serveur de nous inscrire
 			# tester retour pour erreur de nom
 			# random.seed(rep[2])
-			random.seed(644)
+			random.seed(64544)
 
 	def boucleattente(self):
 		rep = self.serveur.faireaction([self.monnom, 0, 0])
@@ -74,9 +74,7 @@ class Controleur():
 		elif rep[0] == 0:
 			self.vue.affichelisteparticipants(rep[2])
 			self.vue.root.after(50, self.boucleattente)
-
-	def initierpartie(self,
-					  rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
+	def initierpartie(self,rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
 		if rep[1][0][0] == "lancerpartie":
 			# print("REP",rep)
 			self.vue.changecadre(self.vue.cadreloading)
@@ -155,17 +153,12 @@ class Controleur():
 		self.vue.root.destroy()
 
 	# FONCTIONS DE COUP DU JOUEUR A ENVOYER AU SERVEUR
-	def creervaisseau(self, systeme):
-		self.modele.creervaisseau(systeme)
-		# self.actions.append([self.monnom,"creervaisseau",""])
+	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
+		self.modele.creervaisseauSolaire(systeme, planete, typeVaisseau)
 
-		# ! debut modif
-
-	def creerLazerboi(self, joueur, systeme, planete, x, y):
-		self.actions.append([self.monnom, "creerlazerboi", [self.monnom, systeme, planete, x, y]])
-
-	# !fin modif
-
+	def creerLazerBoi(self, systeme):
+		self.modele.creerlazerboi(systeme)
+		
 	def creerstationGalactique(self, systeme):
 		self.modele.creerstationGalactique(systeme)
 
@@ -213,6 +206,16 @@ class Controleur():
 
 	def voirplanete(self, idsysteme, idplanete):
 		pass
+
+	def changerproprietaire(self, nom, couleur, systeme):
+		self.vue.modes["galaxie"].changerproprietaire(nom, couleur, systeme)
+
+	def dechargerVaisseauGalactique(self, id, systeme):
+		print("DEMANDE DECHARGEMENT")
+		self.modele.dechargerVaisseauGalactique(id, systeme)
+
+	def upgradeVitesseVaisseau(self, id, boost):
+		self.modele.upgradeVitesseVaisseau(id, boost)
 
 	def chargedansvaisseaugalactique(self, vg, vs):
 		self.modele.chargedansvaisseaugalactique(vg, vs)

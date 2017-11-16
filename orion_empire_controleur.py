@@ -162,6 +162,7 @@ class Controleur():
 		self.modele.creerlazerboi(systeme)
 
 	def creerstationGalactique(self, systeme):
+		print('TES')
 		self.modele.creerstationGalactique(systeme)
 
 	def creervaisseauGalactique(self, systeme):

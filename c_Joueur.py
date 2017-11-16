@@ -1,4 +1,6 @@
 from orion_empire_modele import *
+import c_Vaisseau
+from c_StationGalactique import *
 
 
 class Joueur():
@@ -13,7 +15,7 @@ class Joueur():
 		self.systemesvisites = [systemeorigine]
 		self.vaisseauxinterstellaires = []
 		self.vaisseauxinterplanetaires = []
-		self.stationGalactiques = []  ################################################# MODIF TRISTAN
+		self.stationGalactiques = []  
 		self.actions = {"creervaisseauGalactique": self.creervaisseauGalactique,
 						"ciblerdestination": self.ciblerdestination,
 						"atterrirplanete": self.atterrirplanete,
@@ -30,11 +32,11 @@ class Joueur():
 						"creervaisseauSolaire": self.creervaisseauSolaire
 						}
 
-		self.stationGalactiques = []
-		self.barrackMere = None
+		#self.stationGalactiques = []
+		#self.barrackMere = None
 
-		self.stationGalactiques = []
-		self.barrackMere = None
+		#self.stationGalactiques = []
+		#self.barrackMere = None
 
 		self.planeteOrigine = random.choice(self.systemeorigine.planetes)
 		self.planeteOrigine.proprietaire = self.nom
@@ -173,6 +175,7 @@ class Joueur():
 				return 1
 
 	def creerstationGalactique(self,id):  ##################################################################  MODIF TRISTAN
+		print('creerstationGalactique')
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
@@ -319,8 +322,6 @@ class Joueur():
 
 		self.vaisseauxinterstellaires.pop(vs)
 
-	def creerstationGalactique(self, rep):
-		pass
 	
 	def ajoutessource(self,metaux=0,energie=0,food=0):
 		self.ressource1 += metaux

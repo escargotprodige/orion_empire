@@ -969,6 +969,16 @@ class VueSysteme(Perspective):
 					self.canevas.create_image(jx, jy, image=self.img[k][index],
 					                          tags=(j.proprietaire, "vaisseauinterplanetaires", j.id,j.type, "artefact"))
 					index += 1
+					
+					# Afficher selection vaisseau
+					#print(j.id)
+					if self.maselection != None:
+						if j.id == self.maselection[1]:
+							self.canevas.delete("select")
+							n += 1 # Gere la taille de la selection
+							self.canevas.create_oval((jx) - n - 1, (jy) - n - 1, (jx) + n, (jy) + n - 1, dash=(2, 2),
+							                         outline=self.modele.joueurs[self.parent.nom].couleur,
+							                         tags=("select", "selecteur")) 
 	
 					# Afficher vaisseaux sur minimap
 					if i.nom == self.parent.nom:
@@ -984,12 +994,16 @@ class VueSysteme(Perspective):
 		pass
 
 	def afficherselection(self):
+		
+		print('afficherselection')
 		self.canevas.delete("selecteur")
 		if self.maselection != None:
 			systemes = self.modele.systemes
 
 			e = self.UA2pixel
 
+			print(self.maselection)
+			
 			# Pas obligé de faire la selection initiale mais plus satisfesant
 			if self.maselection[1] == "planete":
 				for j in systemes:
@@ -1004,20 +1018,14 @@ class VueSysteme(Perspective):
 							                         tags=("select", "selecteur"))
 
 							p.selectionne = True
-			'''
-			elif self.maselection[1] == "vaisseauSolaire":
-				for i in joueur.vaisseauxinterstellaires:
-					if i.id == self.maselection[2]:
-						x = i.x
-						y = i.y
-						t = 10
-						self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
-						                              outline=joueur.couleur,
-						                              tags=("select", "selecteur"))
-			'''
+			elif self.maselection[1] == "vaisseauinterplanetaires":
+				for k in self.parent.joueurscles:
+					pass
+					
 	def cliquervue(self, evt):
 		self.changecadreetat(None)
-
+		
+		print('cliquervue!')
 		t = self.canevas.gettags("current")
 		print(t)
 		if t and "etoile" in t:

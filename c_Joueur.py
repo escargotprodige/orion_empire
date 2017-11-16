@@ -29,7 +29,6 @@ class Joueur():
 						"creerlazerboi": self.creerLazerBoi,
 						"creervaisseauSolaire": self.creervaisseauSolaire
 						}
-
 		self.stationGalactiques = []
 		self.barrackMere = None
 
@@ -318,9 +317,6 @@ class Joueur():
 		vg.chargementvaisseau(vs)
 
 		self.vaisseauxinterstellaires.pop(vs)
-
-	def creerstationGalactique(self, rep):
-		pass
 	
 	def ajoutessource(self,metaux=0,energie=0,food=0):
 		self.ressource1 += metaux

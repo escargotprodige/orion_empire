@@ -92,8 +92,8 @@ class Modele():
 						np -= 1
 
 		couleurs = ["cyan", "goldenrod", "orangered", "greenyellow",
-		            "dodgerblue", "yellow2", "maroon1", "chartreuse3",
-		            "firebrick1", "MediumOrchid2", "DeepPink2", "blue"]  # IA ajout de 3 couleurs
+					"dodgerblue", "yellow2", "maroon1", "chartreuse3",
+					"firebrick1", "MediumOrchid2", "DeepPink2", "blue"]  # IA ajout de 3 couleurs
 
 		for i in self.joueurscles:
 			self.joueurs[i] = Joueur(self, i, planes.pop(0), couleurs.pop(0))
@@ -111,7 +111,8 @@ class Modele():
 	def creervaisseauGalactique(self, systeme):  # ! Changer nom
 		self.parent.actions.append([self.parent.monnom, "creervaisseauGalactique", systeme])
 
-	def creerstationGalactique(self, systeme):  #############################################################  MODIF TRISTAN
+	def creerstationGalactique(self,
+							   systeme):  #############################################################  MODIF TRISTAN
 		self.parent.actions.append([self.parent.monnom, "creerstationGalactique", systeme])
 
 	def prochaineaction(self, cadre):  # Loop
@@ -122,7 +123,7 @@ class Modele():
 
 		for i in self.joueurscles:
 			self.joueurs[i].prochaineaction()
-
+ 
 		for i in self.ias:
 			i.analysesituation()
 
@@ -144,7 +145,8 @@ class Modele():
 	def changerproprietaire(self, nom, couleur, syst):
 		self.parent.changerproprietaire(nom, couleur, syst)
 
-	def dechargerVaisseauGalactique(self, id,systeme):  # ! ------------------------------------------------------ METHODE A AJOUTER
+	def dechargerVaisseauGalactique(self, id,
+									systeme):  # ! ------------------------------------------------------ METHODE A AJOUTER
 		self.parent.actions.append([self.parent.monnom, "dechargervausseaugalactique", (id, systeme)])
 
 	# print("ENVOIE DEMANDE DECHARGEMENT")

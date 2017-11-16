@@ -811,6 +811,7 @@ class VueSysteme(Perspective):
 		self.UA2pixel = 20  # Grandeur soleil # ainsi la terre serait a 100 pixels du soleil et Uranus a 19 Unites Astronomiques
 		self.largeur = 1000
 		self.hauteur = self.largeur
+		self.img = {}
 
 		self.afficherUI()
 
@@ -869,7 +870,7 @@ class VueSysteme(Perspective):
 						pixel[i, k] = (r, g, b)
 
 			self.images["transport"][j] = image
-		self.img = {}
+
 # 	def chargeimages(self):
 # 		im = Image.open("./images/v_attaque.png")
 # 		self.images["attaque"] = ImageTk.PhotoImage(im)

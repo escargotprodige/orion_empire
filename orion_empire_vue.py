@@ -975,7 +975,7 @@ class VueSysteme(Perspective):
 					if self.maselection != None:
 						if j.id == self.maselection[1]:
 							self.canevas.delete("select")
-							n += 1 # Gere la taille de la selection
+							n = 10 # Gere la taille de la selection
 							self.canevas.create_oval((jx) - n - 1, (jy) - n - 1, (jx) + n, (jy) + n - 1, dash=(2, 2),
 							                         outline=self.modele.joueurs[self.parent.nom].couleur,
 							                         tags=("select", "selecteur")) 

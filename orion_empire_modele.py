@@ -105,6 +105,9 @@ class Modele():
 			self.joueurs[nomia] = ia  # IA
 			self.ias.append(ia)  # IA
 			
+	def creerlazerboi(self):
+		self.parent.actions.append([self.parent.monnom, "creerlazerboi", barrack])
+		
 	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
 		self.parent.actions.append([self.parent.monnom, "creervaisseauSolaire", (systeme, planete, typeVaisseau)])
 	

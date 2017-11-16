@@ -85,7 +85,7 @@ class Barrack(Batiment):
 		b[ATP.SPEED] = bm[ATP.SPEED]
 		b[ATP.DEFENSE] = bm[ATP.DEFENSE]
 		b[ATP.PRIX] = bm[ATP.PRIX]
-		
+    
 		#dictUnitTemplate = barrackMere.dictUnitTemplate
 
 	def creerLazerBoi(self):

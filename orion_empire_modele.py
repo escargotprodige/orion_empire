@@ -15,9 +15,11 @@ from c_Systeme import *
 from c_Vaisseau import *
 from c_Ferme import *
 from c_Generatrice import *
-from c_StationGalactique import *  ###########################################################  MODIF TRISTAN
+from c_StationGalactique import *  
 from c_Joueur import *
 from c_IA import *
+from c_Batiment import *
+from IdMaker import Id
 
 
 class Modele():
@@ -38,7 +40,6 @@ class Modele():
 		self.creersystemes(int(qteIA))  # nombre d'ias a ajouter
 
 	def creersystemes(self, nbias):  # IA ajout du parametre du nombre d'ias a ajouter
-
 		for i in range(self.nbsystemes):
 			x = random.randrange(self.diametre * 10) / 10
 			y = random.randrange(self.diametre * 10) / 10
@@ -105,13 +106,12 @@ class Modele():
 			self.ias.append(ia)  # IA
 			
 	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
-		self.parent.actions.append([self.parent.monnom, "creervaisseauSolaire", systeme, planete, typeVaisseau])
+		self.parent.actions.append([self.parent.monnom, "creervaisseauSolaire", (systeme, planete, typeVaisseau)])
 	
 	def creervaisseauGalactique(self, systeme):  # ! Changer nom
 		self.parent.actions.append([self.parent.monnom, "creervaisseauGalactique", systeme])
 
-	def creerstationGalactique(self,
-	                           systeme):  #############################################################  MODIF TRISTAN
+	def creerstationGalactique(self, systeme):  #############################################################  MODIF TRISTAN
 		self.parent.actions.append([self.parent.monnom, "creerstationGalactique", systeme])
 
 	def prochaineaction(self, cadre):  # Loop
@@ -132,7 +132,10 @@ class Modele():
 		for i in self.systemes:
 			for p in i.planetes:
 				p.orbiter()
-
+		
+		for i in self.joueurs: #################################################################################### MODIF TRISTAN
+			for s in self.joueurs[i].stationGalactiques:
+				s.orbiter()
 		self.parent.vue.modecourant.updateRessources(self.joueurs[self.parent.monnom])  # !
 
 	def changeetatsystem(self, nom, systeme):  # ! ------------------------------ AJOUTER M�THODE
@@ -141,8 +144,7 @@ class Modele():
 	def changerproprietaire(self, nom, couleur, syst):
 		self.parent.changerproprietaire(nom, couleur, syst)
 
-	def dechargerVaisseauGalactique(self, id,
-	                                systeme):  # ! ------------------------------------------------------ METHODE A AJOUTER
+	def dechargerVaisseauGalactique(self, id,systeme):  # ! ------------------------------------------------------ METHODE A AJOUTER
 		self.parent.actions.append([self.parent.monnom, "dechargervausseaugalactique", (id, systeme)])
 
 	# print("ENVOIE DEMANDE DECHARGEMENT")
@@ -153,4 +155,3 @@ class Modele():
 
 	def chargedansvaisseaugalactique(self, vg, vs):
 		self.parent.actions.append([self.parent.monnom, "chargedansvaisseaugalactique", (vg, vs)])
-		

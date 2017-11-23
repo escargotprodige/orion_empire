@@ -397,9 +397,9 @@ class Perspective(Frame):
 
 	def updateRessources(self, joueur):
 
-		self.r1.set(str(joueur.ressource1))
-		self.r2.set(str(joueur.ressource2))
-		self.r3.set(str(joueur.ressource3))
+		self.r1.set(str(joueur.ressourceM))
+		self.r2.set(str(joueur.ressourceE))
+		self.r3.set(str(joueur.ressourceN))
 
 
 class VueGalaxie(Perspective):

@@ -50,9 +50,9 @@ class Joueur():
 		self.attaquantTerre = []
 		self.ressourcesTEMP = 100
 
-		self.ressource1 = 100
-		self.ressource2 = 100
-		self.ressource3 = 100
+		self.ressourceM = 100
+		self.ressourceE = 100
+		self.ressourceN = 100
 		
 		self.delais = 20
 
@@ -178,13 +178,17 @@ class Joueur():
 				self.vaisseauxinterstellaires.append(v)
 				return 1
 			
-	def creerstationGalactique(self,id):  		
-		print('creerstationGalactique')
-		for i in self.systemesvisites:
-			if i.id == id:
-				sg = StationGalactique(self, self.nom, i, i.x, i.y)
-				self.stationGalactiques.append(sg)
-				return 1
+	def creerstationGalactique(self,id):
+		if self.ressourceM >= 5000 and self.ressourceE >= 5000: 	#a ajuster (enlever le hardcoding)
+			for i in self.systemesvisites:
+				if i.id == id:
+					sg = StationGalactique(self, self.nom, i, i.x, i.y)
+					self.ressourceM -= sg.coutM
+					self.ressourceE -= sg.coutE
+					self.stationGalactiques.append(sg)
+					return 1
+		else:
+			print("Tu es trop pauvre!")
 
 	def creer_station(self, systeme_id, planete_id): 
 		for i in self.systemesvisites:
@@ -345,6 +349,6 @@ class Joueur():
 
 	
 	def ajoutessource(self,metaux=0,energie=0,food=0):
-		self.ressource1 += metaux
-		self.ressource2 += energie
-		self.ressource3 += food
+		self.ressourceM += metaux
+		self.ressourceE += energie
+		self.ressourceN += food

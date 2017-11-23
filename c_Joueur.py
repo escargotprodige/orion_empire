@@ -28,6 +28,7 @@ class Joueur():
 						"creerferme": self.creerferme,
 						"dechargervausseaugalactique": self.dechargervaisseaugalactique,
 						"creerstationGalactique": self.creerstationGalactique,
+						"creerstationSolaire": self.creerstationSolaire,
 						"upgradevitessevaisseau": self.upgradeVitesseVaisseau,
 						"creerbarrack": self.creerbarrack,
 						"creerlazerboi": self.creerLazerBoi,
@@ -39,6 +40,7 @@ class Joueur():
 						}
 
 		self.stationGalactiques = []
+		self.stationSolaire = []
 		self.barrackMere = None
 
 
@@ -181,12 +183,21 @@ class Joueur():
 				self.vaisseauxinterstellaires.append(v)
 				return 1
 			
-	def creerstationGalactique(self,id):  		
-		print('creerstationGalactique')
+	def creerstationGalactique(self,id):  
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
+				return 1
+			
+	def creerstationSolaire(self,id): 
+		for i in self.systemesvisites:
+			if i.id == id:
+				 		
+				
+				ss = Station(self, self.nom, i, i.x, i.y)
+				self.stationSolaire.append(ss)
+				print(self.stationSolaire)
 				return 1
 
 	def creer_station(self, systeme_id, planete_id): 

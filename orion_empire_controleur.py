@@ -157,8 +157,9 @@ class Controleur():
 	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
 		self.modele.creervaisseauSolaire(systeme, planete, typeVaisseau)
 
-	def creerLazerBoi(self, systeme):
-		self.modele.creerlazerboi(systeme)
+	def creerLazerboi(self, joueur, systeme, planete, x, y):
+		self.actions.append([self.monnom, "creerlazerboi", [self.monnom, systeme, planete, x, y]])
+
 
 
 	def creerstationGalactique(self, systeme):
@@ -199,6 +200,8 @@ class Controleur():
 	def afficherLazerBoi(self, lazerBoi):
 		self.vue.afficherLazerBoi(lazerBoi)
 
+	def moveAttaquant(self, lazerboi_id, targetX, targetY):
+		self.actions.append([self.monnom, "movelazerboi", [self.monnom, systeme, planete, targetX, targetY]])
 	# !fin modif
 
 	def effacerBatiment(self, Batiment):

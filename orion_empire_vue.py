@@ -243,6 +243,33 @@ class Vue():
 				self.modes["planetes"][i].minimap(Batiment.id)
 				break;
 
+	def afficherLazerBoi(self, lazerBoi):
+		# 200 c'Est la taille du minimap
+		for i in self.modes["planetes"].keys():
+			if i == lazerBoi.planeteid:
+				p = 200 / self.modes["planetes"][i].planete.terrainTailleCarre
+				print(self.modele.joueurs)
+				couleur = self.modele.joueurs[lazerBoi.proprietaire].couleur
+				t = 200 / self.modes["planetes"][i].largeur
+				x = lazerBoi.x
+				y = lazerBoi.y
+
+				im = self.modes["planetes"][i].images["lazerboi"]
+				self.modes["planetes"][i].canevas.create_image(lazerBoi.x, lazerBoi.y, image=im,
+															   tags=(lazerBoi.id, "lazerboi"))
+
+				self.modes["planetes"][i].minimap.create_oval(x * t - p, y * t - p, x * t + p, y * t + p, fill=couleur,
+															  tags=(lazerBoi.id, "lazerboi"))
+
+				break
+
+	def effacerLazerBoi(self, lazerBoi):
+		for i in self.modes["planetes"].keys():
+			if i == lazerBoi.planeteid:
+				self.modes["planetes"][i].canevas.delete(lazerBoi.id)
+				self.modes["planetes"][i].minimap(lazerBoi.id)
+				break;
+
 	def fermerfenetre(self):
 		# Ici, on pourrait mettre des actions a faire avant de fermer (sauvegarder, avertir etc)
 		self.parent.fermefenetre()
@@ -1170,6 +1197,7 @@ class VuePlanete(Perspective):
 		self.systeme = syste
 		self.infrastructures = {}
 		self.maselection = None
+		self.prevSelection = None
 		self.macommande = None
 
 		self.KM2pixel = 100  # ainsi la terre serait a 100 pixels du soleil et Uranus a 19 Unites Astronomique
@@ -1247,6 +1275,10 @@ class VuePlanete(Perspective):
 			shopBarrack = Button(self.cadreShop, text="Barrack", image=self.images["miniBarra"], compound="top",  command=self.infoBarrack)
 			shopBarrack.grid(row=1, column=1)
 
+			#À EFFACER, TEMPORAIRE
+			shopLazerboi = Button(self.cadreShop, text="Lazerboi", image=self.images["lazerboi"], compound="top",  command=self.infoLazerboi)
+			shopLazerboi.grid(row=1, column=2)
+
 	def infoShop(self, typeBatiment):
 		#couts
 		c = Cout()
@@ -1313,7 +1345,13 @@ class VuePlanete(Perspective):
 			labelCoutEnergie.config(text=c.generatrice["energie"])
 			labelCoutFood.config(text=c.generatrice["nourriture"])
 			boutonAcheter.config(command=self.creeBarrack)
-			
+		elif typeBatiment is "lazerboi":
+			labelImage.config(image=self.images["miniBarra"])
+			labelNom.config(text="Barrack")
+			labelCoutMetal.config(text=c.generatrice["metal"])
+			labelCoutEnergie.config(text=c.generatrice["energie"])
+			labelCoutFood.config(text=c.generatrice["nourriture"])
+			boutonAcheter.config(command=self.creeLazerboi)
 		#grid tout
 			#batiment
 		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
@@ -1341,6 +1379,11 @@ class VuePlanete(Perspective):
 	def infoBarrack(self):
 		self.macommande = None
 		self.infoShop("barrack")
+	#A EFFACER! TEMPORAIRE
+	def infoLazerboi(self):
+		self.macommande = None
+		self.infoShop("lazerboi")
+
 	def creermine(self):
 		self.macommande = "mine"
 
@@ -1358,6 +1401,10 @@ class VuePlanete(Perspective):
 	def creeBarrack(self):
 		self.macommande = "barrack"
 		print('Fo\' the emperor!')
+
+	def creeLazerboi(self):
+		self.macommande = "lazerboi"
+		print("pew pew pew")
 
 	def voirsysteme(self):
 		for i in self.modele.joueurs[self.parent.nom].systemesvisites:
@@ -1421,6 +1468,8 @@ class VuePlanete(Perspective):
 		self.images["miniFerm"] = ImageTk.PhotoImage(im)
 		im = Image.open("./images/mine_50.png")
 		self.images["miniBarra"] = ImageTk.PhotoImage(im)
+		im = Image.open("./images/Fichier_2.png")
+		self.images["lazerboi"] = ImageTk.PhotoImage(im)		
 		
 	def afficherdecor(self):
 		pass
@@ -1516,62 +1565,7 @@ class VuePlanete(Perspective):
 				labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
 				labelNom.grid(row=2,column=0, columnspan=2)
 				labelLvl.grid(row=3,column=0, columnspan=2)
-#		 
-#			 #Infos batiment
-#		 labelImage = Label(self.cadreInfoShop, image=self.images["miniVille"])
-#		 labelNom = Label(self.cadreInfoShop, text="Ville")
-#		 labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
-#		 #Cout batiment
-#		 label = Label(self.cadreInfoShop, text="Cout")
-#		 label.grid(row=0,column=2, columnspan= 2)
-#		 label = Label(self.cadreInfoShop, text="Metal")
-#		 label.grid(row=1, column=2)
-#		 label = Label(self.cadreInfoShop, text="Energie")
-#		 label.grid(row=2, column=2)
-#		 label = Label(self.cadreInfoShop, text="Food")
-#		 label.grid(row=3, column=2)
-#		 
-#		 labelCoutMetal = Label(self.cadreInfoShop, text="")
-#		 labelCoutEnergie = Label(self.cadreInfoShop, text="")
-#		 labelCoutFood = Label(self.cadreInfoShop, text="")
-#		 #Boutons
-#		 boutonAcheter = Button(self.cadreInfoShop, text="Acheter")
-#		 if typeBatiment is "ville":
-#			 labelImage.config(image=self.images["miniVille"])
-#			 labelNom.config(text="Ville")
-#			 labelCoutMetal.config(text=c.ville["metal"])
-#			 labelCoutEnergie.config(text=c.ville["energie"])
-#			 labelCoutFood.config(text=c.ville["nourriture"])
-#			 boutonAcheter.config(command=self.creerville)
-#		 elif typeBatiment is "mine":
-#			 labelImage.config(image=self.images["miniMine"])
-#			 labelNom.config(text="Mine")
-#			 labelCoutMetal.config(text=c.mine["metal"])
-#			 labelCoutEnergie.config(text=c.mine["energie"])
-#			 labelCoutFood.config(text=c.mine["nourriture"])
-#			 boutonAcheter.config(command=self.creermine)
-#		 elif typeBatiment is "generatrice":
-#			 labelImage.config(image=self.images["miniGen"])
-#			 labelNom.config(text="Generatrice")
-#			 labelCoutMetal.config(text=c.generatrice["metal"])
-#			 labelCoutEnergie.config(text=c.generatrice["energie"])
-#			 labelCoutFood.config(text=c.generatrice["nourriture"])
-#			 boutonAcheter.config(command=self.creergeneratrice)
-#		 elif typeBatiment is "ferme":
-#			 labelImage.config(image=self.images["miniFerm"])
-#			 labelNom.config(text="Ferme")
-#			 labelCoutMetal.config(text=c.generatrice["metal"])
-#			 labelCoutEnergie.config(text=c.generatrice["energie"])
-#			 labelCoutFood.config(text=c.generatrice["nourriture"])
-#			 boutonAcheter.config(command=self.creeferme)
-#		 elif typeBatiment is "barrack":
-#			 labelImage.config(image=self.images["miniBarra"])
-#			 labelNom.config(text="Barrack")
-#			 labelCoutMetal.config(text=c.generatrice["metal"])
-#			 labelCoutEnergie.config(text=c.generatrice["energie"])
-#			 labelCoutFood.config(text=c.generatrice["nourriture"])
-#			 boutonAcheter.config(command=self.creeBarrack)
-#			 
+		 
 		
 	def cliquervue(self, evt):
 		t = self.canevas.gettags("current")
@@ -1579,34 +1573,25 @@ class VuePlanete(Perspective):
 		if t and t[0] != "current":
 			self.maselection = None
 			if t[0] == self.parent.nom:
-					pass
+				pass
+			elif t[1] == "mine":
+				print("mine mine mine") #!!!
+				pass
+			elif t[1] == "lazerboi":
+				self.maselection = "lazerboi"
+				print("lazerboi at your service, pew pew.") #!!!
+				self.prevSelection = t
 			elif t[2] == "batiment":
 				self.maselection = t
 				self.selectBatiment()
-# 				print("werk werk werk") #!!!
-# 				if t[1] == "mine":
-# 					self.maselection = t
-# 					print(t[0])
-# 					print("mine mine mine") #!!!
-# 					self.selectBatiment()
-# 				elif t[1] == "generatrice":
-# 					self.maselection = "generatrice"
-# 					print("generatriceeeee") #!!!
-# 					self.selectBatiment()
-# 				elif t[1] == "ferme":
-# 					self.maselection = "ferme"
-# 					print("moo moo moo") #!!!
-# 					self.selectBatiment()
-# 				elif t[1] == "ville":
-# 					self.maselection = "ville"
-# 					print("lalala") #!!!
-# 					self.selectBatiment()
-# 				elif t[1] == "barrack":
-# 					print("1,2! 1,2!") #!!!
-# 					self.selectBatiment()
+				
 		else:
 			x = self.canevas.canvasx(evt.x) / self.tailleTile
 			y = self.canevas.canvasy(evt.y) / self.tailleTile
+			
+			globalX = self.canevas.canvasx(evt.x)
+			globalY = self.canevas.canvasy(evt.y)
+			#print(x,y)
 			#if not clicked on Object
 			self.maselection = None
 			#Reset all selection
@@ -1631,7 +1616,14 @@ class VuePlanete(Perspective):
 			elif self.macommande is "barrack":
 				self.parent.parent.creerbarrack(self.parent.nom, self.systemeid, self.planeteid, x, y)
 				self.macommande = None
-
+			elif self.macommande is "lazerboi":
+				print("hey!")
+				self.parent.parent.creerLazerboi(self.parent.nom, self.systemeid, self.planeteid, globalX, globalY)
+				self.macommande = None
+			elif self.prevSelection[1] == "lazerboi":
+				self.parent.parent.moveAttaquant(self.prevSelection[0], globalX, globalY)
+			
+			
 	def montresystemeselection(self):
 		self.changecadreetat(self.cadreetataction)
 

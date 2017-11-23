@@ -31,7 +31,8 @@ class Joueur():
 						"upgradevitessevaisseau": self.upgradeVitesseVaisseau,
 						"creerbarrack": self.creerbarrack,
 						"creerlazerboi": self.creerLazerBoi,
-						"creervaisseauSolaire": self.creervaisseauSolaire
+						"creervaisseauSolaire": self.creervaisseauSolaire,
+						"movelazerboi": self.moveLazerBoi
 						}
 
 		self.stationGalactiques = []
@@ -203,11 +204,16 @@ class Joueur():
 						lazerboi = self.barrackMere.creerLazerBoi(self.nom)
 						lazerboi.x = x
 						lazerboi.y = y
+						print (str(lazerboi.x) + ", " + str(lazerboi.y) )
 						lazerboi.systemid = systemeid
 						lazerboi.planeteid = planeteid
 						self.attaquantTerre.append(lazerboi)
 						self.parent.parent.afficherLazerBoi(lazerboi)
-
+	
+	
+	def moveLazerBoi(self, lazerboi_id, system, planete, ):
+		pass
+	
 	def ciblerdestination(self, ids):
 		idori, iddesti = ids
 		for i in self.vaisseauxinterstellaires:

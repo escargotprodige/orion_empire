@@ -14,7 +14,7 @@ class AttaquantTerre:
 		self.speed = speed
 		self.x = x
 		self.y = y
-		self.id = ID.Id.prochainid()
+		self.id = Id.prochainid()
 		self.systemid = systemid
 		self.planeteid = planeteid
 		self.proprietaire = proprietaire

@@ -249,7 +249,6 @@ class Vue():
 		for i in self.modes["planetes"].keys():
 			if i == lazerBoi.planeteid:
 				p = 200 / self.modes["planetes"][i].planete.terrainTailleCarre
-				print(self.modele.joueurs)
 				couleur = self.modele.joueurs[lazerBoi.proprietaire].couleur
 				t = 200 / self.modes["planetes"][i].largeur
 				x = lazerBoi.x

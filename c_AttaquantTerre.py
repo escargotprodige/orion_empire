@@ -67,8 +67,6 @@ class AttaquantTerre:
 		if dist < 1:
 			return
 		
-		print(self.targetPositionX, ", ",  self.targetPositionY)
-		print(self.x, ", ",  self.y)
 		self.avancer(self.targetPositionX, self.targetPositionY)
 		
 	def avancer(self, x, y):

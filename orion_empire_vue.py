@@ -595,6 +595,9 @@ class VueGalaxie(Perspective):
 		self.canevas.delete("pulsar")
 		self.afficherselection()
 		self.minimap.delete("vaisseauinterstellaire")
+		
+		mini=2
+		UAmini=4
 
 		e = self.AL2pixel
 		me = 200 / self.modele.diametre
@@ -606,6 +609,16 @@ class VueGalaxie(Perspective):
 									 dash=(1, 1),
 									 outline="maroon1", width=2,
 									 tags=("inconnu", "pulsar", i.id))
+			
+		for j in self.modele.joueurs:################################################Modif Tristan
+			for s in self.modele.joueurs[j].stationGalactiques:
+				xl=s.systemeOrigine.x*e
+				yl=s.systemeOrigine.y*e
+				x,y=hlp.getAngledPoint(math.radians(s.angle),15,xl,yl)
+				n=4
+				self.canevas.create_oval(x-n,y-n,x+n,y+n,fill=self.modele.joueurs[j].couleur,outline="white",tags=(s.proprietaire,"StationGalactique",s.id,"artefact"))
+				x,y=hlp.getAngledPoint(math.radians(s.angle),UAmini,100,100)
+				self.minimap.create_oval(x-mini,y-mini,x+mini,y+mini,fill="red",tags=("stationGalactique"))
 
 		for k in mod.joueurscles:
 			i = mod.joueurs[k]
@@ -645,11 +658,11 @@ class VueGalaxie(Perspective):
 												  fill=i.couleur,
 												  tags=("vaisseauinterstellaire", j.id))
 
-		for i in mod.joueurscles:
-			i = mod.joueurs[i]
-			for j in i.stationGalactiques:
-				self.canevas.create_oval(j.x * e - 5, j.y * e - 5, j.x * e - 15, j.y * e - 15, fill=i.couleur,
-										 outline="white", tags=(j.proprietaire, "StationGalactique", j.id, "artefact"))
+		#for i in mod.joueurscles:
+		#	i = mod.joueurs[i]
+		#	for j in i.stationGalactiques:
+		#		self.canevas.create_oval(j.x * e - 5, j.y * e - 5, j.x * e - 15, j.y * e - 15, fill=i.couleur,
+		#								 outline="white", tags=(j.proprietaire, "StationGalactique", j.id, "artefact"))
 
 	def changeetatsystem(self, nom, systeme):
 		id = str(systeme.id)

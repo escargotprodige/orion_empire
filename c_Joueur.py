@@ -211,7 +211,7 @@ class Joueur():
 						self.parent.parent.afficherLazerBoi(lazerboi)
 	
 	
-	def moveLazerBoi(self, lazerboi_id, system, planete, ):
+	def moveLazerBoi(self, lazerboi_id, systeme, planete, ):
 		pass
 	
 	def ciblerdestination(self, ids):

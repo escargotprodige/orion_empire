@@ -1,5 +1,7 @@
 from orion_empire_modele import *
-from c_Station import Station
+import c_Vaisseau
+from c_StationGalactique import Station
+
 
 
 class Joueur():
@@ -14,7 +16,7 @@ class Joueur():
 		self.systemesvisites = [systemeorigine]
 		self.vaisseauxinterstellaires = []
 		self.vaisseauxinterplanetaires = []
-		self.stationGalactiques = []  ################################################# MODIF TRISTAN
+		self.stationGalactiques = []  
 		self.actions = {"creervaisseauGalactique": self.creervaisseauGalactique,
 						"ciblerdestination": self.ciblerdestination,
 						"atterrirplanete": self.atterrirplanete,
@@ -30,11 +32,13 @@ class Joueur():
 						"creerlazerboi": self.creerLazerBoi,
 						"creervaisseauSolaire": self.creervaisseauSolaire
 						}
-		self.stationGalactiques = []
-		self.barrackMere = None
 
 		self.stationGalactiques = []
 		self.barrackMere = None
+
+
+		#self.stationGalactiques = []
+		#self.barrackMere = None
 
 		self.planeteOrigine = random.choice(self.systemeorigine.planetes)
 		self.planeteOrigine.proprietaire = self.nom
@@ -172,14 +176,15 @@ class Joueur():
 				self.vaisseauxinterstellaires.append(v)
 				return 1
 			
-	def creerstationGalactique(self,id):  ##################################################################  MODIF TRISTAN
+	def creerstationGalactique(self,id):  		
+		print('creerstationGalactique')
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
 
-	def creer_station(self, systeme_id, planete_id):  ##################################################################  MODIF TRISTAN
+	def creer_station(self, systeme_id, planete_id): 
 		for i in self.systemesvisites:
 			if i.id == systeme_id:
 				for j in i.planetes:
@@ -330,6 +335,7 @@ class Joueur():
 		vg.chargementvaisseau(vs)
 
 		self.vaisseauxinterstellaires.pop(vs)
+
 	
 	def ajoutessource(self,metaux=0,energie=0,food=0):
 		self.ressource1 += metaux

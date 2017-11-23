@@ -220,7 +220,8 @@ class Vue():
 				self.deplacerCanevas(250, 250)
 
 	def afficherBatiment(self, Batiment):
-		# 200 c'Est la taille du minimap
+		# 200 c'Est la taille du du minimap
+
 		for i in self.modes["planetes"].keys():
 			if i == Batiment.planeteid:
 				p = 200 / self.modes["planetes"][i].planete.terrainTailleCarre
@@ -228,6 +229,7 @@ class Vue():
 				t = 200 / self.modes["planetes"][i].tailleterrainpixel
 				x = Batiment.x * self.modes["planetes"][i].tailleTile
 				y = Batiment.y * self.modes["planetes"][i].tailleTile
+
 				im = self.modes["planetes"][i].images[Batiment.type]
 				self.modes["planetes"][i].canevas.create_image(x, y, image=im,
 															   tags=(Batiment.id, Batiment.type, "batiment"))
@@ -309,11 +311,12 @@ class Perspective(Frame):
 
 		#label id joueur nom
 		self.labid = Label(self.cadreetat, text=self.parent.nom)
+
 		self.labid.grid(row=20, column=0)
 
 		# self.labid=Label(self.cadreinfo,width= 200,text=self.parent.nom) #!
 		# self.labid.pack()
-
+		
 		self.cadreetataction = Frame(self.cadreetat, width=200, height=200, bg="grey20")
 
 		self.cadreetatmsg = Frame(self.cadreetat, width=200, height=200, bg="grey20")
@@ -429,7 +432,7 @@ class VueGalaxie(Perspective):
 			shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.creervaisseauGalactique)
 			shopVaisseau.grid(row=0, column=0)
 			shopStation = Button(self.cadreShop, text="Station", command=self.creerstationGalactique)
-			shopStation.grid(row=0, column=1)  # MODIF fin
+			shopStation.grid(row=0, column=1)  
 
 	def voirsysteme(self, systeme=None):
 		if systeme == None:
@@ -568,6 +571,8 @@ class VueGalaxie(Perspective):
 		self.canevas.delete("pulsar")
 		self.afficherselection()
 		self.minimap.delete("vaisseauinterstellaire")
+		mini=2
+		UAmini=4
 
 		e = self.AL2pixel
 		me = 200 / self.modele.diametre
@@ -576,9 +581,21 @@ class VueGalaxie(Perspective):
 		for i in mod.pulsars:  # ------------------------- cree les pulsars en premier pour les afficher  sous les vaisseaux
 			t = i.taille
 			self.canevas.create_oval((i.x * e) - t, (i.y * e) - t, (i.x * e) + t, (i.y * e) + t, fill="orchid3",
-									 dash=(1, 1),
-									 outline="maroon1", width=2,
-									 tags=("inconnu", "pulsar", i.id))
+
+			                         dash=(1, 1),
+			                         outline="maroon1", width=2,
+			                         tags=("inconnu", "pulsar", i.id))
+			
+		for j in self.modele.joueurs:################################################Modif Tristan
+			for s in self.modele.joueurs[j].stationGalactiques:
+				xl=s.systemeOrigine.x*e
+				yl=s.systemeOrigine.y*e
+				x,y=hlp.getAngledPoint(math.radians(s.angle),15,xl,yl)
+				n=4
+				self.canevas.create_oval(x-n,y-n,x+n,y+n,fill=self.modele.joueurs[j].couleur,outline="white",tags=(s.proprietaire,"StationGalactique",s.id,"artefact"))
+				x,y=hlp.getAngledPoint(math.radians(s.angle),UAmini,100,100)
+				self.minimap.create_oval(x-mini,y-mini,x+mini,y+mini,fill="red",tags=("stationGalactique"))
+
 
 		for k in mod.joueurscles:
 			i = mod.joueurs[k]
@@ -623,6 +640,7 @@ class VueGalaxie(Perspective):
 			for j in i.stationGalactiques:
 				self.canevas.create_oval(j.x * e - 5, j.y * e - 5, j.x * e - 15, j.y * e - 15, fill=i.couleur,
 										 outline="white", tags=(j.proprietaire, "StationGalactique", j.id, "artefact"))
+
 
 	def changeetatsystem(self, nom, systeme):
 		id = str(systeme.id)

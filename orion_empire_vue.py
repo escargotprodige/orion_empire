@@ -875,7 +875,7 @@ class VueSysteme(Perspective):
 						pixel[i, k] = (r, g, b)
 
 				
-				self.images["transport"][j] = image
+			self.images["transport"][j] = image
 				
 		self.images["combat"]={}
 		for j in mod.joueurscles:

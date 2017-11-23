@@ -230,8 +230,11 @@ class Joueur():
 						self.parent.parent.afficherLazerBoi(lazerboi)
 	
 	
-	def moveLazerBoi(self, lazerboi_id, systeme, planete, ):
-		pass
+	def moveLazerBoi(self, listparams):
+		lazerboi_id, x, y = listparams
+		for at in self.attaquantTerre:
+			if at.id == lazerboi_id:
+				at.setTargetPosition(x, y)
 	
 	def ciblerdestination(self, ids):
 		idori, iddesti = ids
@@ -311,7 +314,9 @@ class Joueur():
 							i.generer()
 							#print(self.ressource1,self.ressource2,self.ressource3)
 
-
+		for at in self.attaquantTerre:
+			at.update()
+		
 	def dechargervaisseaugalactique(self, rep):
 		v = None
 		s = None

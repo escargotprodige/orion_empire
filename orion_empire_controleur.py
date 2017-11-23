@@ -202,7 +202,7 @@ class Controleur():
 		self.vue.afficherLazerBoi(lazerBoi)
 
 	def moveAttaquant(self, lazerboi_id, targetX, targetY):
-		self.actions.append([self.monnom, "movelazerboi", [self.monnom, systeme, planete, targetX, targetY]])
+		self.actions.append([self.monnom, "movelazerboi", [lazerboi_id, targetX, targetY]])
 	# !fin modif
 
 	def effacerBatiment(self, Batiment):

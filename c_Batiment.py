@@ -1,4 +1,4 @@
-from orion_empire_modele import *
+#from orion_empire_modele import *
 from IdMaker import Id
 
 class Batiment:

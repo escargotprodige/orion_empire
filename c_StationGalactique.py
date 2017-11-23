@@ -9,8 +9,8 @@ class StationGalactique():
 		self.x=x
 		self.y=y
 		self.systemeOrigine = systeme
-		self.coutM = 5000
-		self.coutE = 5000
+		self.coutM = 50
+		self.coutE = 50
 		
 		self.angle = 0
 		self.delais = 2

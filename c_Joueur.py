@@ -179,7 +179,7 @@ class Joueur():
 				return 1
 			
 	def creerstationGalactique(self,id):
-		if self.ressourceM >= 5000 and self.ressourceE >= 5000: 	#a ajuster (enlever le hardcoding)
+		if self.ressourceM >= 50 and self.ressourceE >= 50: 	#a ajuster (enlever le hardcoding)
 			for i in self.systemesvisites:
 				if i.id == id:
 					sg = StationGalactique(self, self.nom, i, i.x, i.y)

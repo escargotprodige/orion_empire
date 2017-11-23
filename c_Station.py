@@ -40,6 +40,10 @@ class Station():
 			if self.angle >= 360:
 				self.angle = 0
 
+	def pointOrbite(self,x,y):
+		self.x = x
+		self.y = y
+	
 	def meurt(self):
 		print(self.id,"est mort!")
 		self.parent.stationSolaire.remove(self)

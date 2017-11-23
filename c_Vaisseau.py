@@ -22,6 +22,7 @@ class Vaisseau():
 		self.vie = 100
 		self.niveau = 1
 		self.systeme_courant = systeme
+		self.enfuire = None
 		
 	def avancer(self):
 		pass
@@ -68,13 +69,11 @@ class Vaisseau():
 	
 """
 	def recevoir_dmg(self, dmg):
-		if self.vie - dmg <= 0:
-			self.meurt()
-		else:
-			self.vie -= dmg
+		self.vie -= dmg
 
 	def meurt(self):
-		pass
+		print(self.id,"est mort!")
+		self.parent.vaisseauxinterplanetaires.remove(self)
 
 	def upgrade(self):
 		self.niveau += 1
@@ -93,6 +92,7 @@ class Vaisseau():
 		# print("upgrade vitesse")
 		self.vitesse += boost
 		pass
+					
 
 class VaisseauSolaire(Vaisseau):
 	def __init__(self,parent,nom,systeme,planete,type):
@@ -106,7 +106,23 @@ class VaisseauSolaire(Vaisseau):
 		
 	def avancer(self):
 		rep = None
-		if self.cible:
+		if self.enfuire:
+			#print("RUN")
+			self.cible = None
+			if self.type == 'combat' and self.cibleattaque:
+				self.cibleattaque = None
+			x = self.enfuire.x
+			y = self.enfuire.y
+			direction = hlp.calcDegre(self.x,self.y,x,y) - 180
+			if direction < 0:
+				direction += 360
+				
+			self.angletrajet = math.radians(direction)
+			self.degre = 360 - direction
+			self.x, self.y = hlp.getAngledPoint(direction, self.vitesse, self.x, self.y)
+			self.enfuire = None
+		elif self.cible:
+			#print("avance")
 			x = 0
 			y = 0
 			if type(self.cible) is Planete:
@@ -128,6 +144,7 @@ class VaisseauSolaire(Vaisseau):
 		
 	
 	def ciblerdestination(self,p):
+		self.enfuire = None
 		if not self.cible:
 			self.cible = p
 			self.planete_courrant = None
@@ -135,9 +152,14 @@ class VaisseauSolaire(Vaisseau):
 		y = 0
 		if type(p) is Planete:
 			x,y = hlp.getAngledPoint(math.radians(p.angle),p.distance,0,0)
+			self.cibleattaque = None
 		elif isinstance(p, VaisseauSolaire):
 			x = p.x
 			y = p.y
+			if self.type == 'combat' and hlp.calcDistance(self.x,self.y,x,y) <= self.rayon:
+				self.cibleattaque = p
+			else:
+				self.cibleattaque =None
 			
 		self.angletrajet = hlp.calcAngle(self.x, self.y, x, y)
 		self.degre = 360 - hlp.calcDegre(self.x, self.y, x, y)
@@ -146,7 +168,10 @@ class VaisseauSolaire(Vaisseau):
 	def orbite(self):
 		if self.planete_courrant:
 			self.x,self.y = hlp.getAngledPoint(math.radians(self.planete_courrant.angle),self.planete_courrant.distance+self.planete_courrant.taille,0,0)
-
+		
+	def runaway(self,vaisseau):
+		self.enfuire = vaisseau
+			
 
 class VaisseauTransport(VaisseauSolaire):
 	def __init__(self, parent, nom, systeme,planete):
@@ -171,11 +196,41 @@ class VaisseauCombat(VaisseauSolaire):
 	def __init__(self, parent, nom, systeme,planete):
 		super().__init__(parent, nom, systeme,planete,"combat")
 		self.dmg = 5
-		self.rayon = 10
+		self.rayon = 5
+		self.cibleattaque = None
+		self.agressif = False
 
 	def attaquer(self):
-		pass
+		if self.cibleattaque:
+			self.cibleattaque.recevoir_dmg(self.dmg)
+			if self.cibleattaque.type == 'combat' and self.cibleattaque.agressif:
+				self.cibleattaque.ciblerdestination(self)
+			else:
+				self.cibleattaque.runaway(self)
+				#print("Run Attaque")
+				#self.cibleattaque.runaway(self)
+			x = self.cibleattaque.x
+			y = self.cibleattaque.y
+			if hlp.calcDistance(x,y,self.x,self.y) > self.rayon:
+				self.cible = self.cibleattaque
+				self.cibleattaque = None
+				
+			elif self.cibleattaque.vie <= 0:
+				self.cible = None
+				self.cibleattaque = None
 
+		"""		
+		else:
+			for j in self.parent.parent.joueurscles:
+				if j != self.proprietaire:
+					j = self.parent.parent.joueurs[j]
+					for v in j.vaisseauxinterplanetaires:
+						if hlp.calcDistance(self.x,self.y,v.x,v.y) <= self.rayon:
+							self.cibleattaque = v
+							break
+					if self.cibleattaque:
+						break
+		"""
 
 class VaisseauGalactique(Vaisseau):
 	def __init__(self, parent, nom, systeme):

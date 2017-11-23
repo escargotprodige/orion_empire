@@ -841,10 +841,12 @@ class VueSysteme(Perspective):
 		else:
 			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
 			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-			shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.creervaisseau)
+			shopVaisseau = Button(self.cadreShop, text="Vaisseau Transport", command=self.creervaisseauTransport)
 			shopVaisseau.grid(row=0, column=0)
+			shopVaisseau = Button(self.cadreShop, text="Vaisseau Combat", command=self.creervaisseauCombat)
+			shopVaisseau.grid(row=1, column=0)
 			shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
-			shopStation.grid(row=0, column=1)
+			shopStation.grid(row=2, column=0)
 
 	def voirplanete(self):
 		self.parent.voirplanete(self.maselection)
@@ -869,7 +871,26 @@ class VueSysteme(Perspective):
 						b = int(b / 256)
 						pixel[i, k] = (r, g, b)
 
-			self.images["transport"][j] = image
+		self.images["transport"][j] = image
+		self.images["combat"]={}
+		for j in mod.joueurscles:
+			image = Image.open("./images/v_combat.png")
+
+			pixel = image.load()
+			couleur = image.convert("RGB")
+			for i in range(image.size[0]):
+				for k in range(image.size[1]):
+					r, g, b = couleur.getpixel((i, k))
+					if  r == self.masque[0] and g == self.masque[1] and b == self.masque[2]:
+						bouton = Button()
+						r, g, b = bouton.winfo_rgb(mod.joueurs[j].couleur)
+						r = int(r / 256)
+						g = int(g / 256)
+						b = int(b / 256)
+						pixel[i, k] = (r, g, b)
+
+			self.images["combat"][j] = image
+		self.img = {}
 
 # 	def chargeimages(self):
 # 		im = Image.open("./images/v_attaque.png")
@@ -926,12 +947,20 @@ class VueSysteme(Perspective):
 		self.creerimagefond(i)
 		self.affichermodelestatique(i)
 
-	def creervaisseau(self):
+	def creervaisseauCombat(self):
+		if self.maselection:
+			#print(self.maselection)
+			self.parent.parent.creervaisseauSolaire(self.maselection[5],self.maselection[2],1)
+			self.maselection = None
+			self.canevas.delete("selecteur")
+			
+	def creervaisseauTransport(self):
 		if self.maselection:
 			#print(self.maselection)
 			self.parent.parent.creervaisseauSolaire(self.maselection[5],self.maselection[2],0)
 			self.maselection = None
 			self.canevas.delete("selecteur")
+
 
 	def creerstation(self):
 		print("Creer station EN CONSTRUCTION")
@@ -939,6 +968,7 @@ class VueSysteme(Perspective):
 	def afficherpartie(self, mod):
 		self.canevas.delete("planete")
 		self.canevas.delete("vaisseauinterplanetaires")
+		self.canevas.delete('laser')
 		self.minimap.delete("planete")
 		self.minimap.delete("vaisseauinterplanetaires")
 
@@ -971,8 +1001,12 @@ class VueSysteme(Perspective):
 				if j.systeme_courant.id == self.systeme.id:
 					jx = int(j.x*self.UA2pixel + xl)
 					jy = int(j.y*self.UA2pixel + yl)
-					
-					self.img[k].append(ImageTk.PhotoImage(self.images["transport"][k].rotate(j.degre - 90)))
+					if j.type == 'combat' and j.cibleattaque:
+						cx = int(j.cibleattaque.x*self.UA2pixel + xl)
+						cy = int(j.cibleattaque.y*self.UA2pixel + yl)
+						self.canevas.create_line(jx,jy,cx,cy,fill='red',tags=('laser'))
+						
+					self.img[k].append(ImageTk.PhotoImage(self.images[j.type][k].rotate(j.degre - 90)))
 	
 					self.canevas.create_image(jx, jy, image=self.img[k][index],
 					                          tags=(j.proprietaire, "vaisseauinterplanetaires", j.id,j.type, "artefact"))
@@ -986,6 +1020,7 @@ class VueSysteme(Perspective):
 						self.minimap.create_rectangle((jx - mini), (jy -mini), (jx + mini), (jy + mini),
 						                              fill=i.couleur,
 						                              tags=(j.proprietaire, "vaisseauinterplanetaires", j.id,j.type, "artefact"))
+						
 				
 	def changerproprietaire(self):
 		pass
@@ -1019,13 +1054,8 @@ class VueSysteme(Perspective):
 						y = i.y
 						t = 10
 						self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
-<<<<<<< HEAD
 						                              outline=joueur.couleur,
 						                              tags=("select", "selecteur"))
-=======
-													  outline=joueur.couleur,
-													  tags=("select", "selecteur"))
->>>>>>> affichage menu selection
 			'''
 	def cliquervue(self, evt):
 		self.changecadreetat(None)

@@ -903,8 +903,8 @@ class VueSysteme(Perspective):
 			shopVaisseau.grid(row=0, column=0, sticky=W)
 			shopVaisseau = Button(self.cadreShop, text="Vaisseau Combat", command=self.creervaisseauCombat)
 			shopVaisseau.grid(row=1, column=0, sticky=W)
-			shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
-			shopStation.grid(row=2, column=0, sticky = W)
+			#shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
+			#shopStation.grid(row=2, column=0, sticky = W)
 			
 			btnchangeretatvaisseau = Button(self.cadreShop, text="Changer mode agressif", command=self.changeretatvaisseau)
 			btnchangeretatvaisseau.grid(row=3, column=0, sticky = W)

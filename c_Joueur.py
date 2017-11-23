@@ -28,14 +28,19 @@ class Joueur():
 						"creerferme": self.creerferme,
 						"dechargervausseaugalactique": self.dechargervaisseaugalactique,
 						"creerstationGalactique": self.creerstationGalactique,
+						"creerstationSolaire": self.creerstationSolaire,
 						"upgradevitessevaisseau": self.upgradeVitesseVaisseau,
 						"creerbarrack": self.creerbarrack,
 						"creerlazerboi": self.creerLazerBoi,
 						"creervaisseauSolaire": self.creervaisseauSolaire,
-						"movelazerboi": self.moveLazerBoi
+						"movelazerboi": self.moveLazerBoi,
+						"enfuireVaisseauSolaire":self.enfuireVaisseauSolaire,
+						"changeretatvaisseau":self.changeretatvaisseau,
+						"vaisseaumort":self.vaisseaumort
 						}
 
 		self.stationGalactiques = []
+		self.stationSolaire = []
 		self.barrackMere = None
 
 
@@ -50,9 +55,9 @@ class Joueur():
 		self.attaquantTerre = []
 		self.ressourcesTEMP = 100
 
-		self.ressource1 = 100
-		self.ressource2 = 100
-		self.ressource3 = 100
+		self.ressourceM = 100
+		self.ressourceE = 100
+		self.ressourceN = 100
 		
 		self.delais = 20
 
@@ -178,13 +183,27 @@ class Joueur():
 				self.vaisseauxinterstellaires.append(v)
 				return 1
 			
-	def creerstationGalactique(self,id):  		
-		print('creerstationGalactique')
+
+	def creerstationGalactique(self,id):
+		if self.ressourceM >= 50 and self.ressourceE >= 50: 	#a ajuster (enlever le hardcoding)
+			for i in self.systemesvisites:
+				if i.id == id:
+					sg = StationGalactique(self, self.nom, i, i.x, i.y)
+					self.ressourceM -= sg.coutM
+					self.ressourceE -= sg.coutE
+					self.stationGalactiques.append(sg)
+					return 1
+		else:
+			print("Tu es trop pauvre!")
+
+	def creerstationSolaire(self,id): 
 		for i in self.systemesvisites:
-			if i.id == id:
-				sg = StationGalactique(self, self.nom, i, i.x, i.y)
-				self.stationGalactiques.append(sg)
+			if i.id == id:	
+				ss = Station(self, self.nom, i, i.x, i.y)
+				self.stationSolaire.append(ss)
+				print(self.stationSolaire)
 				return 1
+
 
 	def creer_station(self, systeme_id, planete_id): 
 		for i in self.systemesvisites:
@@ -282,7 +301,8 @@ class Joueur():
 				i.attaquer()
 				
 			if i.vie <= 0:
-				i.meurt()
+				#i.meurt()
+				self.parent.vaisseaumort(i.id)
 
 		self.delais = self.delais -1
 		if self.delais <= 0:
@@ -350,6 +370,46 @@ class Joueur():
 
 	
 	def ajoutessource(self,metaux=0,energie=0,food=0):
-		self.ressource1 += metaux
-		self.ressource2 += energie
-		self.ressource3 += food
+		self.ressourceM += metaux
+		self.ressourceE += energie
+		self.ressourceN += food
+
+		
+	def enfuireVaisseauSolaire(self,ids):
+		idv,ida = ids
+		
+		vaisseau = None
+		attaque = None
+		
+		for v in self.vaisseauxinterplanetaires:
+			if v.id == idv:
+				vaisseau = v
+				break
+		if vaisseau:
+			for j in self.parent.joueurscles:
+				for v in self.parent.joueurs[j].vaisseauxinterplanetaires:
+					if v.id == ida:
+						vaisseau.runaway(v)
+						attaque = v
+						break
+			if attaque:
+				for v  in self.vaisseauxinterplanetaires:
+					if v.id != idv and v.systeme_courant == vaisseau.systeme_courant:
+						if v.type == "combat" and v.agressif:
+							v.ciblerdestination(attaque)
+							
+	def changeretatvaisseau(self,idv):
+		for v in self.vaisseauxinterplanetaires:
+			if v.id == idv:
+				if v.type == "combat":
+					v.changeretatvaisseau()
+				break
+			
+	def vaisseaumort(self,idv):
+		for v in self.vaisseauxinterplanetaires:
+			if v.id == idv:
+				if self.nom == self.parent.parent.monnom:
+					self.parent.parent.vue.vaisseaumort(v)
+				v.meurt()
+				break
+

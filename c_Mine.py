@@ -8,4 +8,3 @@ class Mine(Batiment):
 		
 		Batiment.calculmetauxgen(self)
 		print(self.metauxgen,self.energiegen,self.foodgen)
-

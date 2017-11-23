@@ -1,6 +1,7 @@
 from orion_empire_modele import *
 import c_Vaisseau
-from c_StationGalactique import *
+from c_StationGalactique import Station
+
 
 
 class Joueur():
@@ -32,8 +33,9 @@ class Joueur():
 						"creervaisseauSolaire": self.creervaisseauSolaire
 						}
 
-		#self.stationGalactiques = []
-		#self.barrackMere = None
+		self.stationGalactiques = []
+		self.barrackMere = None
+
 
 		#self.stationGalactiques = []
 		#self.barrackMere = None
@@ -75,7 +77,7 @@ class Joueur():
 				for j in i.planetes:
 					if j.id == planeteid:
 						print(i,j)
-						v = dict_vaisseau[type_vaisseau](i, self.nom, i,j)
+						v = dict_vaisseau[type_vaisseau](self, self.nom, i,j)
 						self.vaisseauxinterplanetaires.append(v)
 						return 1
 
@@ -173,14 +175,23 @@ class Joueur():
 				v = VaisseauGalactique(self, self.nom, i)
 				self.vaisseauxinterstellaires.append(v)
 				return 1
-
-	def creerstationGalactique(self,id):  ##################################################################  MODIF TRISTAN
+			
+	def creerstationGalactique(self,id):  		
 		print('creerstationGalactique')
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
+
+	def creer_station(self, systeme_id, planete_id): 
+		for i in self.systemesvisites:
+			if i.id == systeme_id:
+				for j in i.planetes:
+					if j.id == planete_id:
+						sg = Station(self, self.nom, i, i.x, i.y)
+						self.stations.append(sg)
+						return 1
 
 	def creerLazerBoi(self, listeparams):
 		nom, systemeid, planeteid, x, y = listeparams
@@ -256,8 +267,12 @@ class Joueur():
 					print(rep)
 			else:
 				i.orbite()
-
-		#Génération des ressources tous les 20 mises à jours
+				
+			if i.type == 'combat':
+				i.attaquer()
+				
+			if i.vie <= 0:
+				i.meurt()
 
 		self.delais = self.delais -1
 		if self.delais <= 0:
@@ -281,7 +296,6 @@ class Joueur():
 			if i.id == rep[1]:
 				s = i
 				break
-
 		if s and v:
 			v.dechargervaisseaugalactique(s)
 

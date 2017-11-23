@@ -148,4 +148,3 @@ class Batiment:
 				if y + i < planete.terrainTailleCarre:
 					self.energiegen += planete.terrainRessource[x][y+i].energie
 					#print(self.metauxgen)
-

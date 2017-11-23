@@ -16,7 +16,7 @@ from c_Vaisseau import *
 from c_Ferme import *
 from c_Generatrice import *
 from c_StationGalactique import *  
-from c_Joueur import *
+from c_Joueur import Joueur
 from c_IA import *
 from c_Batiment import *
 from IdMaker import Id
@@ -92,8 +92,8 @@ class Modele():
 						np -= 1
 
 		couleurs = ["cyan", "goldenrod", "orangered", "greenyellow",
-		            "dodgerblue", "yellow2", "maroon1", "chartreuse3",
-		            "firebrick1", "MediumOrchid2", "DeepPink2", "blue"]  # IA ajout de 3 couleurs
+					"dodgerblue", "yellow2", "maroon1", "chartreuse3",
+					"firebrick1", "MediumOrchid2", "DeepPink2", "blue"]  # IA ajout de 3 couleurs
 
 		for i in self.joueurscles:
 			self.joueurs[i] = Joueur(self, i, planes.pop(0), couleurs.pop(0))
@@ -112,7 +112,7 @@ class Modele():
 		self.parent.actions.append([self.parent.monnom, "creervaisseauGalactique", systeme])
 
 	def creerstationGalactique(self, systeme):  
-		print([self.parent.monnom, "creerstationGalactique", systeme])
+
 		self.parent.actions.append([self.parent.monnom, "creerstationGalactique", systeme])
 
 	def prochaineaction(self, cadre):  # Loop
@@ -123,7 +123,7 @@ class Modele():
 
 		for i in self.joueurscles:
 			self.joueurs[i].prochaineaction()
-
+			
 		for i in self.ias:
 			i.analysesituation()
 

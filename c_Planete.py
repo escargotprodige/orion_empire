@@ -37,10 +37,10 @@ class Planete():
 
 		self.terrain = [[0 for x in range(self.terrainTailleCarre)] for y in range(self.terrainTailleCarre)]
 		self.terrainColor = [['#000000' for x in range(self.terrainTailleCarre)] for y in
-		                     range(self.terrainTailleCarre)]
+							 range(self.terrainTailleCarre)]
 
 		self.terrainRessource = [[Ressource() for x in range(self.terrainTailleCarre)] for y in
-		                         range(self.terrainTailleCarre)]
+								 range(self.terrainTailleCarre)]
 
 		self.genTerrain()
 		self.genTerrainColor()
@@ -136,16 +136,16 @@ class Planete():
 			for y in range(self.terrainTailleCarre):
 				if (self.terrain[x][y] < waterlevel):
 					self.terrainColor[x][y] = self.rgbToHex(r * 10, g * self.terrain[x][y] + 50,
-					                                        b * self.terrain[x][y] + 120)
+															b * self.terrain[x][y] + 120)
 				elif (self.terrain[x][y] <= elevationLevelUn):
 					self.terrainColor[x][y] = self.rgbToHex(r * self.terrain[x][y] * 3, g * self.terrain[x][y] * 3,
-					                                        b * self.terrain[x][y])
+															b * self.terrain[x][y])
 				elif (self.terrain[x][y] <= elevationLevelDeux):
 					self.terrainColor[x][y] = self.rgbToHex(r * self.terrain[x][y] * 0.9, g * self.terrain[x][y] * 1.2,
-					                                        b * self.terrain[x][y] / 4)
+															b * self.terrain[x][y] / 4)
 				else:
 					self.terrainColor[x][y] = self.rgbToHex(r * self.terrain[x][y] * 0.9, g * self.terrain[x][y] * 1.2,
-					                                        b * self.terrain[x][y] / 3)
+															b * self.terrain[x][y] / 3)
 
 	def hexToRgb(self, hex):
 		t = hex.lstrip('#')

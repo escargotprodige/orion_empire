@@ -1,4 +1,8 @@
 from orion_empire_modele import *
+import c_Vaisseau
+from c_StationGalactique import StationGalactique
+from c_Station import Station
+
 
 
 class Joueur():
@@ -13,7 +17,7 @@ class Joueur():
 		self.systemesvisites = [systemeorigine]
 		self.vaisseauxinterstellaires = []
 		self.vaisseauxinterplanetaires = []
-		self.stationGalactiques = []  ################################################# MODIF TRISTAN
+		self.stationGalactiques = []  
 		self.actions = {"creervaisseauGalactique": self.creervaisseauGalactique,
 						"ciblerdestination": self.ciblerdestination,
 						"atterrirplanete": self.atterrirplanete,
@@ -34,8 +38,9 @@ class Joueur():
 		self.stationGalactiques = []
 		self.barrackMere = None
 
-		self.stationGalactiques = []
-		self.barrackMere = None
+
+		#self.stationGalactiques = []
+		#self.barrackMere = None
 
 		self.planeteOrigine = random.choice(self.systemeorigine.planetes)
 		self.planeteOrigine.proprietaire = self.nom
@@ -73,8 +78,8 @@ class Joueur():
 			if i.id == systemeid:
 				for j in i.planetes:
 					if j.id == planeteid:
-						print(i,j)
-						v = dict_vaisseau[type_vaisseau](i, self.nom, i,j)
+						#print(i,j)
+						v = dict_vaisseau[type_vaisseau](self, self.nom, i,j)
 						self.vaisseauxinterplanetaires.append(v)
 						return 1
 
@@ -172,13 +177,23 @@ class Joueur():
 				v = VaisseauGalactique(self, self.nom, i)
 				self.vaisseauxinterstellaires.append(v)
 				return 1
-
-	def creerstationGalactique(self,id):  ##################################################################  MODIF TRISTAN
+			
+	def creerstationGalactique(self,id):  		
+		print('creerstationGalactique')
 		for i in self.systemesvisites:
 			if i.id == id:
 				sg = StationGalactique(self, self.nom, i, i.x, i.y)
 				self.stationGalactiques.append(sg)
 				return 1
+
+	def creer_station(self, systeme_id, planete_id): 
+		for i in self.systemesvisites:
+			if i.id == systeme_id:
+				for j in i.planetes:
+					if j.id == planete_id:
+						sg = Station(self, self.nom, i, i.x, i.y)
+						self.stations.append(sg)
+						return 1
 
 	def creerLazerBoi(self, listeparams):
 		nom, systemeid, planeteid, x, y = listeparams
@@ -195,9 +210,10 @@ class Joueur():
 						self.attaquantTerre.append(lazerboi)
 						self.parent.parent.afficherLazerBoi(lazerboi)
 	
-	#A finir
-	# def moveLazerBoi(self, lazerboi_id, system, planete, ):
-
+	
+	def moveLazerBoi(self, lazerboi_id, system, planete, ):
+		pass
+	
 	def ciblerdestination(self, ids):
 		idori, iddesti = ids
 		for i in self.vaisseauxinterstellaires:
@@ -258,8 +274,12 @@ class Joueur():
 					print(rep)
 			else:
 				i.orbite()
-
-		#Génération des ressources tous les 20 mises à jours
+				
+			if i.type == 'combat':
+				i.attaquer()
+				
+			if i.vie <= 0:
+				i.meurt()
 
 		self.delais = self.delais -1
 		if self.delais <= 0:
@@ -283,7 +303,6 @@ class Joueur():
 			if i.id == rep[1]:
 				s = i
 				break
-
 		if s and v:
 			v.dechargervaisseaugalactique(s)
 
@@ -324,8 +343,6 @@ class Joueur():
 
 		self.vaisseauxinterstellaires.pop(vs)
 
-	def creerstationGalactique(self, rep):
-		pass
 	
 	def ajoutessource(self,metaux=0,energie=0,food=0):
 		self.ressource1 += metaux

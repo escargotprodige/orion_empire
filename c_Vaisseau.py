@@ -30,44 +30,6 @@ class Vaisseau():
 	def ciblerdestination(self,p):
 		pass
 
-	"""
-=======
-		self.vitesse = random.choice([0.001, 0.003, 0.005, 0.01]) * 5  # 0.5
-		self.cible = None
-		# self.essence = (random.randrange(5) +5) * 100  # ------------------ essence entre 500 et 1000 unitee
-		self.vaisseauxtransportee = []
-		self.vie = 100
-		self.niveau = 1
-		self.systeme_courant = systeme
-
->>>>>>> affichage menu selection
-	def avancer(self):
-		rep = None
-		if self.cible:
-			# if self.essence > 0: # -------------------------- s'il reste de l'essence, le vaisseau avance
-			# self.essence -= 1 # -------------------------------- -1 unitee d'essence a chaque fois que le vaisseau avance
-			x = self.cible.x
-			y = self.cible.y
-			self.x, self.y = hlp.getAngledPoint(self.angletrajet, self.vitesse, self.x, self.y)
-			if hlp.calcDistance(self.x, self.y, x, y) <= self.vitesse:
-				rep = self.cible
-				self.systeme_courant = self.cible
-				self.cible = None
-			return rep
-			# else: # ----------------------------------------- s'il n'y a plus d'essence, le vaisseau tombe en panne
-			# print("Vaisseau ",self.id," : position ",self.x,",",self.y, " n'a plus d'essence!")
-			# self.cible=None # ---------------------------- arrete d'essayer d'aller a sa cible destination
-
-	def ciblerdestination(self, p):
-		self.cible = p
-		self.angletrajet = hlp.calcAngle(self.x, self.y, p.x, p.y)
-		self.degre = 360 - hlp.calcDegre(self.x, self.y, p.x, p.y)
-		dist = hlp.calcDistance(self.x, self.y, p.x, p.y)
-
-	# print("Distance",dist," en ", int(dist/self.vitesse))
-<<<<<<< HEAD
-	
-"""
 	def recevoir_dmg(self, dmg):
 		self.vie -= dmg
 

@@ -1117,13 +1117,20 @@ class VueSysteme(Perspective):
 						self.minimap.create_rectangle((jx - mini), (jy - mini), (jx + mini), (jy + mini),
 						                              fill=i.couleur,tags=(j.proprietaire, "vaisseauinterplanetaires", j.id,j.type, "artefact"))
 			
+			#ROATION STATION 
+			
+			#NOTE MINI-MAP A FAIRE
 			for s in i.stationSolaire:
-				#print("s.systemeOrigine")
-				#print(s.systemeOrigine.id)
-				#print("self.systeme.id")
-				#print(self.systeme.id)
 				if s.systemeOrigine.id == self.systeme.id:
-					self.canevas.create_oval((400) - n - 1, (500) - n - 1, (400) + n,  (500) + n - 1, fill=i.couleur, tags=(
+					for p in self.systeme.planetes:
+						x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * self.UA2pixel,
+							                          self.largeur / 2, self.largeur / 2)
+						x, y = hlp.getAngledPoint(math.radians(s.angle), self.UA2pixel,
+							                          x, y)
+						s.pointOrbite(x,y)
+						s.orbiter()
+					#n = p.taille * self.UA2pixel
+					self.canevas.create_oval((s.x) - n - 1, (s.y) - n - 1, (s.x) + n,  (s.y) + n - 1, fill=i.couleur, tags=(
 						self.systeme.proprietaire, "stationSolaire", p.id, "inconnu", self.systeme.id, int(x), int(y)))
 					
 

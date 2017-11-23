@@ -593,8 +593,10 @@ class VueGalaxie(Perspective):
 	def afficherpartie(self, mod):
 		self.canevas.delete("artefact")
 		self.canevas.delete("pulsar")
+		self.canevas.delete("stationGalactique")
 		self.afficherselection()
 		self.minimap.delete("vaisseauinterstellaire")
+		self.minimap.delete("stationGalactique")
 		
 		mini=2
 		UAmini=4
@@ -610,13 +612,14 @@ class VueGalaxie(Perspective):
 									 outline="maroon1", width=2,
 									 tags=("inconnu", "pulsar", i.id))
 			
-		for j in self.modele.joueurs:################################################Modif Tristan
-			for s in self.modele.joueurs[j].stationGalactiques:
+		for j in mod.joueurscles:################################################Modif Tristan
+			a = mod.joueurs[j]
+			for s in a.stationGalactiques:
 				xl=s.systemeOrigine.x*e
 				yl=s.systemeOrigine.y*e
 				x,y=hlp.getAngledPoint(math.radians(s.angle),15,xl,yl)
 				n=4
-				self.canevas.create_oval(x-n,y-n,x+n,y+n,fill=self.modele.joueurs[j].couleur,outline="white",tags=(s.proprietaire,"StationGalactique",s.id,"artefact"))
+				self.canevas.create_oval(x-n,y-n,x+n,y+n,fill=a.couleur,outline="white",tags=(s.proprietaire,"StationGalactique",s.id,"artefact"))
 				x,y=hlp.getAngledPoint(math.radians(s.angle),UAmini,100,100)
 				self.minimap.create_oval(x-mini,y-mini,x+mini,y+mini,fill="red",tags=("stationGalactique"))
 
@@ -658,11 +661,6 @@ class VueGalaxie(Perspective):
 												  fill=i.couleur,
 												  tags=("vaisseauinterstellaire", j.id))
 
-		#for i in mod.joueurscles:
-		#	i = mod.joueurs[i]
-		#	for j in i.stationGalactiques:
-		#		self.canevas.create_oval(j.x * e - 5, j.y * e - 5, j.x * e - 15, j.y * e - 15, fill=i.couleur,
-		#								 outline="white", tags=(j.proprietaire, "StationGalactique", j.id, "artefact"))
 
 	def changeetatsystem(self, nom, systeme):
 		id = str(systeme.id)
@@ -707,7 +705,9 @@ class VueGalaxie(Perspective):
 				for i in joueur.vaisseauxinterstellaires:
 					if i.id == self.maselection[2]:
 						x = i.x
+						#print(x)
 						y = i.y
+						#print(y)
 						t = 10
 						self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
 													  outline=joueur.couleur,
@@ -716,12 +716,14 @@ class VueGalaxie(Perspective):
 			elif self.maselection[1] == "StationGalactique":
 				for i in joueur.stationGalactiques:
 					if i.id == self.maselection[2]:
-						x = i.x
-						y = i.y
-						t = 10
-						self.canevas.create_oval((x * e), (y * e), (x * e - 20), (y * e - 20), dash=(2, 2),
-												 outline=joueur.couleur,
+						xl=i.systemeOrigine.x*e
+						yl=i.systemeOrigine.y*e
+						x,y=hlp.getAngledPoint(math.radians(i.angle),15,xl,yl)
+						n=8
+						self.canevas.create_oval(x-n,y-n,x+n,y+n, dash=(2, 2),outline=joueur.couleur,
 												 tags=("select", "selecteur"))
+						
+			
 
 	def cliquervue(self, evt):
 		# self.changecadreetat(None)

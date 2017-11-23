@@ -115,7 +115,6 @@ class Modele():
 		self.parent.actions.append([self.parent.monnom, "creervaisseauGalactique", systeme])
 
 	def creerstationGalactique(self, systeme):  
-
 		self.parent.actions.append([self.parent.monnom, "creerstationGalactique", systeme])
 
 	def prochaineaction(self, cadre):  # Loop

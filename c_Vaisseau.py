@@ -31,6 +31,16 @@ class Vaisseau():
 		pass
 
 	"""
+=======
+		self.vitesse = random.choice([0.001, 0.003, 0.005, 0.01]) * 5  # 0.5
+		self.cible = None
+		# self.essence = (random.randrange(5) +5) * 100  # ------------------ essence entre 500 et 1000 unitee
+		self.vaisseauxtransportee = []
+		self.vie = 100
+		self.niveau = 1
+		self.systeme_courant = systeme
+
+>>>>>>> affichage menu selection
 	def avancer(self):
 		rep = None
 		if self.cible:
@@ -55,6 +65,7 @@ class Vaisseau():
 		dist = hlp.calcDistance(self.x, self.y, p.x, p.y)
 
 	# print("Distance",dist," en ", int(dist/self.vitesse))
+<<<<<<< HEAD
 	
 """
 	def recevoir_dmg(self, dmg):
@@ -74,8 +85,8 @@ class Vaisseau():
 	def recycler(self):
 		pass
 
-	#def sortir_systeme(self):
-	#	pass
+	def sortir_systeme(self):
+		pass
 
 	def upgradeVitesse(self, boost):
 		# print("upgrade vitesse")
@@ -233,7 +244,7 @@ class VaisseauGalactique(Vaisseau):
 			print("DECHARGEMENT VAISSEAU")
 			etoile = systeme.etoile
 			for v in self.vaisseauxtransportee:
-				angle = randrange(360) / 360 * 2 * math.pi
+				angle = random.randrange(360) / 360 * 2 * math.pi
 
 				x, y = hlp.getAngledPoint(angle, etoile.taille, etoile.x, etoile.y)
 
@@ -272,9 +283,12 @@ class VaisseauGalactique(Vaisseau):
 				self.systeme_courant = None
 			# ! -------------------------------- FIN MODIF
 			return rep
-		
-	def ciblerdestination(self, p):
-		self.cible = p
-		self.angletrajet = hlp.calcAngle(self.x, self.y, p.x, p.y)
-		self.degre = 360 - hlp.calcDegre(self.x, self.y, p.x, p.y)
-		dist = hlp.calcDistance(self.x, self.y, p.x, p.y)
+# <<<<<<< HEAD
+# 		
+# 	def ciblerdestination(self, p):
+# 		self.cible = p
+# 		self.angletrajet = hlp.calcAngle(self.x, self.y, p.x, p.y)
+# 		self.degre = 360 - hlp.calcDegre(self.x, self.y, p.x, p.y)
+# 		dist = hlp.calcDistance(self.x, self.y, p.x, p.y)
+# =======
+# >>>>>>> affichage menu selection

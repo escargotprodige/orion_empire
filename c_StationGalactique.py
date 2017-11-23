@@ -22,4 +22,3 @@ class StationGalactique():
 			self.angle += 1
 			if self.angle >= 360:
 				self.angle = 0
-

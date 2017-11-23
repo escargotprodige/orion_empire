@@ -9,10 +9,10 @@ class IA(Joueur):
 		#self.derniereaction=time.time()
 		
 	# NOTE sur l'analyse de la situation   
-	#          on utilise le temps (time.time() retourne le nombre de secondes depuis 1970) pour le delai de 'cool down'
-	#          la decision dependra du contexte (modes de la vue)
-	#          aussi presentement - on s'occupe uniquement d'avoir un vaisseau et de deplacer ce vaisseau vers 
-	#          le systeme le plus proche non prealablement visite.
+	#		  on utilise le temps (time.time() retourne le nombre de secondes depuis 1970) pour le delai de 'cool down'
+	#		  la decision dependra du contexte (modes de la vue)
+	#		  aussi presentement - on s'occupe uniquement d'avoir un vaisseau et de deplacer ce vaisseau vers 
+	#		  le systeme le plus proche non prealablement visite.
 	def analysesituation(self):
 		#t=time.time()
 		if self.delaiaction==0:

@@ -1,4 +1,5 @@
 from orion_empire_modele import *
+from c_Station import Station
 
 
 class Joueur():
@@ -29,7 +30,6 @@ class Joueur():
 						"creerlazerboi": self.creerLazerBoi,
 						"creervaisseauSolaire": self.creervaisseauSolaire
 						}
-
 		self.stationGalactiques = []
 		self.barrackMere = None
 
@@ -179,6 +179,15 @@ class Joueur():
 				self.stationGalactiques.append(sg)
 				return 1
 
+	def creer_station(self, systeme_id, planete_id):  ##################################################################  MODIF TRISTAN
+		for i in self.systemesvisites:
+			if i.id == systeme_id:
+				for j in i.planetes:
+					if j.id == planete_id:
+						sg = Station(self, self.nom, i, i.x, i.y)
+						self.stations.append(sg)
+						return 1
+
 	def creerLazerBoi(self, listeparams):
 		nom, systemeid, planeteid, x, y = listeparams
 		for i in self.systemesvisites:
@@ -321,9 +330,6 @@ class Joueur():
 		vg.chargementvaisseau(vs)
 
 		self.vaisseauxinterstellaires.pop(vs)
-
-	def creerstationGalactique(self, rep):
-		pass
 	
 	def ajoutessource(self,metaux=0,energie=0,food=0):
 		self.ressource1 += metaux

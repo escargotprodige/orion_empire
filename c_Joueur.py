@@ -32,7 +32,10 @@ class Joueur():
 						"creerbarrack": self.creerbarrack,
 						"creerlazerboi": self.creerLazerBoi,
 						"creervaisseauSolaire": self.creervaisseauSolaire,
-						"movelazerboi": self.moveLazerBoi
+						"movelazerboi": self.moveLazerBoi,
+						"enfuireVaisseauSolaire":self.enfuireVaisseauSolaire,
+						"changeretatvaisseau":self.changeretatvaisseau,
+						"vaisseaumort":self.vaisseaumort
 						}
 
 		self.stationGalactiques = []
@@ -279,7 +282,8 @@ class Joueur():
 				i.attaquer()
 				
 			if i.vie <= 0:
-				i.meurt()
+				#i.meurt()
+				self.parent.vaisseaumort(i.id)
 
 		self.delais = self.delais -1
 		if self.delais <= 0:
@@ -348,3 +352,41 @@ class Joueur():
 		self.ressource1 += metaux
 		self.ressource2 += energie
 		self.ressource3 += food
+		
+	def enfuireVaisseauSolaire(self,ids):
+		idv,ida = ids
+		
+		vaisseau = None
+		attaque = None
+		
+		for v in self.vaisseauxinterplanetaires:
+			if v.id == idv:
+				vaisseau = v
+				break
+		if vaisseau:
+			for j in self.parent.joueurscles:
+				for v in self.parent.joueurs[j].vaisseauxinterplanetaires:
+					if v.id == ida:
+						vaisseau.runaway(v)
+						attaque = v
+						break
+			if attaque:
+				for v  in self.vaisseauxinterplanetaires:
+					if v.id != idv and v.systeme_courant == vaisseau.systeme_courant:
+						if v.type == "combat" and v.agressif:
+							v.ciblerdestination(attaque)
+							
+	def changeretatvaisseau(self,idv):
+		for v in self.vaisseauxinterplanetaires:
+			if v.id == idv:
+				if v.type == "combat":
+					v.changeretatvaisseau()
+				break
+			
+	def vaisseaumort(self,idv):
+		for v in self.vaisseauxinterplanetaires:
+			if v.id == idv:
+				if self.nom == self.parent.parent.monnom:
+					self.parent.parent.vue.vaisseaumort(v)
+				v.meurt()
+				break

@@ -295,7 +295,16 @@ class Vue():
 
 		mode.canevas.xview(MOVETO, (x * ratio / mode.largeur) - eex)
 		mode.canevas.yview(MOVETO, (y * ratio / mode.hauteur) - eey)
-
+		
+		
+	def vaisseaumort(self,v):
+		print("efface",v.systeme_courant.id)
+		if v.systeme_courant.id in self.modes["systemes"]:
+			mode = self.modes["systemes"][v.systeme_courant.id]
+			print(mode.maselection)
+			if mode.maselection and v.id in mode.maselection:
+				mode.maselection = None
+				mode.canevas.delete("selecteur")
 
 class Perspective(Frame):
 	def __init__(self, parent):
@@ -859,6 +868,7 @@ class VueSysteme(Perspective):
 
 		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
 		self.boutonShop.grid(row=0, column=0)
+		
 
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
@@ -876,7 +886,9 @@ class VueSysteme(Perspective):
 			shopVaisseau.grid(row=1, column=0, sticky = W)
 			shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
 			shopStation.grid(row=2, column=0, sticky = W)
-	
+			
+			btnchangeretatvaisseau = Button(self.cadreShop, text="Changer mode agressif", command=self.changeretatvaisseau)
+			btnchangeretatvaisseau.grid(row=3, column=0, sticky = W)
 	'''
 	def afficherShopVaisseau(self):
 		
@@ -893,6 +905,11 @@ class VueSysteme(Perspective):
 			shopVaisseau = Button(self.cadreShop, text="Colonisateur", command=self.creervaisseau)
 			shopVaisseau.grid(row=2, column=0, sticky = W)
 	'''
+	
+	def changeretatvaisseau	(self):
+		if self.maselection and "vaisseauinterplanetaires" in self.maselection:
+			self.parent.parent.changeretatvaisseau(self.maselection[1])
+	
 	def voirplanete(self):
 		self.parent.voirplanete(self.maselection)
 
@@ -1643,7 +1660,7 @@ class VuePlanete(Perspective):
 				print("hey!")
 				self.parent.parent.creerLazerboi(self.parent.nom, self.systemeid, self.planeteid, globalX, globalY)
 				self.macommande = None
-			elif self.prevSelection[1] == "lazerboi":
+			elif self.prevSelection and self.prevSelection[1] == "lazerboi":
 				self.parent.parent.moveAttaquant(self.prevSelection[0], globalX, globalY)
 			
 			

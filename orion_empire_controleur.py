@@ -226,6 +226,9 @@ class Controleur():
 
 	def chargedansvaisseaugalactique(self, vg, vs):
 		self.modele.chargedansvaisseaugalactique(vg, vs)
+		
+	def changeretatvaisseau(self,v):
+		self.modele.changeretatvaisseau(v)
 
 
 if __name__ == "__main__":

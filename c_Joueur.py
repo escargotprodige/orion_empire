@@ -77,7 +77,7 @@ class Joueur():
 			if i.id == systemeid:
 				for j in i.planetes:
 					if j.id == planeteid:
-						print(i,j)
+						#print(i,j)
 						v = dict_vaisseau[type_vaisseau](self, self.nom, i,j)
 						self.vaisseauxinterplanetaires.append(v)
 						return 1

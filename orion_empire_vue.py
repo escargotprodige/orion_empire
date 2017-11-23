@@ -249,7 +249,6 @@ class Vue():
 		for i in self.modes["planetes"].keys():
 			if i == lazerBoi.planeteid:
 				p = 200 / self.modes["planetes"][i].planete.terrainTailleCarre
-				print(self.modele.joueurs)
 				couleur = self.modele.joueurs[lazerBoi.proprietaire].couleur
 				t = 200 / self.modes["planetes"][i].largeur
 				x = lazerBoi.x
@@ -268,7 +267,6 @@ class Vue():
 		for i in self.modes["planetes"].keys():
 			if i == lazerBoi.planeteid:
 				self.modes["planetes"][i].canevas.delete(lazerBoi.id)
-				self.modes["planetes"][i].minimap(lazerBoi.id)
 				break;
 
 	def fermerfenetre(self):
@@ -296,7 +294,16 @@ class Vue():
 
 		mode.canevas.xview(MOVETO, (x * ratio / mode.largeur) - eex)
 		mode.canevas.yview(MOVETO, (y * ratio / mode.hauteur) - eey)
-
+		
+		
+	def vaisseaumort(self,v):
+		print("efface",v.systeme_courant.id)
+		if v.systeme_courant.id in self.modes["systemes"]:
+			mode = self.modes["systemes"][v.systeme_courant.id]
+			print(mode.maselection)
+			if mode.maselection and v.id in mode.maselection:
+				mode.maselection = None
+				mode.canevas.delete("selecteur")
 
 class Perspective(Frame):
 	def __init__(self, parent):
@@ -399,9 +406,9 @@ class Perspective(Frame):
 
 	def updateRessources(self, joueur):
 
-		self.r1.set(str(joueur.ressource1))
-		self.r2.set(str(joueur.ressource2))
-		self.r3.set(str(joueur.ressource3))
+		self.r1.set(str(joueur.ressourceM))
+		self.r2.set(str(joueur.ressourceE))
+		self.r3.set(str(joueur.ressourceN))
 
 
 class VueGalaxie(Perspective):
@@ -595,8 +602,13 @@ class VueGalaxie(Perspective):
 	def afficherpartie(self, mod):
 		self.canevas.delete("artefact")
 		self.canevas.delete("pulsar")
+		self.canevas.delete("stationGalactique")
 		self.afficherselection()
 		self.minimap.delete("vaisseauinterstellaire")
+		self.minimap.delete("stationGalactique")
+		
+		mini=2
+		UAmini=4
 
 		e = self.AL2pixel
 		me = 200 / self.modele.diametre
@@ -605,9 +617,22 @@ class VueGalaxie(Perspective):
 		for i in mod.pulsars:  # ------------------------- cree les pulsars en premier pour les afficher  sous les vaisseaux
 			t = i.taille
 			self.canevas.create_oval((i.x * e) - t, (i.y * e) - t, (i.x * e) + t, (i.y * e) + t, fill="orchid3",
-			                         dash=(1, 1),
-			                         outline="maroon1", width=2,
-			                         tags=("inconnu", "pulsar", i.id))
+
+									 dash=(1, 1),
+									 outline="maroon1", width=2,
+									 tags=("inconnu", "pulsar", i.id))
+			
+		for j in mod.joueurscles:################################################Modif Tristan
+			a = mod.joueurs[j]
+			for s in a.stationGalactiques:
+				xl=s.systemeOrigine.x*e
+				yl=s.systemeOrigine.y*e
+				x,y=hlp.getAngledPoint(math.radians(s.angle),15,xl,yl)
+				n=4
+				self.canevas.create_oval(x-n,y-n,x+n,y+n,fill=a.couleur,outline="white",tags=(s.proprietaire,"StationGalactique",s.id,"artefact"))
+				x,y=hlp.getAngledPoint(math.radians(s.angle),UAmini,100,100)
+				self.minimap.create_oval(x-mini,y-mini,x+mini,y+mini,fill="red",tags=("stationGalactique"))
+
 
 		for k in mod.joueurscles:
 			i = mod.joueurs[k]
@@ -647,11 +672,6 @@ class VueGalaxie(Perspective):
 					                              fill=i.couleur,
 					                              tags=("vaisseauinterstellaire", j.id))
 
-		for i in mod.joueurscles:
-			i = mod.joueurs[i]
-			for j in i.stationGalactiques:
-				self.canevas.create_oval(j.x * e - 5, j.y * e - 5, j.x * e - 15, j.y * e - 15, fill=i.couleur,
-				                         outline="white", tags=(j.proprietaire, "StationGalactique", j.id, "artefact"))
 
 	def changeetatsystem(self, nom, systeme):
 		id = str(systeme.id)
@@ -696,7 +716,9 @@ class VueGalaxie(Perspective):
 				for i in joueur.vaisseauxinterstellaires:
 					if i.id == self.maselection[2]:
 						x = i.x
+						#print(x)
 						y = i.y
+						#print(y)
 						t = 10
 						self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
 						                              outline=joueur.couleur,
@@ -705,12 +727,13 @@ class VueGalaxie(Perspective):
 			elif self.maselection[1] == "StationGalactique":
 				for i in joueur.stationGalactiques:
 					if i.id == self.maselection[2]:
-						x = i.x
-						y = i.y
-						t = 10
-						self.canevas.create_oval((x * e), (y * e), (x * e - 20), (y * e - 20), dash=(2, 2),
-						                         outline=joueur.couleur,
-						                         tags=("select", "selecteur"))
+						xl=i.systemeOrigine.x*e
+						yl=i.systemeOrigine.y*e
+						x,y=hlp.getAngledPoint(math.radians(i.angle),15,xl,yl)
+						n=8
+						self.canevas.create_oval(x-n,y-n,x+n,y+n, dash=(2, 2),outline=joueur.couleur,
+												 tags=("select", "selecteur"))
+
 
 	def cliquervue(self, evt):
 		# self.changecadreetat(None)
@@ -862,6 +885,7 @@ class VueSysteme(Perspective):
 
 		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
 		self.boutonShop.grid(row=0, column=0)
+		
 
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
@@ -877,8 +901,11 @@ class VueSysteme(Perspective):
 			shopVaisseau.grid(row=0, column=0, sticky=W)
 			shopVaisseau = Button(self.cadreShop, text="Vaisseau Combat", command=self.creervaisseauCombat)
 			shopVaisseau.grid(row=1, column=0, sticky=W)
-			shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
-			shopStation.grid(row=2, column=0, sticky=W)
+			#shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
+			#shopStation.grid(row=2, column=0, sticky = W)
+			
+			btnchangeretatvaisseau = Button(self.cadreShop, text="Changer mode agressif", command=self.changeretatvaisseau)
+			btnchangeretatvaisseau.grid(row=3, column=0, sticky = W)
 
 	'''
 	def afficherShopVaisseau(self):
@@ -896,6 +923,9 @@ class VueSysteme(Perspective):
 			shopVaisseau = Button(self.cadreShop, text="Colonisateur", command=self.creervaisseau)
 			shopVaisseau.grid(row=2, column=0, sticky = W)
 	'''
+	def changeretatvaisseau	(self):
+		if self.maselection and "vaisseauinterplanetaires" in self.maselection:
+			self.parent.parent.changeretatvaisseau(self.maselection[1])
 
 	def voirplanete(self):
 		self.parent.voirplanete(self.maselection)
@@ -1537,14 +1567,13 @@ class VuePlanete(Perspective):
 	def afficherdecor(self):
 		pass
 
-	def afficherpartie(self, mod):  # ! -----------------------------------------------------
-		# t = 200 / self.largeur  # 200 c'Est la taille du du minimap
-		#  p = 200/ self.planete.terrainTailleCarre
-
-		#  self.canevas.delete("infrastructure")
-
-		#   for i in self.planete.infrastructures:
-		# ! -----------------------------------------------------------------------
+	def afficherpartie(self, mod):
+		for k in mod.joueurscles:
+			joueur = mod.joueurs[k]
+			for at in joueur.attaquantTerre:
+				self.parent.effacerLazerBoi(at)				
+				self.parent.afficherLazerBoi(at)
+		
 		pass
 
 	def changerproprietaire(self, prop, couleur, systeme):
@@ -1683,7 +1712,7 @@ class VuePlanete(Perspective):
 				print("hey!")
 				self.parent.parent.creerLazerboi(self.parent.nom, self.systemeid, self.planeteid, globalX, globalY)
 				self.macommande = None
-			elif self.prevSelection[1] == "lazerboi":
+			elif self.prevSelection and self.prevSelection[1] == "lazerboi":
 				self.parent.parent.moveAttaquant(self.prevSelection[0], globalX, globalY)
 
 	def montresystemeselection(self):

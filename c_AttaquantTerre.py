@@ -22,17 +22,26 @@ class AttaquantTerre:
 		self.type = type
 		self.target = None
 		self.isTargetInRange = False
+		self.dir = directionVers(x, y, x, y)
 
 		self.targetPositionX = None
 		self.targetPositionY = None
 
 	def setTarget(self, target):
 		self.target = target
+		self.targetPositionX = None
+		self.targetPositionY = None
 
+	def setTargetPosition(self, x, y):
+		self.targetPositionX = x
+		self.targetPositionY = y
+		self.target = None
+		
+		
 	def attaquer(self):
 		# v�rifie s'il existe un target
 		if self.target == None:
-			pass
+			return
 
 		# fait avancer l'Attaquant vers son target
 		dist = distance(self.x, self.y, self.target.x, self.target.y)
@@ -50,10 +59,24 @@ class AttaquantTerre:
 			else:
 				target.hp -= 1
 
+	def move(self):
+		if self.targetPositionX == None or self.targetPositionY == None:
+			return
+		
+		dist = distance(self.x, self.y, self.targetPositionX, self.targetPositionY)
+		if dist < 1:
+			return
+		
+		self.avancer(self.targetPositionX, self.targetPositionY)
+		
 	def avancer(self, x, y):
-		dirVers = directionVers(self.x, self.y, x, y)
-		self.x += dirVers[0]
-		self.y += dirVers[1]
-
+		self.dir = directionVers(self.x, self.y, x, y)
+		self.x += self.dir[0]
+		self.y += self.dir[1]
+	
+	def update(self):
+		self.attaquer()
+		self.move()
+		
 	def arboderBoat(self, target):
 		pass

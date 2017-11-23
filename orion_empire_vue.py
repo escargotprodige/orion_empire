@@ -267,7 +267,6 @@ class Vue():
 		for i in self.modes["planetes"].keys():
 			if i == lazerBoi.planeteid:
 				self.modes["planetes"][i].canevas.delete(lazerBoi.id)
-				self.modes["planetes"][i].minimap(lazerBoi.id)
 				break;
 
 	def fermerfenetre(self):
@@ -1497,14 +1496,13 @@ class VuePlanete(Perspective):
 	def afficherdecor(self):
 		pass
 
-	def afficherpartie(self, mod):  # ! -----------------------------------------------------
-		# t = 200 / self.largeur  # 200 c'Est la taille du du minimap
-		#  p = 200/ self.planete.terrainTailleCarre
-
-		#  self.canevas.delete("infrastructure")
-
-		#   for i in self.planete.infrastructures:
-		# ! -----------------------------------------------------------------------
+	def afficherpartie(self, mod):
+		for k in mod.joueurscles:
+			joueur = mod.joueurs[k]
+			for at in joueur.attaquantTerre:
+				self.parent.effacerLazerBoi(at)				
+				self.parent.afficherLazerBoi(at)
+		
 		pass
 
 	def changerproprietaire(self, prop, couleur, systeme):

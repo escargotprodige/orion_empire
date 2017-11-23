@@ -117,6 +117,10 @@ class Modele():
 	def creerstationGalactique(self, systeme):  
 		self.parent.actions.append([self.parent.monnom, "creerstationGalactique", systeme])
 
+	def creerstationSolaire(self, systeme):  
+		self.parent.actions.append([self.parent.monnom, "creerstationSolaire", systeme])
+
+
 	def prochaineaction(self, cadre):  # Loop
 		if cadre in self.actionsafaire:
 			for i in self.actionsafaire[cadre]:
@@ -158,3 +162,12 @@ class Modele():
 
 	def chargedansvaisseaugalactique(self, vg, vs):
 		self.parent.actions.append([self.parent.monnom, "chargedansvaisseaugalactique", (vg, vs)])
+		
+	def enfuireVaisseauSolaire(self,enfuite,attaque):
+		self.parent.actions.append([enfuite.proprietaire, "enfuireVaisseauSolaire", (enfuite.id, attaque.id)])
+		
+	def changeretatvaisseau(self,v):
+		self.parent.actions.append([self.parent.monnom, "changeretatvaisseau", v])
+		
+	def vaisseaumort(self,vid):
+		self.parent.actions.append([self.parent.monnom, "vaisseaumort", vid])

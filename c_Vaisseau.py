@@ -98,7 +98,8 @@ class VaisseauSolaire(Vaisseau):
 	def __init__(self,parent,nom,systeme,planete,type):
 		Vaisseau.__init__(self,parent,nom,systeme)
 		self.planete_courrant=planete
-		self.vitesse = random.choice([0.01, 0.03, 0.05, 0.1]) * 5
+		#self.vitesse = random.choice([ 0.1, 0.13,0.15,0.17]) * 5
+		self.vitesse = 0.1 * 5
 
 		self.x,self.y = hlp.getAngledPoint(math.radians(self.planete_courrant.angle),self.planete_courrant.distance,0,0)
 		#print(self.x,self.y)
@@ -106,41 +107,25 @@ class VaisseauSolaire(Vaisseau):
 		
 	def avancer(self):
 		rep = None
-		if self.enfuire:
-			#print("RUN")
-			self.cible = None
-			if self.type == 'combat' and self.cibleattaque:
-				self.cibleattaque = None
-			x = self.enfuire.x
-			y = self.enfuire.y
-			direction = hlp.calcDegre(self.x,self.y,x,y) - 180
-			if direction < 0:
-				direction += 360
-				
-			self.angletrajet = math.radians(direction)
-			self.degre = 360 - direction
-			self.x, self.y = hlp.getAngledPoint(math.radians(direction), self.vitesse, self.x, self.y)
-			self.enfuire = None
-		elif self.cible:
-			#print("avance")
-			x = 0
-			y = 0
-			if type(self.cible) is Planete:
-				x,y =  hlp.getAngledPoint(math.radians(self.cible.angle),self.cible.distance,0,0)
-				
-			elif isinstance(self.cible, VaisseauSolaire):
-				x = self.cible.x
-				y = self.cible.y
-				
-			self.x, self.y = hlp.getAngledPoint(self.angletrajet, self.vitesse, self.x, self.y)
+		#print("avance")
+		x = 0
+		y = 0
+		if type(self.cible) is Planete:
+			x,y =  hlp.getAngledPoint(math.radians(self.cible.angle),self.cible.distance,0,0)
 			
-			self.ciblerdestination(self.cible)
-			if hlp.calcDistance(self.x, self.y, x, y) <= self.vitesse:
-				rep = self.cible
-				if type(self.cible) is Planete:
-					self.planete_courrant = self.cible
-				self.cible = None
-			return rep
+		elif isinstance(self.cible, VaisseauSolaire):
+			x = self.cible.x
+			y = self.cible.y
+			
+		self.x, self.y = hlp.getAngledPoint(self.angletrajet, self.vitesse, self.x, self.y)
+		
+		self.ciblerdestination(self.cible)
+		if hlp.calcDistance(self.x, self.y, x, y) <= self.vitesse:
+			rep = self.cible
+			if type(self.cible) is Planete:
+				self.planete_courrant = self.cible
+			self.cible = None
+		return rep
 		
 	
 	def ciblerdestination(self,p):
@@ -170,8 +155,36 @@ class VaisseauSolaire(Vaisseau):
 			self.x,self.y = hlp.getAngledPoint(math.radians(self.planete_courrant.angle),self.planete_courrant.distance+self.planete_courrant.taille,0,0)
 		
 	def runaway(self,vaisseau):
-		self.enfuire = vaisseau
+		#print("RUN")
+		limitcadre = 25
+		self.cible = None
+		if self.planete_courrant:
+			self.planete_courrant = None
+		if self.type == 'combat' and self.cibleattaque:
+			self.cibleattaque = None
+		x = vaisseau.x
+		y = vaisseau.y
+		direction = hlp.calcDegre(self.x,self.y,x,y) - 180
+		if direction < 0:
+			direction += 360
 			
+		self.angletrajet = math.radians(direction)
+		self.degre = 360 - direction
+		px,py = hlp.getAngledPoint(math.radians(direction), self.vitesse, self.x, self.y)
+		#print(px,py)
+		while px >= limitcadre or px <= -limitcadre or py >= limitcadre or py <= -limitcadre:
+			
+			direction  = direction  +45
+			if direction  >= 360:
+				direction  -= 360
+				
+			self.degre = 360 - direction
+			self.angletrajet = math.radians(direction)
+			
+			px,py = hlp.getAngledPoint(math.radians(direction), self.vitesse, self.x, self.y)
+			#print(px,py)
+			
+		self.x,self.y = px,py
 
 class VaisseauTransport(VaisseauSolaire):
 	def __init__(self, parent, nom, systeme,planete):
@@ -203,12 +216,12 @@ class VaisseauCombat(VaisseauSolaire):
 	def attaquer(self):
 		if self.cibleattaque:
 			self.cibleattaque.recevoir_dmg(self.dmg)
-			if self.cibleattaque.type == 'combat' and self.cibleattaque.agressif:
-				self.cibleattaque.ciblerdestination(self)
-			else:
-				self.cibleattaque.runaway(self)
-				#print("Run Attaque")
-				#self.cibleattaque.runaway(self)
+			if not self.cibleattaque.cible:
+				if self.cibleattaque.type == 'combat' and self.cibleattaque.agressif:
+					self.cibleattaque.ciblerdestination(self)
+				else:
+					self.parent.parent.enfuireVaisseauSolaire(self.cibleattaque,self)
+
 			x = self.cibleattaque.x
 			y = self.cibleattaque.y
 			if hlp.calcDistance(x,y,self.x,self.y) > self.rayon:
@@ -218,6 +231,12 @@ class VaisseauCombat(VaisseauSolaire):
 			elif self.cibleattaque.vie <= 0:
 				self.cible = None
 				self.cibleattaque = None
+				
+	def changeretatvaisseau(self):
+		if self.agressif:
+			self.agressif = False
+		else:
+			self.agressif = True
 
 		"""		
 		else:

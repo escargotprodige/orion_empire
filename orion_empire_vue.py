@@ -1013,12 +1013,17 @@ class VueSysteme(Perspective):
 			self.canevas.delete("selecteur")
 
 	def creerstation(self):
-		print("Creer station EN CONSTRUCTION")
+		if self.maselection:
+			#print(self.maselection)
+			self.parent.parent.creerstationSolaire(self.maselection[5])
+			self.maselection = None
+			self.canevas.delete("selecteur")
 
 	def afficherpartie(self, mod):
 		self.canevas.delete("planete")
 		self.canevas.delete("vaisseauinterplanetaires")
 		self.canevas.delete('laser')
+		self.canevas.delete("stationSolaire")
 		self.minimap.delete("planete")
 		self.minimap.delete("vaisseauinterplanetaires")
 
@@ -1026,7 +1031,8 @@ class VueSysteme(Perspective):
 		yl = self.hauteur / 2
 		mini = 2
 		UAmini = 4
-
+		
+		
 		for p in self.systeme.planetes:
 			x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * UAmini, 100, 100)
 			self.minimap.create_oval(x - mini, y - mini, x + mini, y + mini, fill=p.couleurPlanete, tags=("planete"))
@@ -1079,9 +1085,17 @@ class VueSysteme(Perspective):
 						jy = int(jy * 200 / self.hauteur)
 						# print(jx,jy)
 						self.minimap.create_rectangle((jx - mini), (jy - mini), (jx + mini), (jy + mini),
-						                              fill=i.couleur,
-						                              tags=(j.proprietaire, "vaisseauinterplanetaires", j.id, j.type,
-						                                    "artefact"))
+						                              fill=i.couleur,tags=(j.proprietaire, "vaisseauinterplanetaires", j.id,j.type, "artefact"))
+			
+			for s in i.stationSolaire:
+				#print("s.systemeOrigine")
+				#print(s.systemeOrigine.id)
+				#print("self.systeme.id")
+				#print(self.systeme.id)
+				if s.systemeOrigine.id == self.systeme.id:
+					self.canevas.create_oval((400) - n - 1, (500) - n - 1, (400) + n,  (500) + n - 1, fill=i.couleur, tags=(
+						self.systeme.proprietaire, "stationSolaire", p.id, "inconnu", self.systeme.id, int(x), int(y)))
+					
 
 	def changerproprietaire(self):
 		pass

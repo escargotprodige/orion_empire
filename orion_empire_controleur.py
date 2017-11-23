@@ -13,6 +13,7 @@ from orion_empire_vue import *
 from helper import Helper as hlp
 from mathPlus import *
 from IdMaker import Id
+from appdirs import system
 
 class Controleur():
 	def __init__(self):
@@ -160,10 +161,10 @@ class Controleur():
 	def creerLazerboi(self, joueur, systeme, planete, x, y):
 		self.actions.append([self.monnom, "creerlazerboi", [self.monnom, systeme, planete, x, y]])
 
-
+	def creerstationSolaire(self,systeme):
+		self.modele.creerstationSolaire(systeme)
 
 	def creerstationGalactique(self, systeme):
-		print('TES')
 		self.modele.creerstationGalactique(systeme)
 
 	def creervaisseauGalactique(self, systeme):

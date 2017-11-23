@@ -15,10 +15,16 @@ class Batiment:
 		self.metauxgen=0
 		self.foodgen=0
 		self.energiegen=0
+		
+		self.controleRessource = 0.1 
 
 	def generer(self):
+		updateEn = int(self.energiegen*self.controleRessource)
+		updateMet = int(self.metauxgen*self.controleRessource)
+		updateNou = int(self.foodgen*self.controleRessource)
+		
 		joueur = self.parent.parent.joueurs[self.proprietaire]
-		joueur.ajoutessource(metaux=self.metauxgen,food=self.foodgen,energie=self.energiegen)
+		joueur.ajoutessource(metaux=updateMet,food=updateNou,energie=updateEn)
 		
 	def calculfoodgen(self):
 		

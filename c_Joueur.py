@@ -55,9 +55,9 @@ class Joueur():
 		self.attaquantTerre = []
 		self.ressourcesTEMP = 100
 
-		self.ressource1 = 100
-		self.ressource2 = 100
-		self.ressource3 = 100
+		self.ressourceM = 100
+		self.ressourceE = 100
+		self.ressourceN = 100
 		
 		self.delais = 20
 
@@ -183,22 +183,27 @@ class Joueur():
 				self.vaisseauxinterstellaires.append(v)
 				return 1
 			
-	def creerstationGalactique(self,id):  
-		for i in self.systemesvisites:
-			if i.id == id:
-				sg = StationGalactique(self, self.nom, i, i.x, i.y)
-				self.stationGalactiques.append(sg)
-				return 1
-			
+
+	def creerstationGalactique(self,id):
+		if self.ressourceM >= 50 and self.ressourceE >= 50: 	#a ajuster (enlever le hardcoding)
+			for i in self.systemesvisites:
+				if i.id == id:
+					sg = StationGalactique(self, self.nom, i, i.x, i.y)
+					self.ressourceM -= sg.coutM
+					self.ressourceE -= sg.coutE
+					self.stationGalactiques.append(sg)
+					return 1
+		else:
+			print("Tu es trop pauvre!")
+
 	def creerstationSolaire(self,id): 
 		for i in self.systemesvisites:
-			if i.id == id:
-				 		
-				
+			if i.id == id:	
 				ss = Station(self, self.nom, i, i.x, i.y)
 				self.stationSolaire.append(ss)
 				print(self.stationSolaire)
 				return 1
+
 
 	def creer_station(self, systeme_id, planete_id): 
 		for i in self.systemesvisites:
@@ -225,7 +230,7 @@ class Joueur():
 						self.parent.parent.afficherLazerBoi(lazerboi)
 	
 	
-	def moveLazerBoi(self, lazerboi_id, system, planete, ):
+	def moveLazerBoi(self, lazerboi_id, systeme, planete, ):
 		pass
 	
 	def ciblerdestination(self, ids):
@@ -360,9 +365,10 @@ class Joueur():
 
 	
 	def ajoutessource(self,metaux=0,energie=0,food=0):
-		self.ressource1 += metaux
-		self.ressource2 += energie
-		self.ressource3 += food
+		self.ressourceM += metaux
+		self.ressourceE += energie
+		self.ressourceN += food
+
 		
 	def enfuireVaisseauSolaire(self,ids):
 		idv,ida = ids
@@ -401,3 +407,4 @@ class Joueur():
 					self.parent.parent.vue.vaisseaumort(v)
 				v.meurt()
 				break
+

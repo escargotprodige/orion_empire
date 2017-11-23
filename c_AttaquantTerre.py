@@ -5,7 +5,7 @@ from test.test_threading_local import target
 
 class AttaquantTerre:
 	def __init__(self, nom, x, y, nearRange, farRange, atk, hp, speed, defense, systemid, planeteid, proprietaire,
-	             type):
+				 type):
 		self.nearRange = nearRange
 		self.farRange = farRange
 		self.atk = atk

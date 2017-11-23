@@ -16,7 +16,7 @@ from c_Vaisseau import *
 from c_Ferme import *
 from c_Generatrice import *
 from c_StationGalactique import *  
-from c_Joueur import *
+from c_Joueur import Joueur
 from c_IA import *
 from c_Batiment import *
 from IdMaker import Id
@@ -40,7 +40,6 @@ class Modele():
 		self.creersystemes(int(qteIA))  # nombre d'ias a ajouter
 
 	def creersystemes(self, nbias):  # IA ajout du parametre du nombre d'ias a ajouter
-
 		for i in range(self.nbsystemes):
 			x = random.randrange(self.diametre * 10) / 10
 			y = random.randrange(self.diametre * 10) / 10
@@ -93,8 +92,8 @@ class Modele():
 						np -= 1
 
 		couleurs = ["cyan", "goldenrod", "orangered", "greenyellow",
-		            "dodgerblue", "yellow2", "maroon1", "chartreuse3",
-		            "firebrick1", "MediumOrchid2", "DeepPink2", "blue"]  # IA ajout de 3 couleurs
+					"dodgerblue", "yellow2", "maroon1", "chartreuse3",
+					"firebrick1", "MediumOrchid2", "DeepPink2", "blue"]  # IA ajout de 3 couleurs
 
 		for i in self.joueurscles:
 			self.joueurs[i] = Joueur(self, i, planes.pop(0), couleurs.pop(0))
@@ -109,10 +108,11 @@ class Modele():
 	def creervaisseauSolaire(self, systeme, planete, typeVaisseau):
 		self.parent.actions.append([self.parent.monnom, "creervaisseauSolaire", (systeme, planete, typeVaisseau)])
 	
-	def creervaisseauGalactique(self, systeme):  # ! Changer nom
+	def creervaisseauGalactique(self, systeme):  
 		self.parent.actions.append([self.parent.monnom, "creervaisseauGalactique", systeme])
 
-	def creerstationGalactique(self, systeme):  #############################################################  MODIF TRISTAN
+	def creerstationGalactique(self, systeme):  
+
 		self.parent.actions.append([self.parent.monnom, "creerstationGalactique", systeme])
 
 	def prochaineaction(self, cadre):  # Loop
@@ -123,7 +123,7 @@ class Modele():
 
 		for i in self.joueurscles:
 			self.joueurs[i].prochaineaction()
-
+			
 		for i in self.ias:
 			i.analysesituation()
 
@@ -134,23 +134,23 @@ class Modele():
 			for p in i.planetes:
 				p.orbiter()
 		
-		for i in self.joueurs: #################################################################################### MODIF TRISTAN
+		for i in self.joueurs:
 			for s in self.joueurs[i].stationGalactiques:
 				s.orbiter()
-		self.parent.vue.modecourant.updateRessources(self.joueurs[self.parent.monnom])  # !
+		self.parent.vue.modecourant.updateRessources(self.joueurs[self.parent.monnom]) 
 
-	def changeetatsystem(self, nom, systeme):  # ! ------------------------------ AJOUTER M�THODE
+	def changeetatsystem(self, nom, systeme):  
 		self.parent.changeetatsystem(nom, systeme)
 
 	def changerproprietaire(self, nom, couleur, syst):
 		self.parent.changerproprietaire(nom, couleur, syst)
 
-	def dechargerVaisseauGalactique(self, id,systeme):  # ! ------------------------------------------------------ METHODE A AJOUTER
+	def dechargerVaisseauGalactique(self, id,systeme):  
 		self.parent.actions.append([self.parent.monnom, "dechargervausseaugalactique", (id, systeme)])
 
 	# print("ENVOIE DEMANDE DECHARGEMENT")
 
-	def upgradeVitesseVaisseau(self, id, boost):  # ! MODIF ICI
+	def upgradeVitesseVaisseau(self, id, boost):
 		# print("DEMANDE UPGRADE VITESSE VAISSEAU",id)
 		self.parent.actions.append([self.parent.monnom, "upgradevitessevaisseau", (id, boost)])
 

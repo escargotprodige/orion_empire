@@ -14,8 +14,6 @@ from helper import Helper as hlp
 from mathPlus import *
 from IdMaker import Id
 
-
-
 class Controleur():
 	def __init__(self):
 		print("IN CONTROLEUR")
@@ -39,19 +37,21 @@ class Controleur():
 		return monip
 
 	def generernom(self):  # generateur de nouveau nom - accelere l'entree de nom pour les tests - parfois a peut generer le meme nom mais c'est rare
+
+
 		monnom = "Commandant_" + str(random.randrange(1000))
 		return monnom
 
 	def creerpartie(self):
 		if self.egoserveur == 0:
-			pid = Popen(["C:\\Python34\\Python.exe", "./orion_empire_serveur.py"],
-			            shell=1).pid  # on lance l'application serveur
+			pid = Popen(["C:\\Python34\\Python.exe", "./orion_empire_serveur.py"],shell=1).pid  # on lance l'application serveur
 			self.egoserveur = 1  # on note que c'est soi qui, ayant demarre le serveur, aura le privilege de lancer la simulation
 
 	## ----------- FONCTION POUR CELUI QUI A CREE LA PARTIE SEULEMENT
-	def lancerpartie(self, diametre=5, densitestellaire=5,
-	                 qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
+	def lancerpartie(self, diametre=5, densitestellaire=5,qteIA=0):  # reponse du bouton de lancement de simulation (pour celui qui a parti le serveur seulement)
+
 		rep = self.serveur.lancerpartie(diametre, densitestellaire, qteIA)
+		## ----------- FIN --
 		## ----------- FIN --
 
 	def inscrirejoueur(self):
@@ -74,7 +74,8 @@ class Controleur():
 		elif rep[0] == 0:
 			self.vue.affichelisteparticipants(rep[2])
 			self.vue.root.after(50, self.boucleattente)
-	def initierpartie(self,rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
+
+	def initierpartie(self, rep):  # initalisation locale de la simulation, creation du modele, generation des assets et suppression du layout de lobby
 		if rep[1][0][0] == "lancerpartie":
 			# print("REP",rep)
 			self.vue.changecadre(self.vue.cadreloading)
@@ -96,7 +97,7 @@ class Controleur():
 			self.actions = []  # on s'assure que les actions a envoyer sont maintenant supprimer (on ne veut pas les envoyer 2 fois)
 			if rep[1] == "attend":
 				self.cadre = self.cadre - 1  # increment du compteur de cadre
-				print("J'attends")
+				#print("J'attends")
 			else:
 				self.modele.prochaineaction(self.cadre)  # mise a jour du modele
 				self.vue.modecourant.afficherpartie(self.modele)  # mise a jour de la vue
@@ -158,8 +159,10 @@ class Controleur():
 
 	def creerLazerBoi(self, systeme):
 		self.modele.creerlazerboi(systeme)
-		
+
+
 	def creerstationGalactique(self, systeme):
+		print('TES')
 		self.modele.creerstationGalactique(systeme)
 
 	def creervaisseauGalactique(self, systeme):
@@ -216,6 +219,7 @@ class Controleur():
 
 	def upgradeVitesseVaisseau(self, id, boost):
 		self.modele.upgradeVitesseVaisseau(id, boost)
+
 
 	def chargedansvaisseaugalactique(self, vg, vs):
 		self.modele.chargedansvaisseaugalactique(vg, vs)

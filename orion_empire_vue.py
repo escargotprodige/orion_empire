@@ -850,6 +850,7 @@ class VueSysteme(Perspective):
 		self.cadreShop = None
 		self.cadreJoueur = None
 		self.cadreSelection = None
+		self.cadreShopVaisseau = None
 
 		boutonBack = Button(self.cadreetat, text="←", command=self.voirgalaxie)
 		boutonBack.grid(row=0, column=0, sticky= N + W)
@@ -857,26 +858,41 @@ class VueSysteme(Perspective):
 		boutonNext.grid(row=0, column=5, sticky= N + E)
 
 		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
-		self.boutonShop.grid(row=2, column=0)
+		self.boutonShop.grid(row=0, column=0)
 
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
 		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
-
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
 			self.boutonShop.config(text="Shop ˃")
 			self.cadreShop = None
 		else:
-			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
+			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="gray")
 			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
 			shopVaisseau = Button(self.cadreShop, text="Vaisseau Transport", command=self.creervaisseauTransport)
-			shopVaisseau.grid(row=0, column=0)
+			shopVaisseau.grid(row=0, column=0, sticky = W)
 			shopVaisseau = Button(self.cadreShop, text="Vaisseau Combat", command=self.creervaisseauCombat)
-			shopVaisseau.grid(row=1, column=0)
+			shopVaisseau.grid(row=1, column=0, sticky = W)
 			shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
-			shopStation.grid(row=2, column=0)
-
+			shopStation.grid(row=2, column=0, sticky = W)
+	
+	'''
+	def afficherShopVaisseau(self):
+		
+		if self.cadreShop:
+			self.cadreShop.grid_forget()
+			self.boutonShop.config(text="Shop ˅")
+			self.cadreShop = None
+			self.cadreShop = Frame(self.cadreetat, width=150, height=200, bg="gray")
+			self.cadreShop.grid(row=3, column=0)#, columnspan=5, rowspan=5)
+			shopVaisseau = Button(self.cadreShop, text="Transport", command=self.creervaisseau)
+			shopVaisseau.grid(row=0, column=0, sticky = W)
+			shopStation = Button(self.cadreShop, text="Combat", command=self.creervaisseau)
+			shopStation.grid(row=1, column=0, sticky = W)
+			shopVaisseau = Button(self.cadreShop, text="Colonisateur", command=self.creervaisseau)
+			shopVaisseau.grid(row=2, column=0, sticky = W)
+	'''
 	def voirplanete(self):
 		self.parent.voirplanete(self.maselection)
 
@@ -1043,6 +1059,16 @@ class VueSysteme(Perspective):
 					self.canevas.create_image(jx, jy, image=self.img[k][index],
 					                          tags=(j.proprietaire, "vaisseauinterplanetaires", j.id,j.type, "artefact"))
 					index += 1
+					
+					# Afficher selection vaisseau
+					#print(j.id)
+					if self.maselection != None:
+						if j.id == self.maselection[1]:
+							self.canevas.delete("select")
+							n = 10 # Gere la taille de la selection
+							self.canevas.create_oval((jx) - n - 1, (jy) - n - 1, (jx) + n, (jy) + n - 1, dash=(2, 2),
+							                         outline=self.modele.joueurs[self.parent.nom].couleur,
+							                         tags=("select", "selecteur")) 
 	
 					# Afficher vaisseaux sur minimap
 					if i.nom == self.parent.nom:
@@ -1058,12 +1084,15 @@ class VueSysteme(Perspective):
 		pass
 
 	def afficherselection(self):
+		
+		print('afficherselection')
 		self.canevas.delete("selecteur")
 		if self.maselection != None:
 			systemes = self.modele.systemes
-
 			e = self.UA2pixel
 
+			print(self.maselection)
+			
 			# Pas obligé de faire la selection initiale mais plus satisfesant
 			if self.maselection[1] == "planete":
 				for j in systemes:
@@ -1078,20 +1107,14 @@ class VueSysteme(Perspective):
 													 tags=("select", "selecteur"))
 
 							p.selectionne = True
-			'''
-			elif self.maselection[1] == "vaisseauSolaire":
-				for i in joueur.vaisseauxinterstellaires:
-					if i.id == self.maselection[2]:
-						x = i.x
-						y = i.y
-						t = 10
-						self.canevas.create_rectangle((x * e) - t, (y * e) - t, (x * e) + t, (y * e) + t, dash=(2, 2),
-						                              outline=joueur.couleur,
-						                              tags=("select", "selecteur"))
-			'''
+			elif self.maselection[1] == "vaisseauinterplanetaires":
+				for k in self.parent.joueurscles:
+					pass
+					
 	def cliquervue(self, evt):
 		self.changecadreetat(None)
-
+		
+		print('cliquervue!')
 		t = self.canevas.gettags("current")
 		print(t)
 		if t and "etoile" in t:

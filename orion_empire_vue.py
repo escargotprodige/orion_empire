@@ -466,7 +466,7 @@ class VueGalaxie(Perspective):
 			for i in range(image.size[0]):
 				for k in range(image.size[1]):
 					r, g, b = couleur.getpixel((i, k))
-					if r == 255 and g == 255 and b == 255:
+					if r == self.masque[0] and g == self.masque[1] and b == self.masque[2]:
 						bouton = Button()
 						r, g, b = bouton.winfo_rgb(mod.joueurs[j].couleur)
 						r = int(r / 256)
@@ -830,6 +830,8 @@ class VueSysteme(Perspective):
 		self.largeur = 1000
 		self.hauteur = self.largeur
 		self.img = {}
+		
+		self.chargeimages(parent.parent.modele)
 
 		self.afficherUI()
 
@@ -871,6 +873,7 @@ class VueSysteme(Perspective):
 
 	def voirgalaxie(self):
 		self.parent.voirgalaxie()
+		
 	def chargeimages(self, mod):
 		self.images["transport"]={}
 		for j in mod.joueurscles:
@@ -1093,15 +1096,8 @@ class VueSysteme(Perspective):
 				nom = t[0]
 				idplanete = t[2]
 				idsysteme = t[4]
-				self.maselection = [self.parent.nom, t[1], t[2], t[5], t[6],
-				                    t[4]]  # prop, type, id; self.canevas.find_withtag(CURRENT)#[0]
-# =======
-# 			nom = t[0]
-# 			idplanete = t[2]
-# 			idsysteme = t[4]
-# 			self.maselection = [self.parent.nom, t[1], t[2], t[5], t[6],
-# 								t[4]]  # prop, type, id; self.canevas.find_withtag(CURRENT)#[0]
-# >>>>>>> affichage menu selection
+				self.maselection = [self.parent.nom, t[1], t[2], t[5], t[6], t[4]]  # prop, type, id; self.canevas.find_withtag(CURRENT)#[0]
+
 			# !!! Modifie Paola 19-10-17
 			# if t[1] == "planete" and t[3]=="inconnu":
 			#   self.montreplaneteselection()
@@ -1111,26 +1107,21 @@ class VueSysteme(Perspective):
 			# ou est-ce que je fais selection seulement pour etre enteriner par un autre bouton
 
 			# self.parent.parent.atterrirdestination(nom,idsysteme,idplanete)
-# <<<<<<< HEAD
-# 			
-# 		elif t and "vaisseauinterplanetaires" in t:
-# 			
-# 			if not self.maselection and t[0] == self.parent.nom:
-# 				print("IN VAISSEAU")
-# 				self.maselection = [t[0],t[2],t[3],t[1]]
-# 			
-# 			elif self.maselection:
-# 				if t[0] != self.parent.nom:
-# 					print("ATTAQUE VAISSEAU ENNEMIE")
-# 					self.parent.parent.ciblerdestination(self.maselection[1],t[2])
-# 			
-# 			
-# =======
-# >>>>>>> affichage menu selection
+
+ 			
+		elif t and "vaisseauinterplanetaires" in t:
+ 			if not self.maselection and t[0] == self.parent.nom:
+ 				print("IN VAISSEAU")
+ 				self.maselection = [t[0],t[2],t[3],t[1]]
+			
+ 			elif self.maselection:
+  				if t[0] != self.parent.nom:
+  					print("ATTAQUE VAISSEAU ENNEMIE")
+  					self.parent.parent.ciblerdestination(self.maselection[1],t[2])
+
 		else:
 			print("Region inconnue")
 			self.maselection = None
-			# self.lbselectecible.pack_forget()
 			self.canevas.delete("selecteur")
 
 	def montreplaneteselection(self):

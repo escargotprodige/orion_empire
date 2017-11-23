@@ -97,7 +97,7 @@ class Controleur():
 			self.actions = []  # on s'assure que les actions a envoyer sont maintenant supprimer (on ne veut pas les envoyer 2 fois)
 			if rep[1] == "attend":
 				self.cadre = self.cadre - 1  # increment du compteur de cadre
-				print("J'attends")
+				#print("J'attends")
 			else:
 				self.modele.prochaineaction(self.cadre)  # mise a jour du modele
 				self.vue.modecourant.afficherpartie(self.modele)  # mise a jour de la vue

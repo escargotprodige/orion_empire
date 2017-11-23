@@ -119,7 +119,7 @@ class VaisseauSolaire(Vaisseau):
 				
 			self.angletrajet = math.radians(direction)
 			self.degre = 360 - direction
-			self.x, self.y = hlp.getAngledPoint(direction, self.vitesse, self.x, self.y)
+			self.x, self.y = hlp.getAngledPoint(math.radians(direction), self.vitesse, self.x, self.y)
 			self.enfuire = None
 		elif self.cible:
 			#print("avance")
@@ -175,7 +175,7 @@ class VaisseauSolaire(Vaisseau):
 
 class VaisseauTransport(VaisseauSolaire):
 	def __init__(self, parent, nom, systeme,planete):
-		super().__init__(parent, nom, systeme,planete,"transport")
+		VaisseauSolaire.__init__(self,parent, nom, systeme,planete,"transport")
 		self.units = []
 		self.max_units = 4
 
@@ -194,7 +194,7 @@ class VaisseauTransport(VaisseauSolaire):
 
 class VaisseauCombat(VaisseauSolaire):
 	def __init__(self, parent, nom, systeme,planete):
-		super().__init__(parent, nom, systeme,planete,"combat")
+		VaisseauSolaire.__init__(self,parent, nom, systeme,planete,"combat")
 		self.dmg = 5
 		self.rayon = 5
 		self.cibleattaque = None
@@ -283,12 +283,9 @@ class VaisseauGalactique(Vaisseau):
 				self.systeme_courant = None
 			# ! -------------------------------- FIN MODIF
 			return rep
-# <<<<<<< HEAD
-# 		
-# 	def ciblerdestination(self, p):
-# 		self.cible = p
-# 		self.angletrajet = hlp.calcAngle(self.x, self.y, p.x, p.y)
-# 		self.degre = 360 - hlp.calcDegre(self.x, self.y, p.x, p.y)
-# 		dist = hlp.calcDistance(self.x, self.y, p.x, p.y)
-# =======
-# >>>>>>> affichage menu selection
+ 		
+	def ciblerdestination(self, p):
+		self.cible = p
+		self.angletrajet = hlp.calcAngle(self.x, self.y, p.x, p.y)
+		self.degre = 360 - hlp.calcDegre(self.x, self.y, p.x, p.y)
+		dist = hlp.calcDistance(self.x, self.y, p.x, p.y)

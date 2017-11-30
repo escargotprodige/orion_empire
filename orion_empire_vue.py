@@ -593,7 +593,6 @@ class VueGalaxie(Perspective):
 		print("Creer station EN CONSTRUCTION")
 
 	def creerstationGalactique(self):
-		print("station Galactique EN CONSTRUCTION")
 		if self.maselection:
 			self.parent.parent.creerstationGalactique(self.maselection[2])
 			self.maselection = None

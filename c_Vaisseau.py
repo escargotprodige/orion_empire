@@ -218,6 +218,8 @@ class VaisseauGalactique(Vaisseau):
 		Vaisseau.__init__(self, parent, nom, systeme)
 		self.vaisseauxtransportee = []
 		self.vitesse = random.choice([0.001, 0.003, 0.005, 0.01]) * 5 
+		self.coutM = 5
+		self.coutE = 5
 
 	def dechargervaisseaugalactique(self, systeme):
 		# EN CONSTRUCTION #

@@ -1,3 +1,4 @@
+
 from orion_empire_modele import *
 import c_Vaisseau
 from c_StationGalactique import StationGalactique
@@ -175,20 +176,44 @@ class Joueur():
 				self.systemesvisites.append(i)
 
 	def creervaisseauGalactique(self, id):
-		for i in self.systemesvisites:
-			if i.id == id:
-				v = VaisseauGalactique(self, self.nom, i)
-				self.vaisseauxinterstellaires.append(v)
-				return 1
-
-	def creerstationGalactique(self, id):
-		if self.ressourceM >= 50 and self.ressourceE >= 50:  # a ajuster (enlever le hardcoding)
+		if self.ressourceM >= 5 and self.ressourceE >= 5:
+			for i in self.systemesvisites:
+				if len(self.stationGalactiques)>0:
+					for station in self.stationGalactiques:
+						if i.id == id and station.systemeOrigine.id == i.id:
+							v = VaisseauGalactique(self, self.nom, i)
+							self.ressourceM -= v.coutM
+							self.ressourceE -= v.coutE
+							print('Ressource----------------------')
+							print('energie ')
+							print(self.ressourceM)
+							print('Metal ')
+							print(self.ressourceE)
+							print('-------------------------------')
+							self.vaisseauxinterstellaires.append(v)
+							return 1
+				else:
+					print('vous n avez pas de station sur se systeme' )
+				
+			print('vous n avez pas de station sur se systeme' )
+		else:
+			print("Tu es trop pauvre!")
+			
+	def creerstationGalactique(self,id):
+		if self.ressourceM >= 50 and self.ressourceE >= 50: 	#a ajuster (enlever le hardcoding)
 			for i in self.systemesvisites:
 				if i.id == id:
 					sg = StationGalactique(self, self.nom, i, i.x, i.y)
 					self.ressourceM -= sg.coutM
 					self.ressourceE -= sg.coutE
+					print('Ressource----------------------')
+					print('energie :')
+					print(self.ressourceM)
+					print('Metal :')
+					print(self.ressourceE)
+					print('-------------------------------')
 					self.stationGalactiques.append(sg)
+					
 					return 1
 		else:
 			print("Tu es trop pauvre!")

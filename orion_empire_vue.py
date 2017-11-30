@@ -1131,7 +1131,7 @@ class VueSysteme(Perspective):
 							s.orbiter()
 							n = p.taille * self.UA2pixel * 0.7
 					self.canevas.create_oval(s.x - n - 1, s.y - n - 1, s.x + n,  s.y + n - 1, fill=i.couleur, tags=(
-						self.systeme.proprietaire, "stationSolaire", p.id, "inconnu", self.systeme.id, int(x), int(y)))
+						i.nom, "stationSolaire", p.id, "inconnu", self.systeme.id, int(x), int(y)))
 
 
 	def changerproprietaire(self):
@@ -1164,6 +1164,18 @@ class VueSysteme(Perspective):
 			elif self.maselection[1] == "vaisseauinterplanetaires":
 				for k in self.parent.joueurscles:
 					pass
+			elif self.maselection[1] == "stationSolaire":
+				print("test")
+				joueur = self.modele.joueurs[self.parent.nom]
+				for i in joueur.stationSolaire:
+					if i.id == self.maselection[2]:
+						x, y = hlp.getAngledPoint(math.radians(i.parent.angle), i.parent.distance * self.UA2pixel,
+						                          self.largeur / 2, self.largeur / 2)
+						x, y = hlp.getAngledPoint(math.radians(i.angle), self.UA2pixel,
+						                          x, y)
+						n=i.parent.taille * self.UA2pixel
+						self.canevas.create_oval(x-n,y-n,x+n,y+n, dash=(2, 2),outline=joueur.couleur,
+						                         tags=("select", "selecteur"))
 
 	def cliquervue(self, evt):
 		self.changecadreetat(None)
@@ -1208,6 +1220,11 @@ class VueSysteme(Perspective):
 				if t[0] != self.parent.nom:
 					print("ATTAQUE VAISSEAU ENNEMIE")
 					self.parent.parent.ciblerdestination(self.maselection[1], t[2])
+
+		elif t and "stationSolaire" in t:
+			print("IN STATION")
+			print(t)
+			self.maselection = [t[0], t[1], t[3], t[2]]
 
 		else:
 			print("Region inconnue")

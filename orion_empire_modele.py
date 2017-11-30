@@ -117,8 +117,8 @@ class Modele():
 	def creerstationGalactique(self, systeme):  
 		self.parent.actions.append([self.parent.monnom, "creerstationGalactique", systeme])
 
-	def creerstationSolaire(self, systeme):  
-		self.parent.actions.append([self.parent.monnom, "creerstationSolaire", systeme])
+	def creerstationSolaire(self, systeme, planete):
+		self.parent.actions.append([self.parent.monnom, "creerstationSolaire", [systeme, planete]])
 
 
 	def prochaineaction(self, cadre):  # Loop

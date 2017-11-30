@@ -161,8 +161,8 @@ class Controleur():
 	def creerLazerboi(self, joueur, systeme, planete, x, y):
 		self.actions.append([self.monnom, "creerlazerboi", [self.monnom, systeme, planete, x, y]])
 
-	def creerstationSolaire(self,systeme):
-		self.modele.creerstationSolaire(systeme)
+	def creerstationSolaire(self,systeme, planete):
+		self.modele.creerstationSolaire(systeme, planete)
 
 	def creerstationGalactique(self, systeme):
 		self.modele.creerstationGalactique(systeme)

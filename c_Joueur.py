@@ -208,7 +208,7 @@ class Joueur():
 				for j in i.planetes:
 					if j.id == planete_id:
 						x, y = hlp.getAngledPoint(math.radians(j.angle), j.distance, 0, 0)
-						sg = Station(self, self.nom, i, x, y)
+						sg = Station(j, self.nom, i, x, y)
 						self.stationSolaire.append(sg)
 						return 1
 

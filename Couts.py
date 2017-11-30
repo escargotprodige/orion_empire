@@ -26,3 +26,9 @@ class Cout:
 	vaisseauG = {"metal": -200,
 			"energie": -100,
 			"nourriture": -50,}
+	vSTransport = {"metal": -200,
+			"energie": -100,
+			"nourriture": -50,}
+	vSCombat= {"metal": -200,
+			"energie": -100,
+			"nourriture": -50,}

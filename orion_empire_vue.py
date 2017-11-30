@@ -51,26 +51,53 @@ class Vue():
 
 	def creercadresplash(self, ip, nom):
 		self.cadresplash = Frame(self.root)
-		self.canevasplash = Canvas(self.cadresplash, width=640, height=480, bg="red")
+		#Canevas
+		self.canevasplash = Canvas(self.cadresplash, bg="black", width=800, height=600)
+		self.canevasplash.config(scrollregion=(0, 0, 1000, 800))
 		self.canevasplash.pack()
+		
+		
 		self.nomsplash = Entry(bg="pink")
 		self.nomsplash.insert(0, nom)
 		self.ipsplash = Entry(bg="pink")
 		self.ipsplash.insert(0, ip)
-		labip = Label(text=ip, bg="red", borderwidth=0, relief=RIDGE)
+		labip = Label(text=ip, bg="pink", borderwidth=0, relief=RIDGE)
 		btncreerpartie = Button(text="Creer partie", bg="pink", command=self.creerpartie)
 		btnconnecterpartie = Button(text="Connecter partie", bg="pink", command=self.connecterpartie)
-		self.canevasplash.create_window(200, 200, window=self.nomsplash, width=100, height=30)
-		self.canevasplash.create_window(200, 250, window=self.ipsplash, width=100, height=30)
-		self.canevasplash.create_window(200, 300, window=labip, width=100, height=30)
-		self.canevasplash.create_window(200, 350, window=btncreerpartie, width=100, height=30)
-		self.canevasplash.create_window(200, 400, window=btnconnecterpartie, width=100, height=30)
-
+		labUser = Label(bg="lightblue",text="Username", borderwidth=0, relief=RIDGE)
+		labToi = Label(bg="lightblue",text="Ton IP", borderwidth=0, relief=RIDGE)
+		labServ = Label(bg="lightblue",text="Serveur", borderwidth=0, relief=RIDGE)
+		
+		#Background
+# 		im = Image.open("./images/orionBoiz600.png")
+# 		logo = ImageTk.PhotoImage(im)
+# 		labBG = Label(text=ip, bg="pink", borderwidth=0, relief=RIDGE, image=logo)
+# 		self.canevasplash.create_window(0, 0, window=labBG, width=1200, height=670)
+		
+		labTitre = Label(font=("Courier", 44),text="Orion", borderwidth=0, bg="black",fg="white", relief=RIDGE)
+		self.canevasplash.create_window(400, 200, window=labTitre, width=300, height=300)
+		labTitre = Label(font=("Rage italic", 44),text="boiz", borderwidth=0, bg="black",fg="#f150a0", relief=RIDGE)
+		self.canevasplash.create_window(450, 250, window=labTitre, width=100, height=65)
+		
+		#buttons
+		self.canevasplash.create_window(320, 400, window=btncreerpartie, width=100, height=30)
+		self.canevasplash.create_window(520, 400, window=btnconnecterpartie, width=100, height=30)
+		#username
+		self.canevasplash.create_window(150, 500, window=labUser, width=60, height=30)
+		self.canevasplash.create_window(250, 500, window=self.nomsplash, width=120, height=30)
+		#ip
+		self.canevasplash.create_window(370, 500, window=labToi, width=50, height=30)
+		self.canevasplash.create_window(440, 500, window=labip, width=100, height=30)
+		#server
+		self.canevasplash.create_window(550, 500, window=labServ, width=50, height=30)
+		self.canevasplash.create_window(630, 500, window=self.ipsplash, width=100, height=30)
+		
 	def creercadrelobby(self):
 		self.cadrelobby = Frame(self.root)
-		self.canevaslobby = Canvas(self.cadrelobby, width=640, height=480, bg="lightblue")
+		#Canevas
+		self.canevaslobby = Canvas(self.cadrelobby, width=800, height=600, bg="black")
 		self.canevaslobby.pack()
-		self.listelobby = Listbox(bg="red", borderwidth=0, relief=FLAT)
+		self.listelobby = Listbox(bg="lightblue", borderwidth=0, relief=FLAT)
 		self.diametre = Entry(bg="pink")
 		self.diametre.insert(0, 5)
 		self.densitestellaire = Entry(bg="pink")
@@ -78,17 +105,20 @@ class Vue():
 		self.qteIA = Entry(bg="pink")
 		self.qteIA.insert(0, 0)
 		self.btnlancerpartie = Button(text="Lancer partie", bg="pink", command=self.lancerpartie, state=DISABLED)
-		self.canevaslobby.create_window(440, 240, window=self.listelobby, width=200, height=400)
-		self.canevaslobby.create_window(200, 200, window=self.diametre, width=100, height=30)
-		self.canevaslobby.create_text(20, 200, text="Diametre en annee lumiere")
+		#usagers
+		self.canevaslobby.create_text(550, 70, text="Usagers dans la partie :",fill="white")
+		self.canevaslobby.create_window(600, 280, window=self.listelobby, width=200, height=400)
+		#Parametres
+		self.canevaslobby.create_text(200, 70, text="Parametres de la partie :",fill="white")
+		
+		self.canevaslobby.create_window(300, 140, window=self.diametre, width=100, height=30)
+		self.canevaslobby.create_text(150, 140, text="Diametre en annees lumiere",fill="white")
+		self.canevaslobby.create_window(300, 240, window=self.densitestellaire, width=100, height=30)
+		self.canevaslobby.create_text(150, 240,fill="white", text="Nb systeme/AL cube")
+		self.canevaslobby.create_window(300, 340, window=self.qteIA, width=100, height=30)
+		self.canevaslobby.create_text(150, 340,text="Nb d'IA",fill="white", justify='right')
 
-		self.canevaslobby.create_window(200, 250, window=self.densitestellaire, width=100, height=30)
-		self.canevaslobby.create_text(20, 250, text="Nb systeme/AL cube")
-
-		self.canevaslobby.create_window(200, 300, window=self.qteIA, width=100, height=30)
-		self.canevaslobby.create_text(20, 300, text="Nb d'IA")
-
-		self.canevaslobby.create_window(200, 450, window=self.btnlancerpartie, width=100, height=30)
+		self.canevaslobby.create_window(400, 500, window=self.btnlancerpartie, width=100, height=30)
 
 	def creercadreloading(self):
 		self.cadreloading = Frame(self.root)
@@ -431,6 +461,7 @@ class VueGalaxie(Perspective):
 		self.cadreShop = None
 		self.cadreJoueur = None
 		self.cadreSelection = None
+		self.cadreInfoShop = None
 
 		boutonNext = Button(self.cadreetat, text="→", command=self.voirsysteme)
 		boutonNext.grid(row=0, column=5, sticky=N + E)
@@ -439,34 +470,117 @@ class VueGalaxie(Perspective):
 		self.boutonShop.grid(row=2, column=0)
 
 		self.cadreSelectionVaisseau = Frame(self.cadreetat, bg="grey20")  # MODIF début
+# 
+# 		self.lbselectecible = Label(self.cadreSelectionVaisseau, text="Choisir cible", bg="darkgrey")
+# 		self.lbselectecible.grid(row=0, column=0)
+# 
+# 		self.btndechargervaisseau = Button(self.cadreSelectionVaisseau, text="Décharger vaisseau",
+# 		                                   command=self.dechargerVaisseauGalactique)
+# 		self.btndechargervaisseau.grid(row=1, column=0)
+# 
+# 		self.btncreervaisseau = Button(self.cadreSelectionVaisseau, text="Upgrade vitesse vaisseau",
+# 		                               command=self.upgradeVitesseVaisseau)
+# 		self.btncreervaisseau.grid(row=2, column=0)
 
-		self.lbselectecible = Label(self.cadreSelectionVaisseau, text="Choisir cible", bg="darkgrey")
-		self.lbselectecible.grid(row=0, column=0)
-
-		self.btndechargervaisseau = Button(self.cadreSelectionVaisseau, text="Décharger vaisseau",
-		                                   command=self.dechargerVaisseauGalactique)
-		self.btndechargervaisseau.grid(row=1, column=0)
-
-		self.btncreervaisseau = Button(self.cadreSelectionVaisseau, text="Upgrade vitesse vaisseau",
-		                               command=self.upgradeVitesseVaisseau)
-		self.btncreervaisseau.grid(row=2, column=0)
+# 	def afficherShop(self):
+# 		self.boutonShop.config(text="Shop ˅")
+# 		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
+# 
+# 		if self.cadreShop:
+# 			self.cadreShop.grid_forget()
+# 			self.boutonShop.config(text="Shop ˃")
+# 			self.cadreShop = None
+# 		else:
+# 			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
+# 			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+# 			shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.creervaisseauGalactique)
+# 			shopVaisseau.grid(row=0, column=0)
+# 			shopStation = Button(self.cadreShop, text="Station", command=self.creerstationGalactique)
+# 			shopStation.grid(row=0, column=1)  # MODIF fin
 
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
-		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
+		# enlever les autres cadres
+		if self.cadreSelection:
+			self.cadreSelection.grid_forget()
+			self.boutonSelect.config(text="Selection >")
+			self.cadreSelection = None
+		else:
+			pass
 
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
 			self.boutonShop.config(text="Shop ˃")
 			self.cadreShop = None
 		else:
-			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
+			self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
 			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-			shopVaisseau = Button(self.cadreShop, text="Vaisseau", command=self.creervaisseauGalactique)
-			shopVaisseau.grid(row=0, column=0)
-			shopStation = Button(self.cadreShop, text="Station", command=self.creerstationGalactique)
-			shopStation.grid(row=0, column=1)  # MODIF fin
 
+			shopVTransport = Button(self.cadreShop, text="Vaisseau", wraplength=80, image=self.images["shopChasseur"], compound="top", command=self.shopVaisseau)
+			shopVTransport.grid(row=0, column=0)
+			
+			shopVCombat = Button(self.cadreShop, text="Station",wraplength=90, image=self.images["shopStation"], compound="top", command=self.shopStation)
+			shopVCombat.grid(row=0, column=1)
+			
+	def infoShop(self, typeBatiment):
+		# couts
+		c = Cout()
+
+		# creer cadre
+		if self.cadreInfoShop:
+			self.cadreInfoShop.grid_forget()
+			self.cadreInfoShop = None
+		else:
+			pass
+		self.cadreInfoShop = Frame(self.cadreShop, width=200, height=100)
+		self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+		# Infos batiment
+		labelImage = Label(self.cadreInfoShop, image=self.images["shopChasseur"])
+		labelNom = Label(self.cadreInfoShop, text="Vaisseau Galactique",wraplength=90,)
+		labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
+		# Cout batiment
+		label = Label(self.cadreInfoShop, text="Cout")
+		label.grid(row=0, column=2, columnspan=2)
+		label = Label(self.cadreInfoShop, text="Metal")
+		label.grid(row=1, column=2)
+		label = Label(self.cadreInfoShop, text="Energie")
+		label.grid(row=2, column=2)
+		label = Label(self.cadreInfoShop, text="Food")
+		label.grid(row=3, column=2)
+
+		labelCoutMetal = Label(self.cadreInfoShop, text="")
+		labelCoutEnergie = Label(self.cadreInfoShop, text="")
+		labelCoutFood = Label(self.cadreInfoShop, text="")
+		# Boutons
+		boutonAcheter = Button(self.cadreInfoShop, text="Acheter")
+		if typeBatiment is "vaisseau":
+			labelCoutMetal.config(text=c.vaisseauG["metal"])
+			labelCoutEnergie.config(text=c.vaisseauG["energie"])
+			labelCoutFood.config(text=c.vaisseauG["nourriture"])
+			boutonAcheter.config(command=self.creervaisseauGalactique)
+		elif typeBatiment is "station":
+			labelImage.config(image=self.images["shopStation"])
+			labelNom.config(text="Station Galactique",wraplength=90)
+			labelCoutMetal.config(text=c.stationG["metal"])
+			labelCoutEnergie.config(text=c.stationG["energie"])
+			labelCoutFood.config(text=c.stationG["nourriture"])
+			boutonAcheter.config(command=self.creerstationGalactique)
+		# grid tout
+		# batiment
+		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
+		labelNom.grid(row=2, column=0, columnspan=2)
+		labelLvl.grid(row=3, column=0, columnspan=2)
+		# ressources -
+		labelCoutMetal.grid(row=1, column=3)
+		labelCoutEnergie.grid(row=2, column=3)
+		labelCoutFood.grid(row=3, column=3)
+		# bouton
+		boutonAcheter.grid(row=4, column=4)
+
+	def shopVaisseau(self):
+		self.infoShop("vaisseau")
+	def shopStation(self):
+		self.infoShop("station")
 	def voirsysteme(self, systeme=None):
 		if systeme == None:
 			if self.maselection and self.maselection[0] == self.parent.nom and self.maselection[1] == "systeme":
@@ -509,6 +623,12 @@ class VueGalaxie(Perspective):
 
 			self.images["chasseur"][j] = image
 		self.img = {}
+		im = Image.open("./images/chasseurShop.png")
+		self.images["shopChasseur"] = ImageTk.PhotoImage(im)
+		#Modifier pour image Station
+		im = Image.open("./images/chasseurShop.png")
+		self.images["shopStation"] = ImageTk.PhotoImage(im)
+		
 
 	def afficherdecor(self):
 		self.creerimagefond()
@@ -877,6 +997,8 @@ class VueSysteme(Perspective):
 		self.cadreJoueur = None
 		self.cadreSelection = None
 		self.cadreShopVaisseau = None
+		self.cadreInfoShop = None
+		
 
 		boutonBack = Button(self.cadreetat, text="←", command=self.voirgalaxie)
 		boutonBack.grid(row=0, column=0, sticky=N + W)
@@ -884,45 +1006,114 @@ class VueSysteme(Perspective):
 		boutonNext.grid(row=0, column=5, sticky=N + E)
 
 		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
-		self.boutonShop.grid(row=0, column=0)
+		self.boutonShop.grid(row=1, column=0, sticky=W)
 		
+# 
+# 	def afficherShop(self):
+# 		self.boutonShop.config(text="Shop ˅")
+# 		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
+# 		if self.cadreShop:
+# 			self.cadreShop.grid_forget()
+# 			self.boutonShop.config(text="Shop ˃")
+# 			self.cadreShop = None
+# 		else:
+# 			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="gray")
+# 			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+# 			shopVaisseau = Button(self.cadreShop, text="Vaisseau Transport", command=self.creervaisseauTransport)
+# 			shopVaisseau.grid(row=0, column=0, sticky=W)
+# 			shopVaisseau = Button(self.cadreShop, text="Vaisseau Combat", command=self.creervaisseauCombat)
+# 			shopVaisseau.grid(row=1, column=0, sticky=W)
+# 			#shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
+# 			#shopStation.grid(row=2, column=0, sticky = W)
+# 			
+# 			btnchangeretatvaisseau = Button(self.cadreShop, text="Changer mode agressif", command=self.changeretatvaisseau)
+# 			btnchangeretatvaisseau.grid(row=3, column=0, sticky = W)
 
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
-		# self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
+		# enlever les autres cadres
+		if self.cadreSelection:
+			self.cadreSelection.grid_forget()
+			self.boutonSelect.config(text="Selection >")
+			self.cadreSelection = None
+		else:
+			pass
+
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
 			self.boutonShop.config(text="Shop ˃")
 			self.cadreShop = None
 		else:
-			self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="gray")
+			self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
 			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
-			shopVaisseau = Button(self.cadreShop, text="Vaisseau Transport", command=self.creervaisseauTransport)
-			shopVaisseau.grid(row=0, column=0, sticky=W)
-			shopVaisseau = Button(self.cadreShop, text="Vaisseau Combat", command=self.creervaisseauCombat)
-			shopVaisseau.grid(row=1, column=0, sticky=W)
-			#shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
-			#shopStation.grid(row=2, column=0, sticky = W)
-			
-			btnchangeretatvaisseau = Button(self.cadreShop, text="Changer mode agressif", command=self.changeretatvaisseau)
-			btnchangeretatvaisseau.grid(row=3, column=0, sticky = W)
 
-	'''
-	def afficherShopVaisseau(self):
+			shopVTransport = Button(self.cadreShop, text="Vaisseau Transport", wraplength=80, image=self.images["shopTransport"], compound="top", command=self.shopTransport)
+			shopVTransport.grid(row=0, column=0)
+			
+			shopVCombat = Button(self.cadreShop, text="Vaisseau Combat",wraplength=90, image=self.images["shopCombat"], compound="top", command=self.shopCombat)
+			shopVCombat.grid(row=0, column=1)
+			
+	def infoShop(self, typeBatiment):
+		# couts
+		c = Cout()
+
+		# creer cadre
+		if self.cadreInfoShop:
+			self.cadreInfoShop.grid_forget()
+			self.cadreInfoShop = None
+		else:
+			pass
+		self.cadreInfoShop = Frame(self.cadreShop, width=200, height=100)
+		self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+		# Infos batiment
+		labelImage = Label(self.cadreInfoShop, image=self.images["shopTransport"])
+		labelNom = Label(self.cadreInfoShop, text="Vaisseau Transport",wraplength=90,)
+		labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
+		# Cout batiment
+		label = Label(self.cadreInfoShop, text="Cout")
+		label.grid(row=0, column=2, columnspan=2)
+		label = Label(self.cadreInfoShop, text="Metal")
+		label.grid(row=1, column=2)
+		label = Label(self.cadreInfoShop, text="Energie")
+		label.grid(row=2, column=2)
+		label = Label(self.cadreInfoShop, text="Food")
+		label.grid(row=3, column=2)
+
+		labelCoutMetal = Label(self.cadreInfoShop, text="")
+		labelCoutEnergie = Label(self.cadreInfoShop, text="")
+		labelCoutFood = Label(self.cadreInfoShop, text="")
+		# Boutons
+		boutonAcheter = Button(self.cadreInfoShop, text="Acheter")
+		if typeBatiment is "transport":
+			labelCoutMetal.config(text=c.vSTransport["metal"])
+			labelCoutEnergie.config(text=c.vSTransport["energie"])
+			labelCoutFood.config(text=c.vSTransport["nourriture"])
+			boutonAcheter.config(command=self.creervaisseauTransport)
+		elif typeBatiment is "combat":
+			labelImage.config(image=self.images["shopCombat"])
+			labelNom.config(text="Vaisseau Combat",wraplength=90)
+			labelCoutMetal.config(text=c.vSCombat["metal"])
+			labelCoutEnergie.config(text=c.vSCombat["energie"])
+			labelCoutFood.config(text=c.vSCombat["nourriture"])
+			boutonAcheter.config(command=self.creervaisseauCombat)
+		# grid tout
+		# batiment
+		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
+		labelNom.grid(row=2, column=0, columnspan=2)
+		labelLvl.grid(row=3, column=0, columnspan=2)
+		# ressources -
+		labelCoutMetal.grid(row=1, column=3)
+		labelCoutEnergie.grid(row=2, column=3)
+		labelCoutFood.grid(row=3, column=3)
+		# bouton
+		boutonAcheter.grid(row=4, column=4)
+
+	def shopTransport(self):
+		self.infoShop("transport")
+
+	def shopCombat(self):
+		self.infoShop("combat")
 		
-		if self.cadreShop:
-			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˅")
-			self.cadreShop = None
-			self.cadreShop = Frame(self.cadreetat, width=150, height=200, bg="gray")
-			self.cadreShop.grid(row=3, column=0)#, columnspan=5, rowspan=5)
-			shopVaisseau = Button(self.cadreShop, text="Transport", command=self.creervaisseau)
-			shopVaisseau.grid(row=0, column=0, sticky = W)
-			shopStation = Button(self.cadreShop, text="Combat", command=self.creervaisseau)
-			shopStation.grid(row=1, column=0, sticky = W)
-			shopVaisseau = Button(self.cadreShop, text="Colonisateur", command=self.creervaisseau)
-			shopVaisseau.grid(row=2, column=0, sticky = W)
-	'''
 	def changeretatvaisseau	(self):
 		if self.maselection and "vaisseauinterplanetaires" in self.maselection:
 			self.parent.parent.changeretatvaisseau(self.maselection[1])
@@ -937,7 +1128,6 @@ class VueSysteme(Perspective):
 		self.images["transport"] = {}
 		for j in mod.joueurscles:
 			image = Image.open("./images/v_transport.png")
-
 			pixel = image.load()
 			couleur = image.convert("RGB")
 			for i in range(image.size[0]):
@@ -972,6 +1162,10 @@ class VueSysteme(Perspective):
 
 			self.images["combat"][j] = image
 		self.img = {}
+		im = Image.open("./images/v_transportShop.png")
+		self.images["shopTransport"] = ImageTk.PhotoImage(im)
+		im = Image.open("./images/v_combatShop.png")
+		self.images["shopCombat"] = ImageTk.PhotoImage(im)
 
 	# 	def chargeimages(self):
 	# 		im = Image.open("./images/v_attaque.png")
@@ -1615,7 +1809,7 @@ class VuePlanete(Perspective):
 			self.cadreShop = None
 		# S'assurer que le conteneur est ouvert
 		if self.cadreSelection is None:
-			self.cadreSelection = Frame(self.cadreetat, width=200, height=300, bg="blue")
+			self.cadreSelection = Frame(self.cadreetat, width=300, height=300, bg="blue")
 			self.cadreSelection.grid(row=11, column=0, columnspan=5, rowspan=5)
 		else:
 			for widget in self.cadreSelection.winfo_children():
@@ -1628,7 +1822,17 @@ class VuePlanete(Perspective):
 				labelNom = Label(self.cadreSelection)
 				labelLvl = Label(self.cadreSelection)
 				if self.maselection[1] == "barrack":
-					pass
+					label = Label(self.cadreSelection, text="Unites")
+					label.grid(row=0, column=2, columnspan=2)
+					unit1 = Button(self.cadreSelection, text="LaserBoiz")
+					unit1.grid(row=1, column=2)
+					label = Label(self.cadreSelection, text="Energie")
+					label.grid(row=2, column=2)
+					label = Label(self.cadreSelection, text="Food")
+					label.grid(row=3, column=2)
+					labelMetal = Label(self.cadreSelection)
+					labelEnergie = Label(self.cadreSelection)
+					labelFood =Label(self.cadreSelection)
 				else:
 					label = Label(self.cadreSelection, text="Ressources")
 					label.grid(row=0, column=2, columnspan=2)
@@ -1638,27 +1842,55 @@ class VuePlanete(Perspective):
 					label.grid(row=2, column=2)
 					label = Label(self.cadreSelection, text="Food")
 					label.grid(row=3, column=2)
+					labelMetal = Label(self.cadreSelection)
+					labelEnergie = Label(self.cadreSelection)
+					labelFood =Label(self.cadreSelection)
 
 					# recup ressources generees
-					print(self.maselection[0])
+					idSelect = self.maselection[0]
 					if self.maselection[1] == "mine":
 						labelImage.config(image=self.images["miniMine"])
-						labelNom.config(text="Mine")
-						labelLvl.config(text="lvl")
-						labelMetal = Label(self.cadreSelection)  # a modifier
-
-
+						labelNom.config(text="Mine")  # a modifier
+						for i in self.planete.infrastructures:
+							if i.id == idSelect:
+								labelLvl.config(text="lvl " + str(i.niveau))
+								labelMetal = Label(self.cadreSelection, text=str(i.metauxgen * i.controleRessource)+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=str(i.energiegen * i.controleRessource)+"/sec")
+								labelFood = Label(self.cadreSelection, text=str(i.foodgen * i.controleRessource)+"/sec")
 					elif self.maselection[1] == "generatrice":
-						pass
+						labelImage.config(image=self.images["miniGen"])
+						labelNom.config(text="Generatrice")  # a modifier
+						for i in self.planete.infrastructures:
+							if i.id == idSelect:
+								labelLvl.config(text="lvl " + str(i.niveau))
+								labelMetal = Label(self.cadreSelection, text=str(i.metauxgen * i.controleRessource)+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=str(i.energiegen * i.controleRessource)+"/sec")
+								labelFood = Label(self.cadreSelection, text=str(i.foodgen * i.controleRessource)+"/sec")
 					elif self.maselection[1] == "ferme":
-						pass
+						labelImage.config(image=self.images["miniFerm"])
+						labelNom.config(text="Ferme")  # a modifier
+						for i in self.planete.infrastructures:
+							if i.id == idSelect:
+								labelLvl.config(text="lvl " + str(i.niveau))
+								labelMetal = Label(self.cadreSelection, text=str(i.metauxgen * i.controleRessource)+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=str(i.energiegen * i.controleRessource)+"/sec")
+								labelFood = Label(self.cadreSelection, text=str(i.foodgen * i.controleRessource)+"/sec")
 					elif self.maselection[1] == "ville":
-						pass
-					pass
+						labelImage.config(image=self.images["miniVille"])
+						labelNom.config(text="Ville")  # a modifier
+						for i in self.planete.infrastructures:
+							if i.id == idSelect:
+								labelLvl.config(text="lvl " + str(i.niveau))
+								labelMetal = Label(self.cadreSelection, text=str(i.metauxgen * i.controleRessource)+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=str(i.energiegen * i.controleRessource)+"/sec")
+								labelFood = Label(self.cadreSelection, text=str(i.foodgen * i.controleRessource)+"/sec")
 				# batiment
 				labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
 				labelNom.grid(row=2, column=0, columnspan=2)
 				labelLvl.grid(row=3, column=0, columnspan=2)
+				labelMetal.grid(row=1, column=3)
+				labelEnergie.grid(row=2, column=3)
+				labelFood.grid(row=3, column=3)
 
 	def cliquervue(self, evt):
 		t = self.canevas.gettags("current")
@@ -1666,9 +1898,6 @@ class VuePlanete(Perspective):
 		if t and t[0] != "current":
 			self.maselection = None
 			if t[0] == self.parent.nom:
-				pass
-			elif t[1] == "mine":
-				print("mine mine mine")  # !!!
 				pass
 			elif t[1] == "lazerboi":
 				self.maselection = "lazerboi"

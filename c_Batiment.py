@@ -15,6 +15,7 @@ class Batiment:
 		self.metauxgen=0
 		self.foodgen=0
 		self.energiegen=0
+		self.niveau = 1
 		
 		self.controleRessource = 0.1 
 

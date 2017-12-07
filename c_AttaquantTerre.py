@@ -36,7 +36,11 @@ class AttaquantTerre:
 		self.targetPositionX = x
 		self.targetPositionY = y
 		self.target = None
-		
+	
+	def isDead(self):
+		if self.hp <= 0:
+			return True;
+		return False;
 		
 	def attaquer(self):
 		# v�rifie s'il existe un target
@@ -45,19 +49,25 @@ class AttaquantTerre:
 
 		# fait avancer l'Attaquant vers son target
 		dist = distance(self.x, self.y, self.target.x, self.target.y)
-		if (dist >= self.farRange and dist <= self.nearRange):
-			self.avancer(self.target.x, self.target.y)
-			self.isTargetInRange = False;
-		else:
+		print(dist)
+		if (dist <= self.farRange and dist >= self.nearRange):
 			self.isTargetInRange = True;
+		else:
+			self.isTargetInRange = False;
+			self.avancer(self.target.x, self.target.y)
+
 
 		# fait attaquer l'attaquant quand celui-ci est rendu a destination
 		if (self.isTargetInRange):
-			damage = self.atk - target.defense
+			damage = self.atk - self.target.defense
 			if (damage > 1):
-				target.hp -= damage
+				self.target.hp -= damage
+				print(self.target.hp)
 			else:
-				target.hp -= 1
+				self.target.hp -= 1
+				print(self.target.hp)
+			if self.target.hp <= 0:
+				self.target = None
 
 	def move(self):
 		if self.targetPositionX == None or self.targetPositionY == None:

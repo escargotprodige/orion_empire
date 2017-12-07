@@ -7,8 +7,11 @@ import math
 from helper import Helper as hlp
 from mathPlus import *
 from Couts import *
+
+from numpy.matlib import rand
 from numpy.distutils.cpuinfo import command_by_line
 from PIL.FontFile import WIDTH
+
 
 
 class Vue():
@@ -275,8 +278,26 @@ class Vue():
 				self.modes["planetes"][i].canevas.delete(Batiment.id)
 				self.modes["planetes"][i].minimap(Batiment.id)
 				break;
-
+			
+	def rgbToHex(self, r, g, b):
+		if r < 0:
+			r = 0
+		if g < 0:
+			g = 0
+		if b < 0:
+			b = 0
+		if r > 255:
+			r = 255
+		if g > 255:
+			g = 255
+		if b > 255:
+			b = 255
+		hex = '#%02x%02x%02x' % (r, g, b)
+		return hex
+	
 	def afficherLazerBoi(self, lazerBoi):
+		subDivisionLevel = 20
+		quantiteReflet = 20
 		# 200 c'Est la taille du minimap
 		for i in self.modes["planetes"].keys():
 			if i == lazerBoi.planeteid:
@@ -290,15 +311,62 @@ class Vue():
 				self.modes["planetes"][i].canevas.create_image(lazerBoi.x, lazerBoi.y, image=im,
 															   tags=(lazerBoi.id, "lazerboi"))
 
-				self.modes["planetes"][i].minimap.create_oval(x * t - p, y * t - p, x * t + p, y * t + p, fill=couleur,
-															  tags=(lazerBoi.id, "lazerboi"))
+				self.modes["planetes"][i].minimap.create_oval(x * t - p, y * t - p, x * t + p, y * t + p, fill=couleur, tags=(lazerBoi.id, "lazerboi"))
+				
+				#lazer
+				if lazerBoi.target != None:
+					if lazerBoi.isTargetInRange:
+						lesRayons = []
+						unRayon = []
+						
+						p = lazerBoi
+						q = lazerBoi.target
+						distTotal = distance(p.x, p.y, q.x, q.y) #D
+						direction = list(directionVers(p.x, p.y, q.x, q.y)) #[x, y]
+						
+						r = random.randint(0,254)
+						g = random.randint(0,254)
+						b = random.randint(0,254)
+						
+						
+						for k in range(subDivisionLevel):
+							unRayon.clear()
+							unRayon.append(direction[0] * (distTotal/subDivisionLevel) * k)
+							unRayon.append(direction[1] * (distTotal/subDivisionLevel) * k)
+							unRayon[0] += p.x + random.randint(-5, 5)
+							unRayon[1] += p.y + random.randint(-5, 5)
+							lesRayons.append(list(unRayon))
+						
+						for k in range(subDivisionLevel):
+							r+= random.randint(0,5)
+							g+= random.randint(0,5)
+							b+= random.randint(0,5)
+							
+							if k == subDivisionLevel-1:
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], q.x, q.y , fill=self.rgbToHex(r, g, b), width=6,
+												tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
+							else:
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], lesRayons[k+1][0], lesRayons[k+1][1], fill=self.rgbToHex(r, g, b), width=2,
+												tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
+						
+						
+						for k in range(quantiteReflet):
+							reflet = []
+							reflet.append(direction[0] * (distTotal/subDivisionLevel) * subDivisionLevel-1)
+							reflet.append(direction[1] * (distTotal/subDivisionLevel) * subDivisionLevel-1)
+							
+							reflet[0] += p.x + random.randint(0,20)
+							reflet[1] += p.y + random.randint(0,20)
+	
+							self.modes["planetes"][i].canevas.create_line(lesRayons[subDivisionLevel-1][0], lesRayons[subDivisionLevel-1][1], reflet[0], reflet[1], fill=self.rgbToHex(255, 255, 255), width=3,
+											tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))   
 
-				break
 
-	def effacerLazerBoi(self, lazerBoi):
+
+	def effacerLazerBoi(self):
 		for i in self.modes["planetes"].keys():
-			if i == lazerBoi.planeteid:
-				self.modes["planetes"][i].canevas.delete(lazerBoi.id)
+				self.modes["planetes"][i].canevas.delete("lazerboi")
+				self.modes["planetes"][i].canevas.delete("rayonLazer")
 				break;
 
 	def fermerfenetre(self):
@@ -1829,8 +1897,8 @@ class VuePlanete(Perspective):
 	def afficherpartie(self, mod):
 		for k in mod.joueurscles:
 			joueur = mod.joueurs[k]
+			self.parent.effacerLazerBoi()
 			for at in joueur.attaquantTerre:
-				self.parent.effacerLazerBoi(at)
 				self.parent.afficherLazerBoi(at)
 
 		pass
@@ -2081,9 +2149,19 @@ class VuePlanete(Perspective):
 		t = self.canevas.gettags("current")
 		# afficherSelection
 		if t and t[0] != "current":
+
 			self.maselection = None
 			if t[0] == self.parent.nom:
 				pass
+
+			elif t[1] == "mine":
+				print("mine mine mine")  # !!!
+				pass
+			elif self.prevSelection != None:
+				if t[1] == "lazerboi" and self.prevSelection[1]:
+					self.parent.parent.attackLazerBoi(self.prevSelection[0], t[0]);
+					self.prevSelection = None
+					
 			elif t[1] == "lazerboi":
 				self.maselection = "lazerboi"
 				self.selectUnit("lazerboi")
@@ -2092,6 +2170,8 @@ class VuePlanete(Perspective):
 			elif t[2] == "batiment":
 				self.maselection = t
 				self.selectBatiment()
+
+
 
 		else:
 			x = self.canevas.canvasx(evt.x) / self.tailleTile
@@ -2133,7 +2213,8 @@ class VuePlanete(Perspective):
 			elif self.prevSelection and self.prevSelection[1] == "lazerboi":
 				self.selectUnit("lazerboi")
 				self.parent.parent.moveAttaquant(self.prevSelection[0], globalX, globalY)
-
+				self.prevSelection = None
+				
 	def montresystemeselection(self):
 		self.changecadreetat(self.cadreetataction)
 

@@ -143,6 +143,7 @@ class Modele():
 		for i in self.joueurs:
 			for s in self.joueurs[i].stationGalactiques:
 				s.orbiter()
+				
 		self.parent.vue.modecourant.updateRessources(self.joueurs[self.parent.monnom]) 
 
 	def changeetatsystem(self, nom, systeme):  
@@ -171,3 +172,6 @@ class Modele():
 		
 	def vaisseaumort(self,vid):
 		self.parent.actions.append([self.parent.monnom, "vaisseaumort", vid])
+		
+	def lazerboimort(self,vid):
+		self.parent.actions.append([self.parent.monnom, "lazerboiumort", vid])

@@ -25,4 +25,16 @@ class Cout:
 			"nourriture": -200}
 	vaisseauG = {"metal": -200,
 			"energie": -100,
-			"nourriture": -50}
+			"nourriture": -50,}
+	vSTransport = {"metal": -200,
+			"energie": -100,
+			"nourriture": -50,}
+	vSCombat= {"metal": -200,
+			"energie": -100,
+			"nourriture": -50,}
+	stationS={"metal": -300,
+			"energie": -150,
+			"nourriture": -200}
+	lazerboi= {"metal": -500,
+			"energie": -500,
+			"nourriture": -500}

@@ -36,7 +36,9 @@ class Joueur():
 		                "movelazerboi": self.moveLazerBoi,
 		                "enfuireVaisseauSolaire": self.enfuireVaisseauSolaire,
 		                "changeretatvaisseau": self.changeretatvaisseau,
-		                "vaisseaumort": self.vaisseaumort
+		                "vaisseaumort": self.vaisseaumort,
+		                "lazerboiumort": self.lazerboimort,
+		                "attacklazerboi": self.attackLazerBoi
 		                }
 
 		# self.stationGalactiques = []
@@ -265,6 +267,15 @@ class Joueur():
 		for at in self.attaquantTerre:
 			if at.id == lazerboi_id:
 				at.setTargetPosition(x, y)
+			
+	def attackLazerBoi(self, listparams):
+		lazerboi_id, lazerboiEnemy = listparams
+		for at in self.attaquantTerre:
+			if at.id == lazerboi_id:
+				for j in self.parent.joueurs:
+					for at_enemi in self.parent.joueurs[j].attaquantTerre:
+						if lazerboiEnemy == at_enemi.id:	
+							at.setTarget(at_enemi)
 
 	def ciblerdestination(self, ids):
 		idori, iddesti = ids
@@ -346,6 +357,10 @@ class Joueur():
 
 		for at in self.attaquantTerre:
 			at.update()
+			
+		for at in self.attaquantTerre:
+			if at.isDead():
+				self.parent.lazerboimort(at.id)
 
 	def dechargervaisseaugalactique(self, rep):
 		v = None
@@ -517,3 +532,8 @@ class Joueur():
 			
 		return False
 	
+	def lazerboimort(self, idv):
+		for v in self.attaquantTerre:
+			if v.id == idv:
+				self.attaquantTerre.remove(v)
+				break

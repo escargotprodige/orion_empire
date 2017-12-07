@@ -466,11 +466,12 @@ class Perspective(Frame):
 		self.afficherUI()
 
 		#Message
-		self.cadreMessage = Frame(self.cadreinfo, width=200, height=35, bg="white")
+		self.cadreMessage = Frame(self.cadreinfo, width=200, height=40, bg="white")
 		self.cadreMessage.pack()
-		self.message = StringVar()
-		self.lblMessage = Label(self.cadreMessage, width=200, height=35,wraplength=180,text="hey",
+		self.message = StringVar();
+		self.lblMessage = Label(self.cadreMessage, width=90, height=2,wraplength=180, bg="#f150a0", fg="white",
 							 textvariable=self.message)
+		self.lblMessage.pack(side=LEFT)
 		self.updateMessage("Bienvenue!")
 		
 		# Afficher Ressources 
@@ -552,7 +553,14 @@ class VueGalaxie(Perspective):
 		self.boutonShop.grid(row=2, column=0)
 
 		self.cadreSelectionVaisseau = Frame(self.cadreetat, bg="grey20")  # MODIF début
-# 
+		
+		self.cadreSelection = Frame(self.cadreetat, width=200, height=400, bg="blue")
+		self.cadreSelection.grid(row=10,column=0)
+		btnCharger = Button(self.cadreSelection, text="Charger Vaisseau", wraplength=80) #, command= ICI FONCTION SARAH)
+		btnDecharger = Button(self.cadreSelection, text="Decharger Vaisseau", wraplength=80) #, command= ICI FONCTION SARAH)
+		btnCharger.grid(row=0,column=0)
+		btnDecharger.grid(row=0,column=1)
+		
 #		 self.lbselectecible = Label(self.cadreSelectionVaisseau, text="Choisir cible", bg="darkgrey")
 #		 self.lbselectecible.grid(row=0, column=0)
 # 
@@ -1090,6 +1098,12 @@ class VueSysteme(Perspective):
 		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
 		self.boutonShop.grid(row=1, column=0, sticky=W)
 		
+		self.cadreSelection = Frame(self.cadreetat, width=200, height=400, bg="blue")
+		self.cadreSelection.grid(row=10,column=0)
+		btnCharger = Button(self.cadreSelection, text="Charger Vaisseau", wraplength=80) #, command= ICI FONCTION SARAH)
+		btnDecharger = Button(self.cadreSelection, text="Decharger Vaisseau", wraplength=80) #, command= ICI FONCTION SARAH)
+		btnCharger.grid(row=0,column=0)
+		btnDecharger.grid(row=0,column=1)
 # 
 #	 def afficherShop(self):
 #		 self.boutonShop.config(text="Shop ˅")
@@ -1126,7 +1140,7 @@ class VueSysteme(Perspective):
 			self.cadreShop = None
 		else:
 			self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
-			self.cadreShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+			self.cadreShop.grid(row=3, column=0)
 			shopVTransport = Button(self.cadreShop, text="Vaisseau Transport", wraplength=80, image=self.images["shopTransport"], compound="top", command=self.shopTransport)
 			shopVTransport.grid(row=0, column=0)
 			
@@ -1139,7 +1153,7 @@ class VueSysteme(Perspective):
 			shopStation = Button(self.cadreShop, text="Station Solaire",wraplength=90, image=self.images["shopCombat"], compound="top", command=self.shopStation)
 			shopStation.grid(row=0,column=2)
 			
-			shopStation = Button(self.cadreShop, text="Station Solaire",wraplength=90, image=self.images["shopCombat"], compound="top", command=self.shopStation)
+			shopStation = Button(self.cadreShop, text="Station Solaire",wraplength=90, image=self.images["shopStation"], compound="top", command=self.shopStation)
 			shopStation.grid(row=0,column=2)
 			
 	def infoShop(self, typeBatiment):
@@ -1153,10 +1167,10 @@ class VueSysteme(Perspective):
 		else:
 			pass
 		self.cadreInfoShop = Frame(self.cadreShop, width=200, height=100)
-		self.cadreInfoShop.grid(row=3, column=0, columnspan=5, rowspan=5)
+		self.cadreInfoShop.grid(row=1, column=0, columnspan=5, rowspan=5)
 		# Infos batiment
 		labelImage = Label(self.cadreInfoShop, image=self.images["shopTransport"])
-		labelNom = Label(self.cadreInfoShop, text="Vaisseau Transport",wraplength=90,)
+		labelNom = Label(self.cadreInfoShop, text="Vaisseau Transport",wraplength=90)
 		labelLvl = Label(self.cadreInfoShop, text="Lvl. 1")
 		# Cout batiment
 		label = Label(self.cadreInfoShop, text="Cout")
@@ -1657,6 +1671,8 @@ class VuePlanete(Perspective):
 
 		self.boutonSelect = Button(self.cadreetat, text="Selection >", command=self.afficherSelection)
 		self.boutonSelect.grid(row=10, column=0, sticky=W)
+		
+		
 
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
@@ -1692,6 +1708,7 @@ class VuePlanete(Perspective):
 								 command=self.infoBarrack)
 			shopBarrack.grid(row=1, column=1)
 
+		
 #			 # À EFFACER, TEMPORAIRE
 #			 shopLazerboi = Button(self.cadreShop, text="Lazerboi", image=self.images["lazerboi"], compound="top",
 #								   command=self.infoLazerboi)
@@ -1782,6 +1799,8 @@ class VuePlanete(Perspective):
 		# bouton
 		boutonAcheter.grid(row=4, column=4)
 
+
+	
 	def infoVille(self):
 		self.macommande = None
 		self.infoShop("ville")
@@ -2086,6 +2105,8 @@ class VuePlanete(Perspective):
 			label.grid(row=2, column=2)
 			label = Label(self.cadreSelection, text="Y " + str(self.moveY))
 			label.grid(row=3, column=2)
+			btnCharger = Button(self.cadreSelection, text="Charger Units", wraplength=80)
+			btnCharger.grid(row=4,column=4)
 				
 			
 	def shopSelection(self, type):

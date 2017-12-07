@@ -343,12 +343,16 @@ class Vue():
 							b+= random.randint(0,5)
 							
 							if k == subDivisionLevel-1:
-								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], q.x, q.y , fill=self.rgbToHex(r, g, b), width=6,
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], q.x, q.y , fill=self.rgbToHex(r, g, b), width=10,
 												tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
 							else:
-								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], lesRayons[k+1][0], lesRayons[k+1][1], fill=self.rgbToHex(r, g, b), width=2,
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], lesRayons[k+1][0], lesRayons[k+1][1], fill=self.rgbToHex(r, g, b), width=10,
 												tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
-						
+
+							if k == subDivisionLevel-1:
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], q.x, q.y , fill=self.rgbToHex(255, 255, 255), width=3, tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
+							else:
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], lesRayons[k+1][0], lesRayons[k+1][1], fill=self.rgbToHex(255,255, 255), width=3, tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
 						
 						for k in range(quantiteReflet):
 							reflet = []
@@ -593,7 +597,7 @@ class VueGalaxie(Perspective):
 			self.cadreSelection = None
 		else:
 			pass
-
+			
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
 			self.boutonShop.config(text="Shop >")
@@ -1120,14 +1124,7 @@ class VueSysteme(Perspective):
 #			 btnchangeretatvaisseau = Button(self.cadreShop, text="Changer mode agressif", command=self.changeretatvaisseau)
 
 	def afficherShop(self):
-		self.boutonShop.config(text="Shop >")
-		# enlever les autres cadres
-		if self.cadreSelection:
-			self.cadreSelection.grid_forget()
-			#self.boutonSelect.config(text="Selection >")
-			self.cadreSelection = None
-		else:
-			pass
+		self.boutonShop.config(text="Shop ˅")
 
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
@@ -2053,9 +2050,9 @@ class VuePlanete(Perspective):
 						for i in self.planete.infrastructures:
 							if i.id == idSelect:
 								labelLvl.config(text="lvl " + str(i.niveau))
-								labelMetal = Label(self.cadreSelection, text=str(round(i.metauxgen * i.controleRessource,2))+"/sec")
-								labelEnergie = Label(self.cadreSelection, text=str(round(i.energiegen * i.controleRessource,2))+"/sec")
-								labelFood = Label(self.cadreSelection, text=str(round(i.foodgen * i.controleRessource,2))+"/sec")
+								labelMetal = Label(self.cadreSelection, text=0+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=0+"/sec")
+								labelFood = Label(self.cadreSelection, text=0+"/sec")
 								break
 					labelMetal.grid(row=1, column=3)
 					labelEnergie.grid(row=2, column=3)

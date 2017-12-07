@@ -28,7 +28,8 @@ class Planete():
 		self.taille = taille
 		self.angle = angle
 
-		self.detailLevel = 5
+		self.detailLevel = 6
+
 		self.terrainTailleCarre = pow(2, self.detailLevel) + 1
 
 		self.elevationMax = 255

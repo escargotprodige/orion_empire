@@ -243,19 +243,22 @@ class Joueur():
 						return 1
 
 	def creerLazerBoi(self, listeparams):
-		nom, systemeid, planeteid, x, y = listeparams
-		for i in self.systemesvisites:
-			if i.id == systemeid:
-				for j in i.planetes:
-					if j.id == planeteid:
-						lazerboi = self.barrackMere.creerLazerBoi(self.nom)
-						lazerboi.x = x
-						lazerboi.y = y
-						print(str(lazerboi.x) + ", " + str(lazerboi.y))
-						lazerboi.systemid = systemeid
-						lazerboi.planeteid = planeteid
-						self.attaquantTerre.append(lazerboi)
-						self.parent.parent.afficherLazerBoi(lazerboi)
+
+		if self.haveFunds("creerlazerboi"):
+			nom, systemeid, planeteid, x, y = listeparams
+			for i in self.systemesvisites:
+				if i.id == systemeid:
+					for j in i.planetes:
+						if j.id == planeteid:
+							lazerboi = self.barrackMere.creerLazerBoi(self.nom)
+							lazerboi.x = x
+							lazerboi.y = y
+							print(str(lazerboi.x) + ", " + str(lazerboi.y))
+							lazerboi.systemid = systemeid
+							lazerboi.planeteid = planeteid
+							self.attaquantTerre.append(lazerboi)
+							self.parent.parent.afficherLazerBoi(lazerboi)
+
 
 	def moveLazerBoi(self, listparams):
 		lazerboi_id, x, y = listparams
@@ -455,7 +458,6 @@ class Joueur():
 		vaisseau = None
 		planete = None
 		print("DECHARGEMENT",vid,pid)
-		
 		for v in self.vaisseauxinterplanetaires:
 			if v.id == vid:
 				vaisseau = v
@@ -469,6 +471,71 @@ class Joueur():
 		if vaisseau and planete:
 			print("DECHARGEMENT",vid,"DANS",pid)
 			vaisseau.dechargerDansPlanete(planete)
+
+	def haveFunds(self,objetACree,params = None): #Girls wanna have fun
+		#print("haveFunds")
+		c = Cout()
+		print(params)
+		if objetACree == "creervaisseauSolaire":
+			if params == 0:
+				if abs(c.vSTransport["metal"]) <= self.ressourceM:
+					if abs(c.vSTransport["energie"]) <= self.ressourceE:
+						if abs(c.vSTransport["nourriture"]) <= self.ressourceN:
+							self.removeFunds(c.vSTransport["metal"],c.vSTransport["energie"],c.vSTransport["nourriture"])
+							return True
+			elif params == 1:
+				if abs(c.vSCombat["metal"]) <= self.ressourceM:
+					if abs(c.vSCombat["energie"]) <= self.ressourceE:
+						if abs(c.vSCombat["nourriture"]) <= self.ressourceN:
+							self.removeFunds(c.vSCombat["metal"],c.vSCombat["energie"],c.vSCombat["nourriture"])
+							return True
+		#elif objetACree == "creervaisseauGalactique":
+			#pass
+		elif objetACree == "creermine":
+			if abs(c.mine["metal"]) <= self.ressourceM:
+				if abs(c.mine["energie"]) <= self.ressourceE:
+					if abs(c.mine["nourriture"]) <= self.ressourceN:
+						self.removeFunds(c.mine["metal"],c.mine["energie"],c.mine["nourriture"])
+						return True
+						
+		elif objetACree == "creerville":
+			if abs(c.ville["metal"]) <= self.ressourceM:
+				if abs(c.ville["energie"]) <= self.ressourceE:
+					if abs(c.ville["nourriture"]) <= self.ressourceN:
+						self.removeFunds(c.ville["metal"],c.ville["energie"],c.ville["nourriture"])
+						return True
+		elif objetACree == "creergeneratrice":
+			if abs(c.generatrice["metal"]) <= self.ressourceM:
+				if abs(c.generatrice["energie"]) <= self.ressourceE:
+					if abs(c.generatrice["nourriture"]) <= self.ressourceN:
+						self.removeFunds(c.generatrice["metal"],c.generatrice["energie"],c.generatrice["nourriture"])
+						return True
+		elif objetACree == "creerferme":
+			if abs(c.ferme["metal"]) <= self.ressourceM:
+				if abs(c.ferme["energie"]) <= self.ressourceE:
+					if abs(c.ferme["nourriture"]) <= self.ressourceN:
+						self.removeFunds(c.ferme["metal"],c.ferme["energie"],c.ferme["nourriture"])
+						return True
+		#elif objetACree == "creerstationGalactique":
+		elif objetACree == "creerstationSolaire":
+			if abs(c.stationSolaire["metal"]) <= self.ressourceM:
+				if abs(c.stationSolaire["energie"]) <= self.ressourceE:
+					if abs(c.stationSolaire["nourriture"]) <= self.ressourceN:
+						self.removeFunds(c.stationSolaire["metal"],c.stationSolaire["energie"],c.stationSolaire["nourriture"])
+						return True
+		#elif objetACree == "upgradevitessevaisseau":
+		elif objetACree == "creerbarrack":
+			if abs(c.barrack["metal"]) <= self.ressourceM:
+				if abs(c.barrack["energie"]) <= self.ressourceE:
+					if abs(c.barrack["nourriture"]) <= self.ressourceN:
+						self.removeFunds(c.barrack["metal"],c.barrack["energie"],c.barrack["nourriture"])
+						return True
+		elif objetACree == "creerlazerboi":
+			if abs(c.lazerboi["metal"]) <= self.ressourceM:
+				if abs(c.lazerboi["energie"]) <= self.ressourceE:
+					if abs(c.lazerboi["nourriture"]) <= self.ressourceN:
+						self.removeFunds(c.lazerboi["metal"],c.lazerboi["energie"],c.lazerboi["nourriture"])
+						return True
 			
 			pass
 		

@@ -9,6 +9,7 @@ class Ville(Batiment):
 		Batiment.calculfoodgen(self)
 		Batiment.calculenergiegen(self)
 		Batiment.calculmetauxgen(self)
+		
 		print(self.metauxgen,self.energiegen,self.foodgen)
  
 		self.ressource =  {"metal": 20,

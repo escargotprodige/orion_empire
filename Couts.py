@@ -32,3 +32,6 @@ class Cout:
 	vSCombat= {"metal": -200,
 			"energie": -100,
 			"nourriture": -50,}
+	lazerboi= {"metal": -500,
+			"energie": -500,
+			"nourriture": -500,}

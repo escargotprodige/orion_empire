@@ -7,6 +7,7 @@ import math
 from helper import Helper as hlp
 from mathPlus import *
 from Couts import *
+from numpy.distutils.cpuinfo import command_by_line
 
 
 class Vue():
@@ -74,10 +75,10 @@ class Vue():
 # 		labBG = Label(text=ip, bg="pink", borderwidth=0, relief=RIDGE, image=logo)
 # 		self.canevasplash.create_window(0, 0, window=labBG, width=1200, height=670)
 		
-		labTitre = Label(font=("Courier", 44),text="Orion", borderwidth=0, bg="black",fg="white", relief=RIDGE)
-		self.canevasplash.create_window(400, 200, window=labTitre, width=300, height=300)
+		labTitre = Label(font=("Courier bold", 44),text="Orion", borderwidth=0, bg="black",fg="white", relief=RIDGE)
+		self.canevasplash.create_window(420, 200, window=labTitre, width=300, height=300)
 		labTitre = Label(font=("Rage italic", 44),text="boiz", borderwidth=0, bg="black",fg="#f150a0", relief=RIDGE)
-		self.canevasplash.create_window(450, 250, window=labTitre, width=100, height=65)
+		self.canevasplash.create_window(460, 255, window=labTitre, width=100, height=65)
 		
 		#buttons
 		self.canevasplash.create_window(320, 400, window=btncreerpartie, width=100, height=30)
@@ -1508,6 +1509,8 @@ class VuePlanete(Perspective):
 		self.cadreJoueur = None
 		self.cadreSelection = None
 		self.cadreJoueur = None
+		self.cadreShopBarrack = None
+		
 		self.chargeimages()
 
 		boutonBack = Button(self.cadreetat, text="←", command=self.voirsysteme)
@@ -1816,23 +1819,33 @@ class VuePlanete(Perspective):
 				widget.destroy()
 		# Cadre selection
 		if self.maselection and self.maselection[0] != "current":
+			self.cadreShopBarrack = None
+			
 			if self.maselection[2] == "batiment":
 				# peupler le cadre
 				labelImage = Label(self.cadreSelection)
 				labelNom = Label(self.cadreSelection)
 				labelLvl = Label(self.cadreSelection)
 				if self.maselection[1] == "barrack":
+					labelImage.config(image=self.images["miniBarra"])
+					labelNom.config(text="Barracks")
+					for i in self.planete.infrastructures:
+							if i.type == "barrack":
+								labelLvl.config(text="lvl " + str(i.niveau))
 					label = Label(self.cadreSelection, text="Unites")
-					label.grid(row=0, column=2, columnspan=2)
-					unit1 = Button(self.cadreSelection, text="LaserBoiz")
+					label.grid(row=0, column=2)
+					unit1 = Button(self.cadreSelection, text="Lazer boiz", command=self.infoShopLazer)
 					unit1.grid(row=1, column=2)
-					label = Label(self.cadreSelection, text="Energie")
-					label.grid(row=2, column=2)
-					label = Label(self.cadreSelection, text="Food")
-					label.grid(row=3, column=2)
-					labelMetal = Label(self.cadreSelection)
-					labelEnergie = Label(self.cadreSelection)
-					labelFood =Label(self.cadreSelection)
+					unit2 = Button(self.cadreSelection, text="Fist boiz")
+					unit2.grid(row=2, column=2)
+					unit3 = Button(self.cadreSelection, text="Tank boiz")
+					unit3.grid(row=3, column=2)
+					unit1 = Button(self.cadreSelection, text="Upgrade")
+					unit1.grid(row=0, column=3)
+				elif self.maselection[1] == "lazerboi":
+					print("yes")
+					self.shopBarrack("lazer")
+					
 				else:
 					label = Label(self.cadreSelection, text="Ressources")
 					label.grid(row=0, column=2, columnspan=2)
@@ -1854,44 +1867,114 @@ class VuePlanete(Perspective):
 						for i in self.planete.infrastructures:
 							if i.id == idSelect:
 								labelLvl.config(text="lvl " + str(i.niveau))
-								labelMetal = Label(self.cadreSelection, text=str(i.metauxgen * i.controleRessource)+"/sec")
-								labelEnergie = Label(self.cadreSelection, text=str(i.energiegen * i.controleRessource)+"/sec")
-								labelFood = Label(self.cadreSelection, text=str(i.foodgen * i.controleRessource)+"/sec")
+								labelMetal = Label(self.cadreSelection, text=str(round(i.metauxgen * i.controleRessource,2))+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=str(round(i.energiegen * i.controleRessource,2))+"/sec")
+								labelFood = Label(self.cadreSelection, text=str(round(i.foodgen * i.controleRessource,2))+"/sec")
+								break
 					elif self.maselection[1] == "generatrice":
 						labelImage.config(image=self.images["miniGen"])
 						labelNom.config(text="Generatrice")  # a modifier
 						for i in self.planete.infrastructures:
 							if i.id == idSelect:
 								labelLvl.config(text="lvl " + str(i.niveau))
-								labelMetal = Label(self.cadreSelection, text=str(i.metauxgen * i.controleRessource)+"/sec")
-								labelEnergie = Label(self.cadreSelection, text=str(i.energiegen * i.controleRessource)+"/sec")
-								labelFood = Label(self.cadreSelection, text=str(i.foodgen * i.controleRessource)+"/sec")
+								labelMetal = Label(self.cadreSelection, text=str(round(i.metauxgen * i.controleRessource,2))+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=str(round(i.energiegen * i.controleRessource,2))+"/sec")
+								labelFood = Label(self.cadreSelection, text=str(round(i.foodgen * i.controleRessource,2))+"/sec")
+								break
 					elif self.maselection[1] == "ferme":
 						labelImage.config(image=self.images["miniFerm"])
 						labelNom.config(text="Ferme")  # a modifier
 						for i in self.planete.infrastructures:
 							if i.id == idSelect:
 								labelLvl.config(text="lvl " + str(i.niveau))
-								labelMetal = Label(self.cadreSelection, text=str(i.metauxgen * i.controleRessource)+"/sec")
-								labelEnergie = Label(self.cadreSelection, text=str(i.energiegen * i.controleRessource)+"/sec")
-								labelFood = Label(self.cadreSelection, text=str(i.foodgen * i.controleRessource)+"/sec")
+								labelMetal = Label(self.cadreSelection, text=str(round(i.metauxgen * i.controleRessource,2))+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=str(round(i.energiegen * i.controleRessource,2))+"/sec")
+								labelFood = Label(self.cadreSelection, text=str(round(i.foodgen * i.controleRessource,2))+"/sec")
+								break
 					elif self.maselection[1] == "ville":
 						labelImage.config(image=self.images["miniVille"])
 						labelNom.config(text="Ville")  # a modifier
 						for i in self.planete.infrastructures:
 							if i.id == idSelect:
 								labelLvl.config(text="lvl " + str(i.niveau))
-								labelMetal = Label(self.cadreSelection, text=str(i.metauxgen * i.controleRessource)+"/sec")
-								labelEnergie = Label(self.cadreSelection, text=str(i.energiegen * i.controleRessource)+"/sec")
-								labelFood = Label(self.cadreSelection, text=str(i.foodgen * i.controleRessource)+"/sec")
+								labelMetal = Label(self.cadreSelection, text=str(round(i.metauxgen * i.controleRessource,2))+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=str(round(i.energiegen * i.controleRessource,2))+"/sec")
+								labelFood = Label(self.cadreSelection, text=str(round(i.foodgen * i.controleRessource,2))+"/sec")
+								break
+					labelMetal.grid(row=1, column=3)
+					labelEnergie.grid(row=2, column=3)
+					labelFood.grid(row=3, column=3)
 				# batiment
 				labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
 				labelNom.grid(row=2, column=0, columnspan=2)
 				labelLvl.grid(row=3, column=0, columnspan=2)
-				labelMetal.grid(row=1, column=3)
-				labelEnergie.grid(row=2, column=3)
-				labelFood.grid(row=3, column=3)
+	def infoShopLazer(self):
+		self.shopBarrack("lazer")
+	def infoShopFist(self):
+		self.shopBarrack("fist")
+	def infoShopTank(self):
+		self.shopBarrack("tank")
+	def shopBarrack(self, type):
+		# couts
+		c = Cout()
 
+		# creer cadre
+		if self.cadreShopBarrack:
+			self.cadreShopBarrack.grid_forget()
+			self.cadreShopBarrack = None
+		else:
+			pass
+		self.cadreShopBarrack = Frame(self.cadreSelection, width=200, height=100, bg="red")
+		self.cadreShopBarrack.grid(row=4, column=0, columnspan=5, rowspan=5)
+		# Infos batiment
+		labelImage = Label(self.cadreShopBarrack)
+		labelNom = Label(self.cadreShopBarrack)
+		labelLvl = Label(self.cadreShopBarrack)
+		# Cout batiment
+		label = Label(self.cadreShopBarrack, text="Cout")
+		label.grid(row=0, column=2, columnspan=2)
+		label = Label(self.cadreShopBarrack, text="Metal")
+		label.grid(row=1, column=2)
+		label = Label(self.cadreShopBarrack, text="Energie")
+		label.grid(row=2, column=2)
+		label = Label(self.cadreShopBarrack, text="Food")
+		label.grid(row=3, column=2)
+
+		labelCoutMetal = Label(self.cadreShopBarrack, text="")
+		labelCoutEnergie = Label(self.cadreShopBarrack, text="")
+		labelCoutFood = Label(self.cadreShopBarrack, text="")
+		# Boutons
+		boutonAcheter = Button(self.cadreShopBarrack, text="Acheter")
+		if type is "lazer":
+			labelImage.config(image=self.images["lazerboi"])
+			labelNom.config(text="Lazer boiz")
+			labelCoutMetal.config(text=c.lazerboi["metal"])
+			labelCoutEnergie.config(text=c.lazerboi["energie"])
+			labelCoutFood.config(text=c.lazerboi["nourriture"])
+			for i in self.planete.infrastructures:
+				if i.type == "barrack":
+					#lvlLazer = i.dictUnitTemplate["AT_TYPE.LAZERBOI"]["ATP.LVL"]
+					#lvlLazer = i.dictUnitTemplate[0][14]
+					#lvlLazer = i.dictUnitTemplate["AT_TYPE.LAZERBOI: 0"]
+					#print(lvlLazer)
+					labelLvl.config(text="lvl " + str(i.niveau))
+					lvlLazer = i.niveau
+					if lvlLazer == 1:
+						boutonAcheter.config(command=self.creeLazerboi)
+					else:
+						boutonAcheter.config(text="Upgrade")
+		# grid tout
+		# batiment
+		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
+		labelNom.grid(row=2, column=0, columnspan=2)
+		labelLvl.grid(row=3, column=0, columnspan=2)
+		# ressources -
+		labelCoutMetal.grid(row=1, column=3)
+		labelCoutEnergie.grid(row=2, column=3)
+		labelCoutFood.grid(row=3, column=3)
+		# bouton
+		boutonAcheter.grid(row=4, column=4)
+		
 	def cliquervue(self, evt):
 		t = self.canevas.gettags("current")
 		# afficherSelection
@@ -1901,6 +1984,7 @@ class VuePlanete(Perspective):
 				pass
 			elif t[1] == "lazerboi":
 				self.maselection = "lazerboi"
+				self.selectBatiment()
 				print("lazerboi at your service, pew pew.")  # !!!
 				self.prevSelection = t
 			elif t[2] == "batiment":

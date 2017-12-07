@@ -114,11 +114,11 @@ class Modele():
 	def creervaisseauGalactique(self, systeme):  
 		self.parent.actions.append([self.parent.monnom, "creervaisseauGalactique", systeme])
 
-	def creerstationGalactique(self, systeme):  
+	def creerstationGalactique(self, systeme):
 		self.parent.actions.append([self.parent.monnom, "creerstationGalactique", systeme])
 
-	def creerstationSolaire(self, systeme):  
-		self.parent.actions.append([self.parent.monnom, "creerstationSolaire", systeme])
+	def creerstationSolaire(self, systeme, planete):
+		self.parent.actions.append([self.parent.monnom, "creerstationSolaire", [systeme, planete]])
 
 
 	def prochaineaction(self, cadre):  # Loop

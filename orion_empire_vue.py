@@ -394,11 +394,12 @@ class Perspective(Frame):
 		self.afficherUI()
 
 		#Message
-		self.cadreMessage = Frame(self.cadreinfo, width=200, height=35, bg="white")
+		self.cadreMessage = Frame(self.cadreinfo, width=200, height=40, bg="white")
 		self.cadreMessage.pack()
-		self.message = StringVar()
-		self.lblMessage = Label(self.cadreMessage, width=200, height=35,wraplength=180,text="hey",
+		self.message = StringVar();
+		self.lblMessage = Label(self.cadreMessage, width=90, height=2,wraplength=180, bg="#f150a0", fg="white",
 							 textvariable=self.message)
+		self.lblMessage.pack(side=LEFT)
 		self.updateMessage("Bienvenue!")
 		
 		# Afficher Ressources 
@@ -1067,7 +1068,7 @@ class VueSysteme(Perspective):
 			shopStation = Button(self.cadreShop, text="Station Solaire",wraplength=90, image=self.images["shopCombat"], compound="top", command=self.shopStation)
 			shopStation.grid(row=0,column=2)
 			
-			shopStation = Button(self.cadreShop, text="Station Solaire",wraplength=90, image=self.images["shopCombat"], compound="top", command=self.shopStation)
+			shopStation = Button(self.cadreShop, text="Station Solaire",wraplength=90, image=self.images["shopStation"], compound="top", command=self.shopStation)
 			shopStation.grid(row=0,column=2)
 			
 	def infoShop(self, typeBatiment):

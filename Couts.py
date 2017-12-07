@@ -20,6 +20,7 @@ class Cout:
 	barrack = {"metal": -80,
 			"energie": -80,
 			"nourriture": -80}
+	#Aller voir dans les classes des objets 
 	stationG = {"metal": -300,
 			"energie": -150,
 			"nourriture": -200}
@@ -37,4 +38,7 @@ class Cout:
 			"nourriture": -200}
 	lazerboi= {"metal": -500,
 			"energie": -500,
+			"nourriture": -500}
+	stationSolaire=  {"metal": -1000,
+			"energie": -200,
 			"nourriture": -500}

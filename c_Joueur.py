@@ -3,7 +3,7 @@ from orion_empire_modele import *
 import c_Vaisseau
 from c_StationGalactique import StationGalactique
 from c_Station import Station
-
+from Couts import *
 
 class Joueur():
 	def __init__(self, parent, nom, systemeorigine, couleur):
@@ -84,20 +84,20 @@ class Joueur():
 	# return coords
 
 	def creervaisseauSolaire(self, listeparams):
-
-		dict_vaisseau = {0: VaisseauTransport,
-		                 1: VaisseauCombat}
-
-		systemeid, planeteid, type_vaisseau = listeparams
-		print("creer vaisseau solaire", systemeid, planeteid, type_vaisseau)
-		for i in self.systemesvisites:
-			if i.id == systemeid:
-				for j in i.planetes:
-					if j.id == planeteid:
-						# print(i,j)
-						v = dict_vaisseau[type_vaisseau](self, self.nom, i, j)
-						self.vaisseauxinterplanetaires.append(v)
-						return 1
+		if self.haveFunds("creervaisseauSolaire",listeparams[2]):
+			dict_vaisseau = {0: VaisseauTransport,
+			                 1: VaisseauCombat}
+	
+			systemeid, planeteid, type_vaisseau = listeparams
+			print("creer vaisseau solaire", systemeid, planeteid, type_vaisseau)
+			for i in self.systemesvisites:
+				if i.id == systemeid:
+					for j in i.planetes:
+						if j.id == planeteid:
+							# print(i,j)
+							v = dict_vaisseau[type_vaisseau](self, self.nom, i, j)
+							self.vaisseauxinterplanetaires.append(v)
+							return 1
 
 	# ajout
 	def creer_infrastructure(self, nom, systemeid, planeteid, x, y, type_infrastructure):
@@ -110,66 +110,71 @@ class Joueur():
 						self.parent.parent.afficherBatiment(infrastructure)
 
 	def creermine(self, listeparams):
-		nom, systemeid, planeteid, x, y = listeparams
-		for i in self.systemesvisites:
-			if i.id == systemeid:
-				for j in i.planetes:
-					if j.id == planeteid:
-						mine = Mine(self, nom, systemeid, planeteid, x, y)
-						j.infrastructures.append(mine)
-						# self.parent.parent.affichermine(nom,systemeid,planeteid,x,y)
-						self.parent.parent.afficherBatiment(mine)
+		if self.haveFunds("creermine"):
+			nom, systemeid, planeteid, x, y = listeparams
+			for i in self.systemesvisites:
+				if i.id == systemeid:
+					for j in i.planetes:
+						if j.id == planeteid:
+							mine = Mine(self, nom, systemeid, planeteid, x, y)
+							j.infrastructures.append(mine)
+							# self.parent.parent.affichermine(nom,systemeid,planeteid,x,y)
+							self.parent.parent.afficherBatiment(mine)
 
 	def creerville(self, listeparams):
-		nom, systemeid, planeteid, x, y = listeparams
-		for i in self.systemesvisites:
-			if i.id == systemeid:
-				for j in i.planetes:
-					if j.id == planeteid:
-						ville = Ville(self, nom, systemeid, planeteid, x, y)
-						j.infrastructures.append(ville)
-						# self.parent.parent.afficherville(nom,systemeid,planeteid,x,y)
-						self.parent.parent.afficherBatiment(ville)
+		if self.haveFunds("creerville"):
+			nom, systemeid, planeteid, x, y = listeparams
+			for i in self.systemesvisites:
+				if i.id == systemeid:
+					for j in i.planetes:
+						if j.id == planeteid:
+							ville = Ville(self, nom, systemeid, planeteid, x, y)
+							j.infrastructures.append(ville)
+							# self.parent.parent.afficherville(nom,systemeid,planeteid,x,y)
+							self.parent.parent.afficherBatiment(ville)
 
 	def creerferme(self, listeparams):
-		nom, systemeid, planeteid, x, y = listeparams
-		for i in self.systemesvisites:
-			if i.id == systemeid:
-				for j in i.planetes:
-					if j.id == planeteid:
-						ferme = Ferme(self, nom, systemeid, planeteid, x, y)
-						j.infrastructures.append(ferme)
-						# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
-						self.parent.parent.afficherBatiment(ferme)
+		if self.haveFunds("creerville"):
+			nom, systemeid, planeteid, x, y = listeparams
+			for i in self.systemesvisites:
+				if i.id == systemeid:
+					for j in i.planetes:
+						if j.id == planeteid:
+							ferme = Ferme(self, nom, systemeid, planeteid, x, y)
+							j.infrastructures.append(ferme)
+							# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
+							self.parent.parent.afficherBatiment(ferme)
 
 	def creergeneratrice(self, listeparams):
-		nom, systemeid, planeteid, x, y = listeparams
-		for i in self.systemesvisites:
-			if i.id == systemeid:
-				for j in i.planetes:
-					if j.id == planeteid:
-						generatrice = Generatrice(self, nom, systemeid, planeteid, x, y)
-						j.infrastructures.append(generatrice)
-						# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
-						self.parent.parent.afficherBatiment(generatrice)
-
-					# ! MODIF
+		if self.haveFunds("creergeneratrice"):
+			nom, systemeid, planeteid, x, y = listeparams
+			for i in self.systemesvisites:
+				if i.id == systemeid:
+					for j in i.planetes:
+						if j.id == planeteid:
+							generatrice = Generatrice(self, nom, systemeid, planeteid, x, y)
+							j.infrastructures.append(generatrice)
+							# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
+							self.parent.parent.afficherBatiment(generatrice)
+	
+						# ! MODIF
 
 	def creerbarrack(self, listeparams):
-		nom, systemeid, planeteid, x, y = listeparams
-		for i in self.systemesvisites:
-			if i.id == systemeid:
-				for j in i.planetes:
-					if j.id == planeteid:
-						barrack = Barrack(self, nom, systemeid, planeteid, x, y)
-
-						if self.barrackMere:
-							barrack.setBarrackMere(self.barrackMere)
-						else:
-							self.barrackMere = barrack
-						j.infrastructures.append(barrack)
-						# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
-						self.parent.parent.afficherBatiment(barrack)
+		if self.haveFunds("creerbarrack"):
+			nom, systemeid, planeteid, x, y = listeparams
+			for i in self.systemesvisites:
+				if i.id == systemeid:
+					for j in i.planetes:
+						if j.id == planeteid:
+							barrack = Barrack(self, nom, systemeid, planeteid, x, y)
+	
+							if self.barrackMere:
+								barrack.setBarrackMere(self.barrackMere)
+							else:
+								self.barrackMere = barrack
+							j.infrastructures.append(barrack)
+							# self.parent.parent.afficherferme(nom,systemeid,planeteid,x,y)
+							self.parent.parent.afficherBatiment(barrack)
 
 	def atterrirplanete(self, d):
 		nom, systeid, planeid = d
@@ -221,12 +226,14 @@ class Joueur():
 			print("Tu es trop pauvre!")
 
 	def creerstationSolaire(self, id):
-		for i in self.systemesvisites:
-			if i.id == id:
-				ss = Station(self, self.nom, i, i.x, i.y)
-				self.stationSolaire.append(ss)
-				print(self.stationSolaire)
-				return 1
+		if self.haveFunds("stationSolaire"):
+			for i in self.systemesvisites:
+				if i.id == id:
+					ss = Station(self, self.nom, i, i.x, i.y)
+					self.stationSolaire.append(ss)
+					self.transaction()
+					print(self.stationSolaire)
+					return 1
 
 	def creer_station(self, liste_params):
 		systeme_id, planete_id = liste_params
@@ -240,19 +247,20 @@ class Joueur():
 						return 1
 
 	def creerLazerBoi(self, listeparams):
-		nom, systemeid, planeteid, x, y = listeparams
-		for i in self.systemesvisites:
-			if i.id == systemeid:
-				for j in i.planetes:
-					if j.id == planeteid:
-						lazerboi = self.barrackMere.creerLazerBoi(self.nom)
-						lazerboi.x = x
-						lazerboi.y = y
-						print(str(lazerboi.x) + ", " + str(lazerboi.y))
-						lazerboi.systemid = systemeid
-						lazerboi.planeteid = planeteid
-						self.attaquantTerre.append(lazerboi)
-						self.parent.parent.afficherLazerBoi(lazerboi)
+		if self.haveFunds("creerLazerBoi"):
+			nom, systemeid, planeteid, x, y = listeparams
+			for i in self.systemesvisites:
+				if i.id == systemeid:
+					for j in i.planetes:
+						if j.id == planeteid:
+							lazerboi = self.barrackMere.creerLazerBoi(self.nom)
+							lazerboi.x = x
+							lazerboi.y = y
+							print(str(lazerboi.x) + ", " + str(lazerboi.y))
+							lazerboi.systemid = systemeid
+							lazerboi.planeteid = planeteid
+							self.attaquantTerre.append(lazerboi)
+							self.parent.parent.afficherLazerBoi(lazerboi)
 
 	def moveLazerBoi(self, listparams):
 		lazerboi_id, x, y = listparams
@@ -446,6 +454,83 @@ class Joueur():
 					self.parent.parent.vue.vaisseaumort(v)
 				v.meurt()
 				break
+	
+	def removeFunds(self,ressourceM,ressourceE,ressourceN): #Girls wanna keep fun
+		self.ressourceM += ressourceM
+		self.ressourceE += ressourceE
+		self.ressourceN += ressourceN
+		
+	def haveFunds(self,objetACree,params = None): #Girls wanna have fun
+		print("haveFunds")
+		c = Cout()
+		print(params)
+		if objetACree == "creervaisseauSolaire":
+			
+			if params == 0:
+				print("have FUNDS creervaisseauSolaire")
+				if c.vSTransport["metal"] <= self.ressourceM:
+					if c.vSTransport["energie"] <= self.ressourceE:
+						if c.vSTransport["nourriture"] <= self.ressourceN:
+							self.removeFunds(c.vSTransport["metal"],c.vSTransport["energie"],c.vSTransport["nourriture"])
+							
+				
+							print("JARRIVE")
+							return True
+			elif params == 1:
+				if c.vSCombat["metal"] <= self.ressourceM:
+					if c.vSCombat["energie"] <= self.ressourceE:
+						if c.vSCombat["nourriture"] <= self.ressourceN:
+							self.removeFunds(c.vSCombat["metal"],c.vSCombat["energie"],c.vSCombat["nourriture"])
+							return True
+		#elif objetACree == "creervaisseauGalactique":
+			#pass
+		elif objetACree == "creermine":
+			if c.mine["metal"] <= self.ressourceM:
+					if c.mine["energie"] <= self.ressourceE:
+						if c.mine["nourriture"] <= self.ressourceN:
+							self.removeFunds(c.mine["metal"],c.mine["energie"],c.mine["nourriture"])
+							return True
+						
+		elif objetACree == "creerville":
+			if c.ville["metal"] <= self.ressourceM:
+					if c.ville["energie"] <= self.ressourceE:
+						if c.ville["nourriture"] <= self.ressourceN:
+							self.removeFunds(c.ville["metal"],c.ville["energie"],c.ville["nourriture"])
+							return True
+		elif objetACree == "creergeneratrice":
+			if c.generatrice["metal"] <= self.ressourceM:
+					if c.generatrice["energie"] <= self.ressourceE:
+						if c.generatrice["nourriture"] <= self.ressourceN:
+							self.removeFunds(c.generatrice["metal"],c.generatrice["energie"],c.generatrice["nourriture"])
+							return True
+		elif objetACree == "creerferme":
+			if c.ferme["metal"] <= self.ressourceM:
+					if c.ferme["energie"] <= self.ressourceE:
+						if c.ferme["nourriture"] <= self.ressourceN:
+							self.removeFunds(c.ferme["metal"],c.ferme["energie"],c.ferme["nourriture"])
+							return True
+		#elif objetACree == "creerstationGalactique":
+		elif objetACree == "creerstationSolaire":
+			if c.stationSolaire["metal"] <= self.ressourceM:
+					if c.stationSolaire["energie"] <= self.ressourceE:
+						if c.stationSolaire["nourriture"] <= self.ressourceN:
+							self.removeFunds(c.stationSolaire["metal"],c.stationSolaire["energie"],c.stationSolaire["nourriture"])
+							return True
+		#elif objetACree == "upgradevitessevaisseau":
+		elif objetACree == "creerbarrack":
+			if c.barrack["metal"] <= self.ressourceM:
+					if c.barrack["energie"] <= self.ressourceE:
+						if c.barrack["nourriture"] <= self.ressourceN:
+							self.removeFunds(c.barrack["metal"],c.barrack["energie"],c.barrack["nourriture"])
+							return True
+		elif objetACree == "creerlazerboi":
+			if c.lazerboi["metal"] <= self.ressourceM:
+					if c.lazerboi["energie"] <= self.ressourceE:
+						if c.lazerboi["nourriture"] <= self.ressourceN:
+							self.removeFunds(c.lazerboi["metal"],c.lazerboi["energie"],c.lazerboi["nourriture"])
+							return True
+			
+		return False
 	
 	def lazerboimort(self, idv):
 		for v in self.attaquantTerre:

@@ -1067,6 +1067,9 @@ class VueSysteme(Perspective):
 			shopStation = Button(self.cadreShop, text="Station Solaire",wraplength=90, image=self.images["shopCombat"], compound="top", command=self.shopStation)
 			shopStation.grid(row=0,column=2)
 			
+			shopStation = Button(self.cadreShop, text="Station Solaire",wraplength=90, image=self.images["shopCombat"], compound="top", command=self.shopStation)
+			shopStation.grid(row=0,column=2)
+			
 	def infoShop(self, typeBatiment):
 		# couts
 		c = Cout()
@@ -1111,7 +1114,6 @@ class VueSysteme(Perspective):
 			labelCoutFood.config(text=c.vSCombat["nourriture"])
 			boutonAcheter.config(command=self.creervaisseauCombat)
 		elif typeBatiment is "station":
-
 			labelImage.config(image=self.images["shopStation"])
 			labelNom.config(text="Station Solaire",wraplength=90)
 			labelCoutMetal.config(text=c.stationS["metal"])
@@ -1138,7 +1140,7 @@ class VueSysteme(Perspective):
 		self.infoShop("combat")
 
 	def shopStation(self):
-		self.infoShop("station")		
+		self.infoShop("station")			
 		
 	def changeretatvaisseau	(self):
 		if self.maselection and "vaisseauinterplanetaires" in self.maselection:

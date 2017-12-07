@@ -542,25 +542,25 @@ class VueGalaxie(Perspective):
 		self.cadreSelection = None
 		self.cadreInfoShop = None
 
-		boutonNext = Button(self.cadreetat, text="→", command=self.voirsysteme)
+		boutonNext = Button(self.cadreetat, text=">", command=self.voirsysteme)
 		boutonNext.grid(row=0, column=5, sticky=N + E)
 
-		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
+		self.boutonShop = Button(self.cadreetat, text="Shop >", command=self.afficherShop)
 		self.boutonShop.grid(row=2, column=0)
 
-		self.cadreSelectionVaisseau = Frame(self.cadreetat, bg="grey20")  # MODIF début
+		self.cadreSelectionVaisseau = Frame(self.cadreetat, bg="grey20")  # MODIF dÃ©but
 		
 		self.cadreSelection = Frame(self.cadreetat, width=200, height=400, bg="blue")
 		self.cadreSelection.grid(row=10,column=0)
-		btnCharger = Button(self.cadreSelection, text="Charger Vaisseau", wraplength=80) #, command= ICI FONCTION SARAH)
-		btnDecharger = Button(self.cadreSelection, text="Decharger Vaisseau", wraplength=80) #, command= ICI FONCTION SARAH)
-		btnCharger.grid(row=0,column=0)
+		#btnCharger = Button(self.cadreSelection, text="Charger Vaisseau", wraplength=80) #, command= ICI FONCTION SARAH)
+		btnDecharger = Button(self.cadreSelection, text="Decharger Vaisseau", wraplength=80,command=self.dechargerVaisseauGalactique) #, command= ICI FONCTION SARAH)
+		#btnCharger.grid(row=0,column=0)
 		btnDecharger.grid(row=0,column=1)
 		
 #		 self.lbselectecible = Label(self.cadreSelectionVaisseau, text="Choisir cible", bg="darkgrey")
 #		 self.lbselectecible.grid(row=0, column=0)
 # 
-#		 self.btndechargervaisseau = Button(self.cadreSelectionVaisseau, text="Décharger vaisseau",
+#		 self.btndechargervaisseau = Button(self.cadreSelectionVaisseau, text="DÃ©charger vaisseau",
 #											command=self.dechargerVaisseauGalactique)
 #		 self.btndechargervaisseau.grid(row=1, column=0)
 # 
@@ -569,12 +569,12 @@ class VueGalaxie(Perspective):
 #		 self.btncreervaisseau.grid(row=2, column=0)
 
 #	 def afficherShop(self):
-#		 self.boutonShop.config(text="Shop ˅")
+#		 self.boutonShop.config(text="Shop Ë…")
 #		 # self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
 # 
 #		 if self.cadreShop:
 #			 self.cadreShop.grid_forget()
-#			 self.boutonShop.config(text="Shop ˃")
+#			 self.boutonShop.config(text="Shop Ëƒ")
 #			 self.cadreShop = None
 #		 else:
 #			 self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="blue")
@@ -585,18 +585,18 @@ class VueGalaxie(Perspective):
 #			 shopStation.grid(row=0, column=1)  # MODIF fin
 
 	def afficherShop(self):
-		self.boutonShop.config(text="Shop ˅")
+		self.boutonShop.config(text="Shop ^")
 		# enlever les autres cadres
 		if self.cadreSelection:
 			self.cadreSelection.grid_forget()
-			self.boutonSelect.config(text="Selection >")
+			#self.boutonSelect.config(text="Selection >")
 			self.cadreSelection = None
 		else:
 			pass
 
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
+			self.boutonShop.config(text="Shop >")
 			self.cadreShop = None
 		else:
 			self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
@@ -963,7 +963,7 @@ class VueGalaxie(Perspective):
 				else:
 					print("IN systeme + RIEN")
 					self.maselection = None
-					self.lbselectecible.pack_forget()
+					#self.lbselectecible.pack_forget()
 					self.canevas.delete("selecteur")
 				# self.changecadreetat(None)
 
@@ -1015,7 +1015,6 @@ class VueGalaxie(Perspective):
 
 		self.canevas.xview(MOVETO, (x * xn / self.largeur) - eex)
 		self.canevas.yview(MOVETO, (y * yn / self.hauteur) - eey)
-
 	def dechargerVaisseauGalactique(self):
 		print("DEMANDE DECHARGEMENT")
 		e = self.AL2pixel
@@ -1086,27 +1085,27 @@ class VueSysteme(Perspective):
 		self.cadreInfoShop = None
 		
 
-		boutonBack = Button(self.cadreetat, text="←", command=self.voirgalaxie)
+		boutonBack = Button(self.cadreetat, text="<", command=self.voirgalaxie)
 		boutonBack.grid(row=0, column=0, sticky=N + W)
-		boutonNext = Button(self.cadreetat, text="→", command=self.voirplanete)
+		boutonNext = Button(self.cadreetat, text=">", command=self.voirplanete)
 		boutonNext.grid(row=0, column=5, sticky=N + E)
 
-		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
+		self.boutonShop = Button(self.cadreetat, text="Shop >", command=self.afficherShop)
 		self.boutonShop.grid(row=1, column=0, sticky=W)
 		
 		self.cadreSelection = Frame(self.cadreetat, width=200, height=400, bg="blue")
 		self.cadreSelection.grid(row=10,column=0)
-		btnCharger = Button(self.cadreSelection, text="Charger Vaisseau", wraplength=80) #, command= ICI FONCTION SARAH)
-		btnDecharger = Button(self.cadreSelection, text="Decharger Vaisseau", wraplength=80) #, command= ICI FONCTION SARAH)
+		btnCharger = Button(self.cadreSelection, text="Charger Vaisseau", wraplength=80,command=self.chargedansvaisseaugalactique) #, command= ICI FONCTION SARAH)
+		btnDecharger = Button(self.cadreSelection, text="Decharger Vaisseau", wraplength=80,command=self.dechargervaisseauplanetaire) #, command= ICI FONCTION SARAH)
 		btnCharger.grid(row=0,column=0)
 		btnDecharger.grid(row=0,column=1)
 # 
 #	 def afficherShop(self):
-#		 self.boutonShop.config(text="Shop ˅")
+#		 self.boutonShop.config(text="Shop Ë…")
 #		 # self.cadreShop=Frame(self.cadreetat,width=200,height=200,bg="blue")
 #		 if self.cadreShop:
 #			 self.cadreShop.grid_forget()
-#			 self.boutonShop.config(text="Shop ˃")
+#			 self.boutonShop.config(text="Shop Ëƒ")
 #			 self.cadreShop = None
 #		 else:
 #			 self.cadreShop = Frame(self.cadreetat, width=200, height=200, bg="gray")
@@ -1121,18 +1120,18 @@ class VueSysteme(Perspective):
 #			 btnchangeretatvaisseau = Button(self.cadreShop, text="Changer mode agressif", command=self.changeretatvaisseau)
 
 	def afficherShop(self):
-		self.boutonShop.config(text="Shop ˅")
+		self.boutonShop.config(text="Shop >")
 		# enlever les autres cadres
 		if self.cadreSelection:
 			self.cadreSelection.grid_forget()
-			self.boutonSelect.config(text="Selection >")
+			#self.boutonSelect.config(text="Selection >")
 			self.cadreSelection = None
 		else:
 			pass
 
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
+			self.boutonShop.config(text="Shop ^")
 			self.cadreShop = None
 		else:
 			self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
@@ -1467,7 +1466,7 @@ class VueSysteme(Perspective):
 
 			print(self.maselection)
 
-			# Pas obligé de faire la selection initiale mais plus satisfesant
+			# Pas obligÃ© de faire la selection initiale mais plus satisfesant
 			if self.maselection[1] == "planete":
 				for j in systemes:
 					for p in j.planetes:
@@ -1571,38 +1570,47 @@ class VueSysteme(Perspective):
 
 		self.canevas.xview(MOVETO, (x * xn / self.largeur) - eex)
 		self.canevas.yview(MOVETO, (y * yn / self.hauteur) - eey)
-
+		
 	def chargedansvaisseaugalactique(self):
-		if self.maselection:
+		if self.maselection and "vaisseauinterplanetaires" in self.maselection:
 			print("DEMANDE CHARGER DANS VAISSEAU GALACTIQUE")
 			print(self.maselection)
 
-			x = self.systeme.x
-			y = self.systeme.y
-			e = self.parent.modes["galaxie"].Al2pixel
-
-			item = self.parent.modes["galaxie"].canevas.find_overlapping(x * e - 20, y * e - 20, x * e + 20, y * e + 20)
-
 			vaisseau = None
+			
+			joueur = self.parent.modele.joueurs[self.parent.nom]
+			
+			for v in joueur.vaisseauxinterstellaires:
+				if v.systeme_courant == self.systeme:
+					vaisseau = v
+					break
+			
 
-			for i in range(len(item)):
-				if "vaisseauinterstellaire" == item[i]:
-					id = item[i + 1]
-					joueurs = self.parent.parent.modele.joueurs
-					for j in joueurs:
-						for v in j.vaisseauinterstellaires:
-							if v.id == id:
-								vaisseau = item[i + 1]
-								break
-
-			if vaisseau:
+			if vaisseau and vaisseau.proprietaire == self.parent.nom:
 				print("CHARGEMENT DANS VAISSEAU GALACTIQUE", vaisseau)
-				self.parent.parent.chargedansvaisseaugalactique(vaisseau, self.maselection[2])
+				self.parent.parent.chargedansvaisseaugalactique(vaisseau.id, self.maselection[1])
 
 			else:
 				print("AUCUN VAISSEAU GALACTIQUE PRESENT À CE SYSTEME")
 
 		pass
+	
+	def dechargervaisseauplanetaire(self):
+		if self.maselection and "vaisseauinterplanetaires" in self.maselection and "transport" in self.maselection:
+			print("DEMANDE DECHARGEMENT VAISSEAU PLANETAIRE")
+			print(self.maselection)
+			
+			joueur = self.parent.modele.joueurs[self.parent.nom]
+			for v in joueur.vaisseauxinterplanetaires:
+				if v.id == self.maselection[1]:
+					if v.planete_courrant:
+						print("DECHARGEMENT DANS PLANETE",v.planete_courrant)
+						self.parent.parent.dechargervaisseauplanetaire(v.id,v.planete_courrant.id)
+					else:
+						print("VAISSEAU PAS À UNE PLANÈTE")
+					break
+			
+			pass
 
 
 class VuePlanete(Perspective):
@@ -1657,12 +1665,12 @@ class VuePlanete(Perspective):
 		
 		self.chargeimages()
 
-		boutonBack = Button(self.cadreetat, text="←", command=self.voirsysteme)
+		boutonBack = Button(self.cadreetat, text="<", command=self.voirsysteme)
 		boutonBack.grid(row=0, column=0, sticky=N + W)
-		# boutonNext=Button(self.cadreetat,text="→",command=self.voirsysteme)
+		# boutonNext=Button(self.cadreetat,text="â†’",command=self.voirsysteme)
 		# boutonNext.grid(row=0,column=5)
 
-		self.boutonShop = Button(self.cadreetat, text="Shop ˃", command=self.afficherShop)
+		self.boutonShop = Button(self.cadreetat, text="Shop >", command=self.afficherShop)
 		self.boutonShop.grid(row=1, column=0, sticky=W)
 
 		self.boutonSelect = Button(self.cadreetat, text="Selection >", command=self.afficherSelection)
@@ -1671,7 +1679,7 @@ class VuePlanete(Perspective):
 		
 
 	def afficherShop(self):
-		self.boutonShop.config(text="Shop ˅")
+		self.boutonShop.config(text="Shop ^")
 		# enlever les autres cadres
 		if self.cadreSelection:
 			self.cadreSelection.grid_forget()
@@ -1682,7 +1690,7 @@ class VuePlanete(Perspective):
 
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
+			self.boutonShop.config(text="Shop >")
 			self.cadreShop = None
 		else:
 			self.cadreShop = Frame(self.cadreetat, width=200, height=400, bg="blue")
@@ -1705,7 +1713,7 @@ class VuePlanete(Perspective):
 			shopBarrack.grid(row=1, column=1)
 
 		
-#			 # À EFFACER, TEMPORAIRE
+#			 # Ã€ EFFACER, TEMPORAIRE
 #			 shopLazerboi = Button(self.cadreShop, text="Lazerboi", image=self.images["lazerboi"], compound="top",
 #								   command=self.infoLazerboi)
 #			 shopLazerboi.grid(row=1, column=2)
@@ -1830,7 +1838,7 @@ class VuePlanete(Perspective):
 
 	def creergeneratrice(self):
 		self.macommande = "generatrice"
-		print('WOW une génératrice')
+		print('WOW une gÃ©nÃ©ratrice')
 
 	def creeferme(self):
 		self.macommande = "ferme"
@@ -1927,18 +1935,18 @@ class VuePlanete(Perspective):
 
 	# UI
 	def afficherSelection(self):  # si on clique sur le bouton Selection
-		self.boutonSelect.config(text="Selection ˅")
+		self.boutonSelect.config(text="Selection Ë…")
 		# Fermer les autres cadres
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
+			self.boutonShop.config(text="Shop Ëƒ")
 			self.cadreShop = None
 		else:
 			pass
 		# Si Selection est ouvert, fermer
 		if self.cadreSelection != None:
 			self.cadreSelection.grid_forget()
-			self.boutonSelect.config(text="Selection ˃")
+			self.boutonSelect.config(text="Selection Ëƒ")
 			self.cadreSelection = None
 		else:
 			# Sinon, on ouvre le cadre selection
@@ -1953,11 +1961,11 @@ class VuePlanete(Perspective):
 				self.selectBatiment()
 
 	def selectBatiment(self):  # Si on clique sur un batiment, montrer selection
-		self.boutonSelect.config(text="Selection ˅")
+		self.boutonSelect.config(text="Selection Ë…")
 		# Fermer les autres cadres
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
+			self.boutonShop.config(text="Shop Ëƒ")
 			self.cadreShop = None
 		# S'assurer que le conteneur est ouvert
 		if self.cadreSelection is None:
@@ -2064,11 +2072,11 @@ class VuePlanete(Perspective):
 		self.shopSelection("tank")
 	def selectUnit(self, unitName):
 		print("ok")
-		self.boutonSelect.config(text="Selection ˅")
+		self.boutonSelect.config(text="Selection Ë…")
 		# Fermer les autres cadres
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
-			self.boutonShop.config(text="Shop ˃")
+			self.boutonShop.config(text="Shop Ëƒ")
 			self.cadreShop = None
 		# S'assurer que le conteneur est ouvert
 		if self.cadreSelection is None:
@@ -2101,7 +2109,7 @@ class VuePlanete(Perspective):
 			label.grid(row=2, column=2)
 			label = Label(self.cadreSelection, text="Y " + str(self.moveY))
 			label.grid(row=3, column=2)
-			btnCharger = Button(self.cadreSelection, text="Charger Units", wraplength=80)
+			btnCharger = Button(self.cadreSelection, text="Charger Units", wraplength=80,command=self.chargerdansvaisseauplanetaire)
 			btnCharger.grid(row=4,column=4)
 				
 			
@@ -2208,7 +2216,7 @@ class VuePlanete(Perspective):
 			# Reset all selection
 			if self.cadreSelection != None:
 				self.cadreSelection.grid_forget()
-				self.boutonSelect.config(text="Selection ˃")
+				self.boutonSelect.config(text="Selection Ëƒ")
 				self.cadreSelection = None
 
 			if self.macommande == "mine":
@@ -2260,6 +2268,26 @@ class VuePlanete(Perspective):
 
 		self.canevas.xview(MOVETO, (x * xn / largeur) - eex)
 		self.canevas.yview(MOVETO, (y * yn / hauteur) - eey)
+		
+		
+	def chargerdansvaisseauplanetaire(self):
+		if self.prevSelection and "lazerboi" in self.prevSelection:
+			print("CHARGEMENT DANS VAISSEAU PLANÉTAIRE")
+			print(self.prevSelection)
+			joueur = self.parent.modele.joueurs[self.parent.nom]
+			vaisseau = None
+			for v in joueur.vaisseauxinterplanetaires:
+				if v.planete_courrant == self.planete and v.type == "transport":
+					vaisseau = v
+					break
+				
+			if vaisseau:
+				self.parent.parent.chargerdansvaisseauplanetaire(self.prevSelection[0],vaisseau.id)
+			else:
+				print("AUCUN VAISSEAU À CETTE PLANÈTE")
+		
+
+
 
 
 if __name__ == '__main__':

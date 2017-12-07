@@ -156,7 +156,10 @@ class VaisseauTransport(VaisseauSolaire):
 
 	def charger_unit(self, unit):
 		if len(self.units) < self.max_units:
+			unit.planeteid = None
+			unit.systemeid = None
 			self.units.append(unit)
+			print("UNIT CHARGEE")
 		else:
 			print("Trop de units dans le vaisseau, upgrade le vaisseau")
 
@@ -166,6 +169,20 @@ class VaisseauTransport(VaisseauSolaire):
 			i += 1
 			if unit.id == id:
 				return self.units.pop(i)
+			
+	def dechargerDansPlanete(self,planete):
+		if len(self.units) > 0:
+			for u in self.units:
+				u.planeteid = self.planete_courrant.id
+				u.systemeid = self.systeme_courant
+				
+				self.parent.attaquantTerre.append(u)
+			self.units.clear()
+			print("DECHARGER")
+		else:
+			print("AUCUN UNITS")
+		
+		pass
 
 class VaisseauCombat(VaisseauSolaire):
 	def __init__(self, parent, nom, systeme,planete):
@@ -232,13 +249,19 @@ class VaisseauGalactique(Vaisseau):
 			print("DECHARGEMENT VAISSEAU")
 			etoile = systeme.etoile
 			for v in self.vaisseauxtransportee:
-				angle = random.randrange(360) / 360 * 2 * math.pi
-
-				x, y = hlp.getAngledPoint(angle, etoile.taille, etoile.x, etoile.y)
-
+				x = 0
+				y = 0
+				angle = random.randrange(360)
+	
+				x, y = hlp.getAngledPoint(math.radians(angle), etoile.taille, 0, 0)
+					
 				v.x = x
 				v.y = y
+					
+				v.systeme_courant = self.systeme_courant
 				self.parent.vaisseauxinterplanetaires.append(v)
+					
+					
 			self.vaisseauxtransportee.clear()
 
 		else:
@@ -246,6 +269,8 @@ class VaisseauGalactique(Vaisseau):
 		pass
 
 	def chargementvaisseau(self, vaisseau):
+		vaisseau.systeme_courant = None
+		vaisseau.planete_courrant = None
 		self.vaisseauxtransportee.append(vaisseau)
 
 	def avancer(self):

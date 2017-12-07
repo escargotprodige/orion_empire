@@ -1909,12 +1909,36 @@ class VuePlanete(Perspective):
 				labelNom.grid(row=2, column=0, columnspan=2)
 				labelLvl.grid(row=3, column=0, columnspan=2)
 	def infoShopLazer(self):
-		self.shopBarrack("lazer")
+		self.shopSelection("lazer")
 	def infoShopFist(self):
-		self.shopBarrack("fist")
+		self.shopSelection("fist")
 	def infoShopTank(self):
-		self.shopBarrack("tank")
-	def shopBarrack(self, type):
+		self.shopSelection("tank")
+		
+	def selectUnit(self, unitName):
+		self.boutonSelect.config(text="Selection ˅")
+		# Fermer les autres cadres
+		if self.cadreShop:
+			self.cadreShop.grid_forget()
+			self.boutonShop.config(text="Shop ˃")
+			self.cadreShop = None
+		# S'assurer que le conteneur est ouvert
+		if self.cadreSelection is None:
+			self.cadreSelection = Frame(self.cadreetat, width=300, height=300, bg="blue")
+			self.cadreSelection.grid(row=11, column=0, columnspan=5, rowspan=5)
+		else:
+			for widget in self.cadreSelection.winfo_children():
+				widget.destroy()
+		# Cadre selection
+		if self.maselection and self.maselection[0] != "current":
+			self.cadreShopBarrack = None
+			if self.maselection == "lazerboi":
+				# peupler le cadre
+				labelImage = Label(self.cadreSelection)
+				labelNom = Label(self.cadreSelection)
+				labelLvl = Label(self.cadreSelection)
+			
+	def shopSelection(self, type):
 		# couts
 		c = Cout()
 
@@ -1984,7 +2008,7 @@ class VuePlanete(Perspective):
 				pass
 			elif t[1] == "lazerboi":
 				self.maselection = "lazerboi"
-				self.selectBatiment()
+				self.selectUnit("lazerboi")
 				print("lazerboi at your service, pew pew.")  # !!!
 				self.prevSelection = t
 			elif t[2] == "batiment":

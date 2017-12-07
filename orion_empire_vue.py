@@ -1323,6 +1323,8 @@ class VueSysteme(Perspective):
 			for s in i.stationSolaire:
 				if s.systemeOrigine.id == self.systeme.id:
 					for p in self.systeme.planetes:
+						
+						
 						if p == s.parent:
 							x, y = hlp.getAngledPoint(math.radians(p.angle), p.distance * self.UA2pixel,
 								                          self.largeur / 2, self.largeur / 2)
@@ -1331,8 +1333,18 @@ class VueSysteme(Perspective):
 							s.pointOrbite(x,y)
 							s.orbiter()
 							n = p.taille * self.UA2pixel * 0.7
-					self.canevas.create_oval(s.x - n - 1, s.y - n - 1, s.x + n,  s.y + n - 1, fill=i.couleur, tags=(
-						i.nom, "stationSolaire", p.id, "inconnu", self.systeme.id, int(x), int(y)))
+							
+							#DESSINE STATION
+							self.canevas.create_oval(s.x - n - 1, s.y - n - 1, s.x + n,  s.y + n - 1, fill=i.couleur, tags=(
+							i.nom, "stationSolaire", p.id, "inconnu", self.systeme.id, int(x), int(y)))
+							#SELECTION STATION
+							if self.maselection != None:
+								if i.nom == self.maselection[0] and self.maselection[1] == 'stationSolaire' and self.maselection[3] == p.id:
+									self.canevas.delete("select")
+									n = 9  # Gere la taille de la selection
+									self.canevas.create_oval(s.x - n - 1, s.y - n - 1, s.x + n,  s.y + n - 1, dash=(2, 2),
+							                         outline=self.modele.joueurs[self.parent.nom].couleur,
+							                         tags=("select", "selecteur"))
 
 
 	def changerproprietaire(self):
@@ -1426,6 +1438,7 @@ class VueSysteme(Perspective):
 			print("IN STATION")
 			print(t)
 			self.maselection = [t[0], t[1], t[3], t[2]]
+			print(self.maselection)
 
 		else:
 			print("Region inconnue")

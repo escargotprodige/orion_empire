@@ -65,7 +65,7 @@ class Controleur():
 			rep = self.serveur.inscrireclient(self.monnom)  # on averti le serveur de nous inscrire
 			# tester retour pour erreur de nom
 			# random.seed(rep[2])
-			random.seed(64544)
+			random.seed(17)
 
 	def boucleattente(self):
 		rep = self.serveur.faireaction([self.monnom, 0, 0])
@@ -204,6 +204,8 @@ class Controleur():
 	def moveAttaquant(self, lazerboi_id, targetX, targetY):
 		self.actions.append([self.monnom, "movelazerboi", [lazerboi_id, targetX, targetY]])
 	# !fin modif
+	def attackLazerBoi(self, lazerboi_id, lazerboiEnemy):
+		self.actions.append([self.monnom, "attacklazerboi", [lazerboi_id, lazerboiEnemy]])
 
 	def effacerBatiment(self, Batiment):
 		self.vue.effacerBatiment(Batiment)

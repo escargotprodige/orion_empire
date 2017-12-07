@@ -2,6 +2,7 @@ from orion_empire_modele import *
 import random
 from mathPlus import *
 from IdMaker import Id
+import numpy as np
 
 
 #
@@ -31,16 +32,16 @@ class Planete():
 		self.terrainTailleCarre = pow(2, self.detailLevel) + 1
 
 		self.elevationMax = 255
-		self.roughness = 4
+		self.roughness = 8
 		
 		self.couleurPlanete = 0
 
-		self.terrain = [[0 for x in range(self.terrainTailleCarre)] for y in range(self.terrainTailleCarre)]
-		self.terrainColor = [['#000000' for x in range(self.terrainTailleCarre)] for y in
-							 range(self.terrainTailleCarre)]
+		self.terrain = list(np.zeros((self.terrainTailleCarre, self.terrainTailleCarre))) #[[0 for x in range(self.terrainTailleCarre)] for y in range(self.terrainTailleCarre)]
+		self.terrainColor = list(np.full((self.terrainTailleCarre, self.terrainTailleCarre), '#000000'))#[['#000000' for x in range(self.terrainTailleCarre)] for y in
+							 #range(self.terrainTailleCarre)]
 
-		self.terrainRessource = [[Ressource() for x in range(self.terrainTailleCarre)] for y in
-								 range(self.terrainTailleCarre)]
+		self.terrainRessource = list(np.full((self.terrainTailleCarre, self.terrainTailleCarre), Ressource() ))#[[Ressource() for x in range(self.terrainTailleCarre)] for y in
+								 #range(self.terrainTailleCarre)]
 
 		self.genTerrain()
 		self.genTerrainColor()
@@ -54,8 +55,8 @@ class Planete():
 		
 	def genTerrain(self):
 		size = self.terrainTailleCarre
-		for n in range(self.terrainTailleCarre * self.terrainTailleCarre):
-			self.terrain.append(0)
+		#for n in range(self.terrainTailleCarre * self.terrainTailleCarre):
+		#	self.terrain.append(0)
 		self.terrain[0][0] = self.elevationMax / 2
 		self.terrain[size - 1][0] = self.elevationMax / 2
 		self.terrain[size - 1][size - 1] = self.elevationMax / 2

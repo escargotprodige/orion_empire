@@ -3,6 +3,7 @@ from orion_empire_modele import *
 import c_Vaisseau
 from c_StationGalactique import StationGalactique
 from c_Station import Station
+from Couts import *
 
 
 class Joueur():

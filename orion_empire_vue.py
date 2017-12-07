@@ -519,13 +519,6 @@ class VueGalaxie(Perspective):
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
 		# enlever les autres cadres
-		if self.cadreSelection:
-			self.cadreSelection.grid_forget()
-			self.boutonSelect.config(text="Selection >")
-			self.cadreSelection = None
-		else:
-			pass
-
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
 			self.boutonShop.config(text="Shop ˃")
@@ -1054,13 +1047,6 @@ class VueSysteme(Perspective):
 
 	def afficherShop(self):
 		self.boutonShop.config(text="Shop ˅")
-		# enlever les autres cadres
-		if self.cadreSelection:
-			self.cadreSelection.grid_forget()
-			self.boutonSelect.config(text="Selection >")
-			self.cadreSelection = None
-		else:
-			pass
 
 		if self.cadreShop:
 			self.cadreShop.grid_forget()
@@ -1977,9 +1963,9 @@ class VuePlanete(Perspective):
 						for i in self.planete.infrastructures:
 							if i.id == idSelect:
 								labelLvl.config(text="lvl " + str(i.niveau))
-								labelMetal = Label(self.cadreSelection, text=str(round(i.metauxgen * i.controleRessource,2))+"/sec")
-								labelEnergie = Label(self.cadreSelection, text=str(round(i.energiegen * i.controleRessource,2))+"/sec")
-								labelFood = Label(self.cadreSelection, text=str(round(i.foodgen * i.controleRessource,2))+"/sec")
+								labelMetal = Label(self.cadreSelection, text=0+"/sec")
+								labelEnergie = Label(self.cadreSelection, text=0+"/sec")
+								labelFood = Label(self.cadreSelection, text=0+"/sec")
 								break
 					labelMetal.grid(row=1, column=3)
 					labelEnergie.grid(row=2, column=3)

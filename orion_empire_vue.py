@@ -1050,16 +1050,19 @@ class VueSysteme(Perspective):
 			
 			shopVCombat = Button(self.cadreShop, text="Vaisseau Combat",wraplength=90, image=self.images["shopCombat"], compound="top", command=self.shopCombat)
 			shopVCombat.grid(row=0, column=1)
+
+			shopStation = Button(self.cadreShop, text="Station",wraplength=90, image=self.images["shopCombat"], compound="top", command=self.shopStation)
+			shopStation.grid(row=0, column=3)
 			
 	def infoShop(self, typeBatiment):
 		# couts
 		c = Cout()
-		shopVaisseau = Button(self.cadreShop, text="Vaisseau Transport", command=self.creervaisseauTransport)
-		shopVaisseau.grid(row=0, column=0, sticky=W)
-		shopVaisseau = Button(self.cadreShop, text="Vaisseau Combat", command=self.creervaisseauCombat)
-		shopVaisseau.grid(row=1, column=0, sticky=W)
-		shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
-		shopStation.grid(row=2, column=0, sticky = W)
+		# shopVaisseau = Button(self.cadreShop, text="Vaisseau Transport", command=self.creervaisseauTransport)
+		# shopVaisseau.grid(row=0, column=0, sticky=W)
+		# shopVaisseau = Button(self.cadreShop, text="Vaisseau Combat", command=self.creervaisseauCombat)
+		# shopVaisseau.grid(row=1, column=0, sticky=W)
+		# shopStation = Button(self.cadreShop, text="Station", command=self.creerstation)
+		# shopStation.grid(row=2, column=0, sticky = W)
 
 		btnchangeretatvaisseau = Button(self.cadreShop, text="Changer mode agressif", command=self.changeretatvaisseau)
 		btnchangeretatvaisseau.grid(row=3, column=0, sticky = W)
@@ -1102,6 +1105,13 @@ class VueSysteme(Perspective):
 			labelCoutEnergie.config(text=c.vSCombat["energie"])
 			labelCoutFood.config(text=c.vSCombat["nourriture"])
 			boutonAcheter.config(command=self.creervaisseauCombat)
+		elif typeBatiment is "station":
+			labelImage.config(image=self.images["shopCombat"])
+			labelNom.config(text="Station",wraplength=90)
+			labelCoutMetal.config(text=c.vSCombat["metal"])
+			labelCoutEnergie.config(text=c.vSCombat["energie"])
+			labelCoutFood.config(text=c.vSCombat["nourriture"])
+			boutonAcheter.config(command=self.creerstation)
 		# grid tout
 		# batiment
 		labelImage.grid(row=0, column=0, columnspan=2, rowspan=2)
@@ -1119,6 +1129,9 @@ class VueSysteme(Perspective):
 
 	def shopCombat(self):
 		self.infoShop("combat")
+
+	def shopStation(self):
+		self.infoShop("station")
 		
 	def changeretatvaisseau	(self):
 		if self.maselection and "vaisseauinterplanetaires" in self.maselection:

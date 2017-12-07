@@ -19,6 +19,7 @@ class ATP(Enum):  # ATTAQUANT_TERRE PARAMETRE
 	PROPRIETAIRE = 11
 	TYPE = 12
 	PRIX = 13
+	LVL = 14
 
 
 class AT_TYPE(Enum):
@@ -42,7 +43,8 @@ class Barrack(Batiment):
 											   ATP.PLANETEID: self.planeteid,
 											   ATP.PROPRIETAIRE: self.proprietaire,
 											   ATP.TYPE: AT_TYPE.LAZERBOI,
-											   ATP.PRIX: 100
+											   ATP.PRIX: 100,
+											   ATP.LVL: 1
 											   },
 							AT_TYPE.FISTBOI: {ATP.NOM: 'fistBoi',
 											  ATP.X: self.x,
@@ -57,7 +59,8 @@ class Barrack(Batiment):
 											  ATP.PLANETEID: self.planeteid,
 											  ATP.PROPRIETAIRE: self.proprietaire,
 											  ATP.TYPE: AT_TYPE.FISTBOI,
-											  ATP.PRIX: 100
+											  ATP.PRIX: 100,
+											  ATP.LVL: 1
 											  }
 							}
 
@@ -111,6 +114,7 @@ class Barrack(Batiment):
 		t[ATP.DEFENSE] *= scale
 		t[ATP.NOM] += 'i'
 		t[ATP.PRIX] *= scale
+		t[ATP.LVL] += 1
 
 	def upgradeFistBoi(self, scale):
 		t = self.dictUnitTemplat[AT_TYPE.FISTBOI]
@@ -122,3 +126,4 @@ class Barrack(Batiment):
 		t[ATP.DEFENSE] *= scale
 		t[ATP.NOM] += 'i'
 		t[ATP.PRIX] *= scale
+		t[ATP.LVL] += 1

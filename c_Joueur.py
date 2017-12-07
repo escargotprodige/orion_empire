@@ -56,9 +56,9 @@ class Joueur():
 		self.attaquantTerre = []
 		self.ressourcesTEMP = 100
 
-		self.ressourceM = 100
-		self.ressourceE = 100
-		self.ressourceN = 100
+		self.ressourceM = 1000
+		self.ressourceE = 1000
+		self.ressourceN = 1000
 
 		self.delais = 20
 	
@@ -247,20 +247,20 @@ class Joueur():
 						return 1
 
 	def creerLazerBoi(self, listeparams):
-		if self.haveFunds("creerLazerBoi"):
-			nom, systemeid, planeteid, x, y = listeparams
-			for i in self.systemesvisites:
-				if i.id == systemeid:
-					for j in i.planetes:
-						if j.id == planeteid:
-							lazerboi = self.barrackMere.creerLazerBoi(self.nom)
-							lazerboi.x = x
-							lazerboi.y = y
-							print(str(lazerboi.x) + ", " + str(lazerboi.y))
-							lazerboi.systemid = systemeid
-							lazerboi.planeteid = planeteid
-							self.attaquantTerre.append(lazerboi)
-							self.parent.parent.afficherLazerBoi(lazerboi)
+		#if self.haveFunds("creerLazerBoi"):
+		nom, systemeid, planeteid, x, y = listeparams
+		for i in self.systemesvisites:
+			if i.id == systemeid:
+				for j in i.planetes:
+					if j.id == planeteid:
+						lazerboi = self.barrackMere.creerLazerBoi(self.nom)
+						lazerboi.x = x
+						lazerboi.y = y
+						print(str(lazerboi.x) + ", " + str(lazerboi.y))
+						lazerboi.systemid = systemeid
+						lazerboi.planeteid = planeteid
+						self.attaquantTerre.append(lazerboi)
+						self.parent.parent.afficherLazerBoi(lazerboi)
 
 	def moveLazerBoi(self, listparams):
 		lazerboi_id, x, y = listparams
@@ -528,6 +528,7 @@ class Joueur():
 					if c.lazerboi["energie"] <= self.ressourceE:
 						if c.lazerboi["nourriture"] <= self.ressourceN:
 							self.removeFunds(c.lazerboi["metal"],c.lazerboi["energie"],c.lazerboi["nourriture"])
+							print("asdfa;sldfkj")
 							return True
 			
 		return False

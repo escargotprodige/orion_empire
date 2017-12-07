@@ -214,9 +214,9 @@ class VaisseauCombat(VaisseauSolaire):
 		"""
 
 def getCoutMvg():
-	return 5
+	return 10000
 def getCoutEvg():
-	return 5
+	return 2000
 
 class VaisseauGalactique(Vaisseau):
 	def __init__(self, parent, nom, systeme):

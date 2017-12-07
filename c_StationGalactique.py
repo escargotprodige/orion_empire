@@ -1,10 +1,10 @@
 from orion_empire_modele import *
 
 def getCoutMsg():
-	return 50
+	return 30000
 
 def getCoutEsg():
-	return 50
+	return 4000
 
 class StationGalactique():
 	def __init__(self,parent,nom,systeme,x,y):

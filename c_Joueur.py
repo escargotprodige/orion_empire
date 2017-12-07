@@ -59,7 +59,17 @@ class Joueur():
 		self.ressourceN = 100
 
 		self.delais = 20
-
+	
+	def printRessource(self):
+		print('Ressource----------------------')
+		print('Energie ')
+		print(self.ressourceE)
+		print('Metal ')
+		print(self.ressourceM)
+		print('Nourriture ')
+		print(self.ressourceN)
+		print('-------------------------------')
+		
 	def creerVilleOrigine(self):
 		ville = Ville(self, self.nom, self.systemeorigine, self.planeteOrigine, 25, 25)  ### TEST ICI  ###
 		self.planeteOrigine.infrastructures.append(ville)
@@ -184,12 +194,7 @@ class Joueur():
 							v = VaisseauGalactique(self, self.nom, i)
 							self.ressourceM -= v.coutM
 							self.ressourceE -= v.coutE
-							print('Ressource----------------------')
-							print('energie ')
-							print(self.ressourceM)
-							print('Metal ')
-							print(self.ressourceE)
-							print('-------------------------------')
+							self.printRessource()
 							self.vaisseauxinterstellaires.append(v)
 							return 1
 				else:
@@ -206,12 +211,7 @@ class Joueur():
 					sg = StationGalactique(self, self.nom, i, i.x, i.y)
 					self.ressourceM -= sg.coutM
 					self.ressourceE -= sg.coutE
-					print('Ressource----------------------')
-					print('energie :')
-					print(self.ressourceM)
-					print('Metal :')
-					print(self.ressourceE)
-					print('-------------------------------')
+					self.printRessource()
 					self.stationGalactiques.append(sg)
 					
 					return 1

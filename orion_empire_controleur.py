@@ -204,6 +204,8 @@ class Controleur():
 	def moveAttaquant(self, lazerboi_id, targetX, targetY):
 		self.actions.append([self.monnom, "movelazerboi", [lazerboi_id, targetX, targetY]])
 	# !fin modif
+	def attackLazerBoi(self, lazerboi_id, lazerboiEnemy):
+		self.actions.append([self.monnom, "attacklazerboi", [lazerboi_id, lazerboiEnemy]])
 
 	def effacerBatiment(self, Batiment):
 		self.vue.effacerBatiment(Batiment)

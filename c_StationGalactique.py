@@ -1,5 +1,11 @@
 from orion_empire_modele import *
 
+def getCoutMsg():
+	return 30000
+
+def getCoutEsg():
+	return 4000
+
 class StationGalactique():
 	def __init__(self,parent,nom,systeme,x,y):
 		self.parent=parent
@@ -9,8 +15,8 @@ class StationGalactique():
 		self.x=x
 		self.y=y
 		self.systemeOrigine = systeme
-		self.coutM = 50
-		self.coutE = 50
+		self.coutM = getCoutMsg()
+		self.coutE = getCoutEsg()
 		
 		self.angle = 0
 		self.delais = 2
@@ -24,3 +30,4 @@ class StationGalactique():
 			self.angle += 1
 			if self.angle >= 360:
 				self.angle = 0
+				

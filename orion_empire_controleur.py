@@ -65,7 +65,7 @@ class Controleur():
 			rep = self.serveur.inscrireclient(self.monnom)  # on averti le serveur de nous inscrire
 			# tester retour pour erreur de nom
 			# random.seed(rep[2])
-			random.seed(17)
+			random.seed(64454)
 
 	def boucleattente(self):
 		rep = self.serveur.faireaction([self.monnom, 0, 0])
@@ -232,6 +232,15 @@ class Controleur():
 		
 	def changeretatvaisseau(self,v):
 		self.modele.changeretatvaisseau(v)
+		
+	def chargementdansvaisseaugalactique(self,vg,vs):
+		self.actions.append([self.monnom, "chargedansvaisseaugalactique",(vg,vs)])
+		
+	def dechargervaisseauplanetaire(self,vg,vs):
+		self.actions.append([self.monnom, "dechargervaisseauplanetaire",(vg,vs)])
+		
+	def chargerdansvaisseauplanetaire(self,vg,vs):
+		self.actions.append([self.monnom, "chargerdansvaisseauplanetaire",(vg,vs)])
 
 
 if __name__ == "__main__":

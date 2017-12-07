@@ -343,12 +343,16 @@ class Vue():
 							b+= random.randint(0,5)
 							
 							if k == subDivisionLevel-1:
-								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], q.x, q.y , fill=self.rgbToHex(r, g, b), width=6,
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], q.x, q.y , fill=self.rgbToHex(r, g, b), width=10,
 												tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
 							else:
-								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], lesRayons[k+1][0], lesRayons[k+1][1], fill=self.rgbToHex(r, g, b), width=2,
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], lesRayons[k+1][0], lesRayons[k+1][1], fill=self.rgbToHex(r, g, b), width=10,
 												tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
-						
+
+							if k == subDivisionLevel-1:
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], q.x, q.y , fill=self.rgbToHex(255, 255, 255), width=3, tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
+							else:
+								self.modes["planetes"][i].canevas.create_line(lesRayons[k][0], lesRayons[k][1], lesRayons[k+1][0], lesRayons[k+1][1], fill=self.rgbToHex(255,255, 255), width=3, tags=(p.proprietaire, "rayonLazer", str(p.id), "effetsSpeciaux"))
 						
 						for k in range(quantiteReflet):
 							reflet = []

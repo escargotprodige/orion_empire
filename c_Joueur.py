@@ -262,6 +262,7 @@ class Joueur():
 							self.attaquantTerre.append(lazerboi)
 							self.parent.parent.afficherLazerBoi(lazerboi)
 
+
 	def moveLazerBoi(self, listparams):
 		lazerboi_id, x, y = listparams
 		for at in self.attaquantTerre:
